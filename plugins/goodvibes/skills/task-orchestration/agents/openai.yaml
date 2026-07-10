@@ -1,0 +1,7 @@
+interface:
+  display_name: "Task Orchestration"
+  short_description: "Coordinate focused subagents and review loops"
+  default_prompt: "Use $task-orchestration to split this work into bounded subagent tasks and review gates."
+
+policy:
+  allow_implicit_invocation: true

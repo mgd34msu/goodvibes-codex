@@ -1,0 +1,7 @@
+interface:
+  display_name: "Codebase Review"
+  short_description: "Review diffs with grounded refutation checks"
+  default_prompt: "Use $codebase-review to review the current diff with grounded checks and refutation."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,13 @@
+interface:
+  display_name: "Project Onboarding"
+  short_description: "Map unfamiliar repositories before editing"
+  default_prompt: "Use $project-onboarding to map this unfamiliar repository before proposing changes."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "goodvibes_intel"
+      description: "GoodVibes code intelligence MCP server"
+
+policy:
+  allow_implicit_invocation: true

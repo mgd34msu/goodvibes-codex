@@ -1,0 +1,7 @@
+interface:
+  display_name: "GoodVibes Memory"
+  short_description: "Read and record durable project decisions"
+  default_prompt: "Use $goodvibes-memory to check and record durable context for this repository."
+
+policy:
+  allow_implicit_invocation: false

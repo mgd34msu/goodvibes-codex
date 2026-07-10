@@ -1,0 +1,7 @@
+node_modules/
+coverage/
+.cache/
+.goodvibes/
+.codex/.tmp/
+*.log
+.DS_Store

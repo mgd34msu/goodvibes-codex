@@ -1,0 +1,7 @@
+interface:
+  display_name: "GoodVibes Maintenance"
+  short_description: "Diagnose and prepare the GoodVibes plugin"
+  default_prompt: "Use $goodvibes-maintenance to inspect GoodVibes health or prepare its runtime dependencies."
+
+policy:
+  allow_implicit_invocation: false

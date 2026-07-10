@@ -1,0 +1,23 @@
+{
+  "name": "@goodvibes/connect",
+  "version": "0.1.0",
+  "description": "GoodVibes Connect MCP server for Codex — controlled HTTP and database access (3 tools).",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@goodvibes/core": "*",
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "undici": "^6.27.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "esbuild": "^0.28.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
+  }
+}

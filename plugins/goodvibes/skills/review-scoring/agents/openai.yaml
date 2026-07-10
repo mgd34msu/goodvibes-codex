@@ -1,0 +1,7 @@
+interface:
+  display_name: "Review Scoring"
+  short_description: "Find and rank concrete defects in changes"
+  default_prompt: "Use $review-scoring to refute the claims made by this change and rank any defects."
+
+policy:
+  allow_implicit_invocation: true

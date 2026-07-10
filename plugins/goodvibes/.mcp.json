@@ -1,0 +1,31 @@
+{
+  "mcpServers": {
+    "goodvibes_intel": {
+      "command": "node",
+      "args": ["server/intel/launcher.cjs"],
+      "cwd": ".",
+      "env": {
+        "NODE_ENV": "production",
+        "GOODVIBES_HOST": "codex"
+      }
+    },
+    "goodvibes_analytics": {
+      "command": "node",
+      "args": ["server/analytics/launcher.cjs"],
+      "cwd": ".",
+      "env": {
+        "NODE_ENV": "production",
+        "GOODVIBES_HOST": "codex"
+      }
+    },
+    "goodvibes_connect": {
+      "command": "node",
+      "args": ["server/connect/launcher.cjs"],
+      "cwd": ".",
+      "env": {
+        "NODE_ENV": "production",
+        "GOODVIBES_HOST": "codex"
+      }
+    }
+  }
+}

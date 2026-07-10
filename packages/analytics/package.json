@@ -1,0 +1,22 @@
+{
+  "name": "@goodvibes/analytics",
+  "version": "0.1.0",
+  "description": "GoodVibes Analytics MCP server for Codex — local token, session, and health analytics (7 tools).",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@goodvibes/core": "*",
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "esbuild": "^0.28.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "goodvibes",
+  "version": "0.1.0",
+  "description": "Structure-aware code intelligence, Codex analytics, and controlled service access through three MCP servers.",
+  "author": {
+    "name": "Mike Davis",
+    "email": "mgd34msu@gmail.com",
+    "url": "https://github.com/mgd34msu"
+  },
+  "homepage": "https://github.com/mgd34msu/goodvibes-codex",
+  "repository": "https://github.com/mgd34msu/goodvibes-codex",
+  "license": "MIT",
+  "keywords": ["codex", "mcp", "code-intelligence", "analytics", "database"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "GoodVibes",
+    "shortDescription": "Code intelligence, analytics, and safe service access",
+    "longDescription": "Inspect and edit code structurally, analyze Codex usage, and access registered HTTP and database services through explicit trust boundaries.",
+    "developerName": "Mike Davis",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://github.com/mgd34msu/goodvibes-codex",
+    "defaultPrompt": [
+      "Map this codebase with GoodVibes and identify its main architectural boundaries.",
+      "Review this change with GoodVibes and rank the findings by severity.",
+      "Show GoodVibes token and session health for this project."
+    ]
+  },
+  "mcpServers": "./.mcp.json"
+}

@@ -1,0 +1,11 @@
+{"timestamp":"2026-07-09T12:00:00.000Z","type":"session_meta","payload":{"id":"session-main","session_id":"session-main","timestamp":"2026-07-09T12:00:00.000Z","cwd":"/workspace/demo","cli_version":"0.144.1","originator":"codex_cli","source":"cli"}}
+{"timestamp":"2026-07-09T12:00:01.000Z","type":"turn_context","payload":{"turn_id":"turn-1","cwd":"/workspace/demo","model":"gpt-5","workspace_roots":["/workspace/demo"]}}
+{"timestamp":"2026-07-09T12:00:02.000Z","type":"event_msg","payload":{"type":"user_message","message":"SECRET_MESSAGE_MUST_NOT_BE_RETAINED"}}
+{"timestamp":"2026-07-09T12:00:03.000Z","type":"response_item","payload":{"type":"function_call","name":"code_read","call_id":"call-1","arguments":"{\"path\":\"SECRET_TOOL_ARGUMENT\"}"}}
+{"timestamp":"2026-07-09T12:00:04.000Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":700,"cached_input_tokens":200,"output_tokens":250,"reasoning_output_tokens":50,"total_tokens":1000},"last_token_usage":{"input_tokens":700,"cached_input_tokens":200,"output_tokens":250,"reasoning_output_tokens":50,"total_tokens":1000},"model_context_window":200000}}}
+{"timestamp":"2026-07-09T12:00:05.000Z","type":"event_msg","payload":{"type":"token_count","info":null,"rate_limits":{"primary":null}}}
+{"timestamp":"2026-07-09T12:05:00.000Z","type":"turn_context","payload":{"turn_id":"turn-2","cwd":"/workspace/demo","model":"gpt-5.1","workspace_roots":["/workspace/demo"]}}
+{"timestamp":"2026-07-09T12:05:01.000Z","type":"response_item","payload":{"type":"custom_tool_call","name":"web_search","call_id":"call-2","input":"SECRET_CUSTOM_TOOL_INPUT"}}
+{"timestamp":"2026-07-09T12:10:00.000Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":1300,"cached_input_tokens":400,"output_tokens":400,"reasoning_output_tokens":100,"total_tokens":1800},"last_token_usage":{"input_tokens":600,"cached_input_tokens":200,"output_tokens":150,"reasoning_output_tokens":50,"total_tokens":800},"model_context_window":200000}}}
+{"timestamp":"2026-07-09T12:10:01.000Z","type":"future_record","payload":{"type":"new_schema_shape","content":"SECRET_FUTURE_PAYLOAD"}}
+this is an intentionally malformed trailing record

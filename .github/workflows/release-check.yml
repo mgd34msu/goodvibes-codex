@@ -1,0 +1,89 @@
+name: Release candidate check
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-and-stage:
+    name: Verify and stage plugin
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Verify tag and manifest version
+        if: github.ref_type == 'tag'
+        shell: bash
+        run: |
+          VERSION=$(node -p "require('./plugins/goodvibes/.codex-plugin/plugin.json').version")
+          if [ "${GITHUB_REF_NAME}" != "v${VERSION}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match plugin version ${VERSION}." >&2
+            exit 1
+          fi
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Run release checks
+        run: |
+          npm run check:versions
+          npm run typecheck
+          npm test
+          npm run lint
+          npm run build
+          git diff --exit-code -- plugins/goodvibes/server plugins/goodvibes/ARTIFACTS.json
+          npm run validate:plugin
+          npm run smoke:mcp
+
+      - name: Scan generated output for release hazards
+        shell: bash
+        run: |
+          if find plugins/goodvibes/server -type f -name '*.map' -print -quit | grep -q .; then
+            echo 'Source maps must not be present in the marketplace artifact.' >&2
+            exit 1
+          fi
+          if rg -l --hidden --glob '**/server/**/index.cjs' 'CLAUDE_PLUGIN_ROOT|CLAUDE_PROJECT_DIR|@goodvibes/|/home/[^/]+/|/Users/[^/]+/|[A-Za-z]:\\\\Users\\\\' plugins/goodvibes; then
+            echo 'Generated bundles contain an unresolved workspace import, Claude-only variable, or absolute developer path.' >&2
+            exit 1
+          fi
+
+      - name: Stage tracked marketplace files and hashes
+        shell: bash
+        run: |
+          mkdir -p dist/stage
+          git archive --format=tar HEAD .agents/plugins/marketplace.json plugins/goodvibes | tar -xf - -C dist/stage
+          find dist/stage -type f -printf '%P\n' | LC_ALL=C sort > dist/stage/FILELIST
+          (
+            cd dist/stage
+            find . -type f ! -name SHA256SUMS -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > SHA256SUMS
+          )
+          VERSION=$(node -p "require('./plugins/goodvibes/.codex-plugin/plugin.json').version")
+          tar --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner -czf "dist/goodvibes-codex-${VERSION}.tar.gz" -C dist/stage .
+          sha256sum "dist/goodvibes-codex-${VERSION}.tar.gz" > "dist/goodvibes-codex-${VERSION}.tar.gz.sha256"
+
+      - name: Upload release candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: goodvibes-release-candidate-${{ github.run_id }}
+          path: |
+            dist/goodvibes-codex-*.tar.gz
+            dist/goodvibes-codex-*.tar.gz.sha256
+            dist/stage/FILELIST
+            dist/stage/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 30

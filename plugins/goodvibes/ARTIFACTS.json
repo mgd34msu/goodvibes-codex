@@ -1,0 +1,598 @@
+{
+  "schema_version": 1,
+  "plugin": "goodvibes",
+  "version": "0.1.0",
+  "algorithm": "sha256",
+  "files": [
+    {
+      "path": ".codex-plugin/plugin.json",
+      "bytes": 1330,
+      "sha256": "a0508577ef96b5dbcd93861e61ea4b7c6dc8912476ea7eeb7e1800ed126c40cc"
+    },
+    {
+      "path": ".mcp.json",
+      "bytes": 670,
+      "sha256": "4f310a405f3d48db70585e6467d1269b201cbec5a4eb40346a0f0699d8f899ae"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1079,
+      "sha256": "ace29ba7e92dc2ef66602c2039199a2fbbb1da1978bd80aa68adbaca0d3aa025"
+    },
+    {
+      "path": "README.md",
+      "bytes": 902,
+      "sha256": "afabd4d88c0246124766905255bccb52d1088b1ff5f99efeade9c926d6f0fe4f"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "bytes": 813,
+      "sha256": "67d76d18289cbb15d9d601311583dcced07350dd21d54c1e27e0744eb8635141"
+    },
+    {
+      "path": "UPSTREAM.md",
+      "bytes": 410,
+      "sha256": "d3144147d5f9845c9709e711bce646ff53fc2097c9ea2e5b1b090545e8ff9d45"
+    },
+    {
+      "path": "hooks/README.md",
+      "bytes": 2277,
+      "sha256": "64950f5a9ff7af5bde5bb1fc42d10c33451cbb3ffba2d09e2cc7e3864d8936c8"
+    },
+    {
+      "path": "hooks/commit-guard.mjs",
+      "bytes": 4271,
+      "sha256": "9a736e838e5a1f115492f284d20a07e374d7aae0fa99e6a408ff90858cd98016"
+    },
+    {
+      "path": "hooks/hooks.json",
+      "bytes": 2312,
+      "sha256": "fab3c29037cfaee94a3a88c654b525f0aca2f7dd44ec66148f449e6106991722"
+    },
+    {
+      "path": "hooks/lib/data-root.mjs",
+      "bytes": 2609,
+      "sha256": "0ba3c92b61ce866f01971556590ffcf711a6ddaa7160c5d1fb3a738822648c48"
+    },
+    {
+      "path": "hooks/lib/event-sink.mjs",
+      "bytes": 3119,
+      "sha256": "ea84bc2d8b6a36aa9637e6449b1939b254f357940e096c98726789bcf5878693"
+    },
+    {
+      "path": "hooks/lib/hook-io.mjs",
+      "bytes": 1753,
+      "sha256": "30f4567d53e2b1e8d04e77e2282f3746d8074e30d2a548d7acfeaf477d21e86f"
+    },
+    {
+      "path": "hooks/pre-compact.mjs",
+      "bytes": 941,
+      "sha256": "cc809befca01079bb82483df289117665bcbc4e12589b3056816fdbdc1597651"
+    },
+    {
+      "path": "hooks/session-start.mjs",
+      "bytes": 4174,
+      "sha256": "22e44ef5dfa07c2285c6c352b9be848f9d6ee5241ed1d8e457970361c0d503a3"
+    },
+    {
+      "path": "hooks/stop.mjs",
+      "bytes": 365,
+      "sha256": "1567ef7f1db0bd0f1bf03a2e1d73dcf0ef926b90ac0b377a559dbf64f1d1b4bb"
+    },
+    {
+      "path": "hooks/subagent-start.mjs",
+      "bytes": 597,
+      "sha256": "14ee45a1294258b59e0a7676434370c051dcf507490ecdc36818774f0d7a9478"
+    },
+    {
+      "path": "hooks/subagent-stop.mjs",
+      "bytes": 452,
+      "sha256": "231ab56a8b147c6c2cd96e45139c72a4c49a7184873533b92550780956157d45"
+    },
+    {
+      "path": "scripts/goodvibes-control.mjs",
+      "bytes": 26569,
+      "sha256": "4e74e6ae05451c252fa14b3dccf1a2b7d6c809b2c5b2b189ad130cb951e51c12"
+    },
+    {
+      "path": "server/analytics/index.cjs",
+      "bytes": 649724,
+      "sha256": "431ff3cda4fdd113ba8e4c64a9caca980b51de757b0da30bea49b7fc43d6dd15"
+    },
+    {
+      "path": "server/analytics/launcher.cjs",
+      "bytes": 1173,
+      "sha256": "e7f9eff476447388c53b8fc50ea0d2775a7af44eba1d61ea186528aad2e49258"
+    },
+    {
+      "path": "server/analytics/package-lock.json",
+      "bytes": 217,
+      "sha256": "e3650f147a8800b493e782e8eee74927c4ac3bd477935b158fd0c2125808116d"
+    },
+    {
+      "path": "server/analytics/package.json",
+      "bytes": 206,
+      "sha256": "5c0f0e16fe5ced547a076eaf18ec80a3f95ecbafff85fde9e99316fee0b68309"
+    },
+    {
+      "path": "server/connect/index.cjs",
+      "bytes": 1481609,
+      "sha256": "f9694eef81706fd1691d2dd3f6a0b4318f55615b162c991ce99823868f05733a"
+    },
+    {
+      "path": "server/connect/launcher.cjs",
+      "bytes": 1171,
+      "sha256": "ca4c06debf3d1646cb73bc695d88a8434dc83476d9d643280bfc349a6fda0d10"
+    },
+    {
+      "path": "server/connect/package-lock.json",
+      "bytes": 10652,
+      "sha256": "89af1f9cc9a42926d93b8e54d53d262a6855aa3841b77a1c3f7a15cc8ef3d4be"
+    },
+    {
+      "path": "server/connect/package.json",
+      "bytes": 266,
+      "sha256": "e9ba84e296e3ccbf2e7f59469e2219932382a02f76f7718868a07031eaa889d2"
+    },
+    {
+      "path": "server/connect/wasm/sql-wasm.wasm",
+      "bytes": 659730,
+      "sha256": "438c88f666dc054ce4e9395f80fe9db4218b1a3c379960454880f048a7898aed"
+    },
+    {
+      "path": "server/intel/index.cjs",
+      "bytes": 12382524,
+      "sha256": "d3b037fe16ebe6219e2140200913132e3420b9b335e37b1172699bd68697c7ba"
+    },
+    {
+      "path": "server/intel/launcher.cjs",
+      "bytes": 1159,
+      "sha256": "f97222bc2ddb5866fffb183431a2f71d7bd242a97da0a23d390579fffae4b42f"
+    },
+    {
+      "path": "server/intel/package-lock.json",
+      "bytes": 9735,
+      "sha256": "d563ef01b6eccc11972c70ff072bceeeb3e1ccd5f32ee8ac6d50d7964f23fa54"
+    },
+    {
+      "path": "server/intel/package.json",
+      "bytes": 355,
+      "sha256": "d4ceaf19ef21b15f28e2999633f29ca299f8d9b75c4991c75d6048267b5aa694"
+    },
+    {
+      "path": "server/intel/wasm/tree-sitter-go.wasm",
+      "bytes": 217182,
+      "sha256": "9504573f352b20be7f2f1911754d710622aedc15afff16d5ed8fb5645681aee7"
+    },
+    {
+      "path": "server/intel/wasm/tree-sitter-javascript.wasm",
+      "bytes": 411770,
+      "sha256": "5fb488d0cabb4775a594bab85682de5ad6ce83c0d6ac997a9f82dd084d571240"
+    },
+    {
+      "path": "server/intel/wasm/tree-sitter-python.wasm",
+      "bytes": 457883,
+      "sha256": "16108b50df4ee9a30168794252ab55e7c93bfc5765d7fa0aa3e335752c515f47"
+    },
+    {
+      "path": "server/intel/wasm/tree-sitter-rust.wasm",
+      "bytes": 1113644,
+      "sha256": "0dac14947cb04d94466e3df659f80a4e264c216a60b3eda175eae4cf12ed7a8d"
+    },
+    {
+      "path": "server/intel/wasm/tree-sitter-typescript.wasm",
+      "bytes": 1413849,
+      "sha256": "778025db5a8be0e70f8ccc3671e486dfeddd048c25d9e8a70c26de2e1bf6f97d"
+    },
+    {
+      "path": "server/intel/wasm/web-tree-sitter.wasm",
+      "bytes": 200452,
+      "sha256": "e8cddb21e0d899ff8613925742f6475838068a0d1b2405faa7087c08151ee3a2"
+    },
+    {
+      "path": "skills/codebase-review/SKILL.md",
+      "bytes": 1568,
+      "sha256": "713a6e5abcc58517e24eac40dd2b6aab66a5244367bac67ee75e330dbc55b249"
+    },
+    {
+      "path": "skills/codebase-review/agents/openai.yaml",
+      "bytes": 261,
+      "sha256": "e388b8f9de20dcbeeb64f789f2ed3a34d87405aa57fe8df1f6d324599e4e9742"
+    },
+    {
+      "path": "skills/codebase-review/references/workflow.md",
+      "bytes": 1480,
+      "sha256": "af32f3e2349706d7acfeccf4d25e5f6fed47e746ae0400f28bf8806ceb438a60"
+    },
+    {
+      "path": "skills/goodvibes-analytics/SKILL.md",
+      "bytes": 2148,
+      "sha256": "7c94c7b3330f0903a38e32188e5d0d4cd00ecbce62f3beaa81d972c10fbeeab5"
+    },
+    {
+      "path": "skills/goodvibes-analytics/agents/openai.yaml",
+      "bytes": 399,
+      "sha256": "0127a28fe94c9f4d4b7887e6b505ecce23af41201b06311d8451edcf315c277e"
+    },
+    {
+      "path": "skills/goodvibes-analytics/references/operations.md",
+      "bytes": 2952,
+      "sha256": "5240d71ce13ab05fbe820c092b83c9282265be0563e9a7634ae6a23b23935f43"
+    },
+    {
+      "path": "skills/goodvibes-maintenance/SKILL.md",
+      "bytes": 2089,
+      "sha256": "3451e94ca2084ce7a1c09ac648c1679b000005ea82ad0d8de7d78424f5696b26"
+    },
+    {
+      "path": "skills/goodvibes-maintenance/agents/openai.yaml",
+      "bytes": 272,
+      "sha256": "237552d45aed1bbaee56be9738707216c5f80a2a8191fea2643a201ef4dbd7db"
+    },
+    {
+      "path": "skills/goodvibes-maintenance/references/diagnostics.md",
+      "bytes": 1978,
+      "sha256": "19b58a2c01a915034005f189489bb6c5c66fab0fda058ea811b04b45bdfa93e9"
+    },
+    {
+      "path": "skills/goodvibes-memory/SKILL.md",
+      "bytes": 1449,
+      "sha256": "5c7cd12c3fc0196526ddc8700b9fef6eb9dd3a2a8ac4dce7261d027d04a9a12b"
+    },
+    {
+      "path": "skills/goodvibes-memory/agents/openai.yaml",
+      "bytes": 254,
+      "sha256": "ddf2e769bf2076b966d549f8c6e150b4837c8ae8a9d4659d278f4bd05ce40670"
+    },
+    {
+      "path": "skills/goodvibes-memory/references/schemas.md",
+      "bytes": 1470,
+      "sha256": "e0ce06d96cfbb73b38865f7d6a47d0ed177b59488657a76a06fdb35f7bc8cf8f"
+    },
+    {
+      "path": "skills/intel-mastery/SKILL.md",
+      "bytes": 2092,
+      "sha256": "caa8231afac9a2636da15d9944ddb762b0416508c9a04f57a1ce72bae72b6f7b"
+    },
+    {
+      "path": "skills/intel-mastery/agents/openai.yaml",
+      "bytes": 391,
+      "sha256": "d6a708f978023b681eeb706b44377997a63c3382451c770e84b27e90e7eb777d"
+    },
+    {
+      "path": "skills/intel-mastery/references/tools.md",
+      "bytes": 1913,
+      "sha256": "a75999e8701f7733f13174d4c3bef4721f59d4f6546e4e89afdf89fa273c1171"
+    },
+    {
+      "path": "skills/project-onboarding/SKILL.md",
+      "bytes": 1888,
+      "sha256": "489546fc1f2ede1cda19f74abefe878bb754811a87f609c9803f2cbc9c284963"
+    },
+    {
+      "path": "skills/project-onboarding/agents/openai.yaml",
+      "bytes": 394,
+      "sha256": "93e72072742324df86de42cc123ab90dd1cce2edaeccc259c05d54006ba626fc"
+    },
+    {
+      "path": "skills/review-scoring/SKILL.md",
+      "bytes": 1573,
+      "sha256": "2a49143c4335f02c14c78efee3349904ce7aa8cf09891bb38111dd01a8cc3e72"
+    },
+    {
+      "path": "skills/review-scoring/agents/openai.yaml",
+      "bytes": 255,
+      "sha256": "51721fe058eceb2330ce991eb264fce132d605ba8f5599bbb105e4f61b46ac03"
+    },
+    {
+      "path": "skills/service-integration/SKILL.md",
+      "bytes": 2448,
+      "sha256": "ca7dbcef81eb4ecafd3ac8f336fb033eb038af6bf6031a5efa6439dfa46d2b12"
+    },
+    {
+      "path": "skills/service-integration/agents/openai.yaml",
+      "bytes": 410,
+      "sha256": "86ac3d0d3ae625280148880dd0b9bfd78a10b8cdcd577cc9ae3db60f463c0ee5"
+    },
+    {
+      "path": "skills/service-integration/references/operations.md",
+      "bytes": 2366,
+      "sha256": "c4acf9d2e628c89d3a5e35ce7df2884b22a1a37ec997f7184116ab1b00f476eb"
+    },
+    {
+      "path": "skills/task-orchestration/SKILL.md",
+      "bytes": 2117,
+      "sha256": "293396ac77c4ec05039921751779c92ba035c5d67afd4bc73a112eda7d73aac8"
+    },
+    {
+      "path": "skills/task-orchestration/agents/openai.yaml",
+      "bytes": 269,
+      "sha256": "64162440a509ab948106fc787190259ead46a0db038e1c4362af091969354537"
+    },
+    {
+      "path": "skills/task-orchestration/references/roles/architect.md",
+      "bytes": 1008,
+      "sha256": "5621c0602b29efab989cd443531db0e9d8302963f16ec3ee13aae154c7473fb3"
+    },
+    {
+      "path": "skills/task-orchestration/references/roles/engineer.md",
+      "bytes": 1032,
+      "sha256": "5fda8d7159f8720039e0a9f2e42105576620b65edd67bd7baf22d93b1f9d8719"
+    },
+    {
+      "path": "skills/task-orchestration/references/roles/refutation-reviewer.md",
+      "bytes": 1079,
+      "sha256": "69dc187c9b602e989d2ace9559a4cf263f9cd74e6ea394aaeb36b6ad80cbfb7a"
+    },
+    {
+      "path": "skills/task-orchestration/references/roles/tester.md",
+      "bytes": 1006,
+      "sha256": "e7e4a3c63c056ed39ca29a2d714bf1686022a9553e322b4a7b034beed3cc7257"
+    },
+    {
+      "path": "templates/README.md",
+      "bytes": 716,
+      "sha256": "06a62b946dbbd538ab5aa35a6a934f136f21099d5ee4244bb09786bff6cf9cc4"
+    },
+    {
+      "path": "templates/full/next-saas/files/.env.example.hbs",
+      "bytes": 804,
+      "sha256": "e6b5e41400bc4d702e3a24cd141749c5116706e50d5edefb2582b6ab1da66224"
+    },
+    {
+      "path": "templates/full/next-saas/files/.gitignore",
+      "bytes": 363,
+      "sha256": "0f5576ed24147c55b666c3448e11a554748f15502815ddbc32ce2c4ab6e3c94d"
+    },
+    {
+      "path": "templates/full/next-saas/files/next.config.ts",
+      "bytes": 130,
+      "sha256": "313bbd12b7c02687533a9834c38c1052cd8037ad0b47b26713cbaa19e6fbad74"
+    },
+    {
+      "path": "templates/full/next-saas/files/package.json.hbs",
+      "bytes": 1343,
+      "sha256": "bb79f6a6900e107f9c67181c79a67223d934b88f568f79be32a15e00a5b148eb"
+    },
+    {
+      "path": "templates/full/next-saas/files/postcss.config.js",
+      "bytes": 83,
+      "sha256": "fa650b380adfabb151a0b352f7135e107e6352345f899060f1c5c231228f94bf"
+    },
+    {
+      "path": "templates/full/next-saas/files/prisma/schema.prisma.hbs",
+      "bytes": 2155,
+      "sha256": "41c60a977accfa8efb094710bc5b77c170bce2c07097715259f9792f4b739afd"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/app/(auth)/login/page.tsx",
+      "bytes": 4368,
+      "sha256": "89c26167563a9a399405f69f19990aaa08cf1d1257387c3821fe9f297b6b35c8"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/app/(auth)/register/page.tsx",
+      "bytes": 3864,
+      "sha256": "601ac9cb121eff53fb10ef305dfceb43b9da146e0b657539617b34e66685cb35"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/app/(dashboard)/dashboard/page.tsx",
+      "bytes": 3998,
+      "sha256": "199545a3ea3796ba6494a0cb4bb9b46d0bf0624c5345fe6ebeddb0257222b880"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/app/api/auth/[...nextauth]/route.ts",
+      "bytes": 79,
+      "sha256": "f8e7087d134bc2a07fc98aeba38af50a5eec925664f17e780fb65355cc0aa780"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/app/api/webhooks/stripe/route.ts",
+      "bytes": 2870,
+      "sha256": "f649f35bdb106eb07c8863e413c6f56471956e366e0fe1a742b003857c1bad32"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/app/globals.css",
+      "bytes": 229,
+      "sha256": "d04e0c8ddcb1be03823fc19a3b3f83e0274c56a8b38db6019d20484a122762c5"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/app/layout.tsx.hbs",
+      "bytes": 451,
+      "sha256": "7e89fdf9be5663b6b3f59c676832860b9b21c07b9254008d658e70c55d095d00"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/app/page.tsx",
+      "bytes": 3198,
+      "sha256": "e60303187e102c65a131224ac837d1d1d8c94452f4c4394dfa4344617179ade3"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/components/Button.tsx",
+      "bytes": 1191,
+      "sha256": "7165d440995ad2fa361c7634335299ea67258ee4521b355e442636d4c4448b29"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/components/Input.tsx",
+      "bytes": 1095,
+      "sha256": "c29de53854ad91ed423c143ae301098c2fde7278aeda6abdf21e83cb825ed73e"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/lib/auth.ts.hbs",
+      "bytes": 2109,
+      "sha256": "9b79853f439911306c3c9b4d4a2418ec4208b28053c4e92a2483e2fd897866ca"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/lib/prisma.ts",
+      "bytes": 290,
+      "sha256": "6458ff7e824bef218b61b835dc96ab8a22ff7b51727590a5ca6a417a8a97e02f"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/lib/stripe.ts",
+      "bytes": 897,
+      "sha256": "602d5923fb6dafce608dd7a93dd9875d741a746b0e979ec23f3a89c7aa679b52"
+    },
+    {
+      "path": "templates/full/next-saas/files/src/middleware.ts",
+      "bytes": 1172,
+      "sha256": "e290c85ade77207160c0c8c09c1a2702f37489821762c9533ae5cf91fd197b4d"
+    },
+    {
+      "path": "templates/full/next-saas/files/tailwind.config.ts",
+      "bytes": 317,
+      "sha256": "512e6121cdc9f4545682ddc2409f35b40ba72644fd96d5da5d16d8ea90ad045a"
+    },
+    {
+      "path": "templates/full/next-saas/files/tsconfig.json",
+      "bytes": 576,
+      "sha256": "ea6125dd5a756e3f9f17e57463a615ebd2dfbee1c9f30facf8a6b89458faf952"
+    },
+    {
+      "path": "templates/full/next-saas/template.yaml",
+      "bytes": 1960,
+      "sha256": "4301fc3d845f899d4da46e809e36dfe437eaafd8d1cde8871fa4d13fd1d18420"
+    },
+    {
+      "path": "templates/minimal/next-app/files/.eslintrc.json",
+      "bytes": 160,
+      "sha256": "0f03a9055508928df1e500db02689d2cb148605048757e74352b9488fc11f49e"
+    },
+    {
+      "path": "templates/minimal/next-app/files/.gitignore",
+      "bytes": 282,
+      "sha256": "2995dcc8689ea386e27ddd0c5b2be940c7fc4a64acf4e5710e37d745f223045f"
+    },
+    {
+      "path": "templates/minimal/next-app/files/.prettierrc",
+      "bytes": 106,
+      "sha256": "318a8eeccd0825d06ee95e9377f560c95ef6552c7d0abf58003be50071d582b2"
+    },
+    {
+      "path": "templates/minimal/next-app/files/next.config.ts",
+      "bytes": 176,
+      "sha256": "8c793c0a28cfe101ef5b1083e4a3099f53d845eb7639b3d821787d25115eac94"
+    },
+    {
+      "path": "templates/minimal/next-app/files/package.json.hbs",
+      "bytes": 705,
+      "sha256": "0234eb5ee5224a28a408bd4a720be98af5551dc53c2a8a212613ed780663be74"
+    },
+    {
+      "path": "templates/minimal/next-app/files/postcss.config.js",
+      "bytes": 83,
+      "sha256": "fa650b380adfabb151a0b352f7135e107e6352345f899060f1c5c231228f94bf"
+    },
+    {
+      "path": "templates/minimal/next-app/files/src/app/globals.css",
+      "bytes": 345,
+      "sha256": "ecbfe8b9473e9fbbb584a597760495c2fd9f8512bb757199db8d7d699036c0a0"
+    },
+    {
+      "path": "templates/minimal/next-app/files/src/app/layout.tsx.hbs",
+      "bytes": 451,
+      "sha256": "7e89fdf9be5663b6b3f59c676832860b9b21c07b9254008d658e70c55d095d00"
+    },
+    {
+      "path": "templates/minimal/next-app/files/src/app/page.tsx.hbs",
+      "bytes": 811,
+      "sha256": "36d0922dee1a8ffb516474916dd926c5aa92074768296a37f48536fddef36a19"
+    },
+    {
+      "path": "templates/minimal/next-app/files/src/components/Button.tsx",
+      "bytes": 1191,
+      "sha256": "7165d440995ad2fa361c7634335299ea67258ee4521b355e442636d4c4448b29"
+    },
+    {
+      "path": "templates/minimal/next-app/files/tailwind.config.ts",
+      "bytes": 429,
+      "sha256": "df9efaadb2aead255a75363b8065711c327aa1f4d0d095dbae1d626408f01c12"
+    },
+    {
+      "path": "templates/minimal/next-app/files/tsconfig.json",
+      "bytes": 576,
+      "sha256": "ea6125dd5a756e3f9f17e57463a615ebd2dfbee1c9f30facf8a6b89458faf952"
+    },
+    {
+      "path": "templates/minimal/next-app/template.yaml",
+      "bytes": 1094,
+      "sha256": "03ef2d801cef677657eced4012cb5ef13eed6b4062f2166d32ecc7ae6dc590ca"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/.eslintrc.json",
+      "bytes": 355,
+      "sha256": "a8a8c26cebf2aa40bbdd84fb583b3b630838032c18447788ab4576852d42cfa2"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/.gitignore",
+      "bytes": 235,
+      "sha256": "2309c7b315f2ef112eed068dc9081db156ee3425f345e112fc25e3f4dd5ed01b"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/.prettierrc",
+      "bytes": 85,
+      "sha256": "08252adeb30b8cc5256d3991e3d6a7c6017c14aeb93acdf79f8799089089c6da"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/index.html.hbs",
+      "bytes": 365,
+      "sha256": "a596c819078ce378da93c3a798356d08e7394089ed0c6bf1672ba0cf80a2e409"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/package.json.hbs",
+      "bytes": 780,
+      "sha256": "f11e5478ffc9a378d920b7c2186af7c31011d9e34476b35efe44f8e73f324265"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/postcss.config.js",
+      "bytes": 81,
+      "sha256": "e32657baf631d7c5f4dc67b4b2ee0ec8e7d5b3c41860e09cddce7c0377cd80bc"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/src/App.tsx.hbs",
+      "bytes": 935,
+      "sha256": "5eed76054e77488cd8b309ef0411dc5c096f4e283f34e375cefc14ce1f1abece"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/src/components/Button.tsx",
+      "bytes": 781,
+      "sha256": "010b9cd470584747e197d636b373111db63414aff9771427e3ee473b739de2d3"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/src/index.css",
+      "bytes": 59,
+      "sha256": "cc1a7ad0d019ddb1d32d0ecb588ba0ac26ce41d8625dd6c366348b25f83a28ec"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/src/main.tsx",
+      "bytes": 230,
+      "sha256": "4a61bfe25f4b731c1ad59ca594045042eeddbfe3602e1f2cf9e4027f4faaa4ec"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/src/vite-env.d.ts",
+      "bytes": 38,
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/tailwind.config.ts",
+      "bytes": 223,
+      "sha256": "01c72821d1fa50be0bad9f058ab2754d9a09f402dadc00463a165ef7a3123333"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/tsconfig.json",
+      "bytes": 609,
+      "sha256": "0c3a347462666cf8a625bca5173c1119c86d881e51848242cf5cf855f7bbca43"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/tsconfig.node.json",
+      "bytes": 435,
+      "sha256": "e7e3cf511bcf2b1916169b18af2c2c0d44d06ad71ccb891197da3763e2230b86"
+    },
+    {
+      "path": "templates/minimal/vite-react/files/vite.config.ts",
+      "bytes": 244,
+      "sha256": "b19e74030c5910a9ecf980e05bcc648c7e97c6cc0e528b02237637fc7308ebcc"
+    },
+    {
+      "path": "templates/minimal/vite-react/template.yaml",
+      "bytes": 1095,
+      "sha256": "0e63cb9ce45c1666214108194bc999c29dd433ef4208f40db5c767e7799165d8"
+    }
+  ]
+}

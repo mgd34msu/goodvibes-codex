@@ -1,0 +1,255 @@
+/**
+ * `@goodvibes/core/config` — configuration file loader for the servers.
+ *
+ * Configuration is file-backed and never writable through MCP. Open mode is
+ * controlled out of band by the interactive utility, and each load rereads the
+ * files so revocation affects a long-lived server immediately.
+ *
+ * Project state lives under `.goodvibes/` in the target project. `getStatePath`
+ * is the single helper the telemetry, cache, logging, and overflow modules use
+ * to locate their files. Codex project state uses the explicit `codex`
+ * namespace and never imports a legacy host's state implicitly.
+ *
+ * Config keys are documented from ONE source of truth (`CONFIG_KEYS`), so the
+ * defaults, the docs, and the loaded shape can never drift.
+ */
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { goodvibesDataRoot } from '../workspace/index.js';
+
+export type EnvelopeMode = 'restricted' | 'open';
+
+/** Per-call time budgets (ms). Mechanisms are mandated; values are overridable (R10). */
+export interface Budgets {
+  /** intel analyzers (code_surface, safe_delete, api_*, db_schema, frontend). */
+  analyzer_ms: number;
+  /** code_grep / code_glob / code_read. */
+  search_ms: number;
+  /** connect api_request default per-request timeout. */
+  http_default_ms: number;
+  /** connect api_request hard ceiling. */
+  http_max_ms: number;
+  /** connect db_query. */
+  db_query_ms: number;
+  /** analytics tools. */
+  analytics_ms: number;
+}
+
+export interface GoodvibesConfig {
+  /** Response trust mode; `open` only via a human editing the file out-of-band. */
+  mode: EnvelopeMode;
+  /** Loud, separate key that keeps `open` mode across sessions (re-announced each session). */
+  dangerously_persist_across_sessions: boolean;
+  /** Parent-liveness ppid poll interval (ms). */
+  ppid_poll_ms: number;
+  /** Whether telemetry writing is enabled. */
+  telemetry_enabled: boolean;
+  /** File-state cache memory budget (MB). */
+  cache_max_mb: number;
+  /** Default response token cap when a caller omits `output.max_tokens`. */
+  max_tokens_default: number;
+  /** Per-call time budgets. */
+  budgets: Budgets;
+}
+
+interface KeyDoc {
+  default: unknown;
+  description: string;
+}
+
+/**
+ * Single source of truth for every config key: its default and its docs.
+ * `DEFAULT_CONFIG` and `describeConfigKeys()` are both derived from this map so
+ * they cannot drift.
+ */
+export const CONFIG_KEYS: Record<string, KeyDoc> = {
+  mode: {
+    default: 'restricted',
+    description:
+      "Response trust mode: 'restricted' (default) or 'open'. Only a human editing this file may set 'open'; no tool can flip it.",
+  },
+  dangerously_persist_across_sessions: {
+    default: false,
+    description:
+      "Keep 'open' mode across sessions. Loud, separate key; re-announced at every session start when true.",
+  },
+  ppid_poll_ms: {
+    default: 5000,
+    description: 'Interval for the parent-liveness poll that catches reparent-to-init.',
+  },
+  telemetry_enabled: {
+    default: true,
+    description: 'Whether the server records telemetry to the local SQLite database.',
+  },
+  cache_max_mb: {
+    default: 200,
+    description: 'Memory budget for the in-session file-state cache, in megabytes.',
+  },
+  max_tokens_default: {
+    default: 4000,
+    description: 'Default response token cap applied when a call omits output.max_tokens.',
+  },
+  'budgets.analyzer_ms': {
+    default: 20000,
+    description: 'Per-call time budget for intel analyzers.',
+  },
+  'budgets.search_ms': {
+    default: 15000,
+    description: 'Per-call time budget for code_read / code_grep / code_glob.',
+  },
+  'budgets.http_default_ms': {
+    default: 30000,
+    description: 'Default per-request timeout for connect api_request.',
+  },
+  'budgets.http_max_ms': {
+    default: 120000,
+    description: 'Hard ceiling for connect api_request timeout.',
+  },
+  'budgets.db_query_ms': {
+    default: 30000,
+    description: 'Per-call time budget for connect db_query.',
+  },
+  'budgets.analytics_ms': {
+    default: 20000,
+    description: 'Per-call time budget for analytics tools.',
+  },
+};
+
+/** Default config, derived from CONFIG_KEYS so it never drifts from the docs. */
+export const DEFAULT_CONFIG: GoodvibesConfig = Object.freeze({
+  mode: 'restricted',
+  dangerously_persist_across_sessions: false,
+  ppid_poll_ms: 5000,
+  telemetry_enabled: true,
+  cache_max_mb: 200,
+  max_tokens_default: 4000,
+  budgets: Object.freeze({
+    analyzer_ms: 20000,
+    search_ms: 15000,
+    http_default_ms: 30000,
+    http_max_ms: 120000,
+    db_query_ms: 30000,
+    analytics_ms: 20000,
+  }) as Budgets,
+});
+
+/** Project state directory name. */
+export const STATE_SEGMENTS = ['.goodvibes', 'codex'] as const;
+
+/**
+ * Resolve a path inside the project state directory (`.goodvibes/`).
+ * @param cwd - project root
+ * @param segments - path segments under `.goodvibes/`
+ */
+export function getStatePath(cwd: string, ...segments: string[]): string {
+  const root = path.join(cwd, ...STATE_SEGMENTS);
+  return path.join(root, ...segments);
+}
+
+/**
+ * Resolve a state path relative to the current working directory.
+ * Evaluated lazily at call time so it honours the server's runtime cwd.
+ * @param segments - path segments under `.goodvibes/`
+ */
+export function statePath(...segments: string[]): string {
+  return path.join(goodvibesDataRoot(), ...segments);
+}
+
+/** Project-level config file path (under `.goodvibes/`). */
+export function projectConfigPath(cwd: string = process.cwd()): string {
+  return getStatePath(cwd, 'config.json');
+}
+
+/** User-level Codex config file path. */
+export function userConfigPath(): string {
+  return path.join(goodvibesDataRoot(), 'config.json');
+}
+
+function readJsonIfPresent(file: string): Record<string, unknown> {
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf-8')) as Record<string, unknown>;
+  } catch {
+    return {};
+  }
+}
+
+function mergeBudgets(base: Budgets, override: unknown): Budgets {
+  if (!override || typeof override !== 'object') {
+    return base;
+  }
+  const o = override as Record<string, unknown>;
+  const pick = (k: keyof Budgets): number =>
+    typeof o[k] === 'number' && Number.isFinite(o[k]) && (o[k] as number) > 0
+      ? (o[k] as number)
+      : base[k];
+  return {
+    analyzer_ms: pick('analyzer_ms'),
+    search_ms: pick('search_ms'),
+    http_default_ms: pick('http_default_ms'),
+    http_max_ms: pick('http_max_ms'),
+    db_query_ms: pick('db_query_ms'),
+    analytics_ms: pick('analytics_ms'),
+  };
+}
+
+/**
+ * Load the effective config: defaults, overlaid by the user file, overlaid by
+ * the project file. `mode: 'open'` is only honoured from a file on disk — there
+ * is no in-process setter, so a tool can never toggle it.
+ *
+ * @param cwd - project root (defaults to process.cwd())
+ * @returns the merged, validated config
+ */
+export function loadConfig(cwd?: string): GoodvibesConfig {
+  const projFile = cwd ? projectConfigPath(cwd) : null;
+  const userFile = userConfigPath();
+
+  const user = readJsonIfPresent(userFile);
+  const project = projFile ? readJsonIfPresent(projFile) : {};
+  const merged = { ...DEFAULT_CONFIG, ...user, ...project } as Record<string, unknown>;
+
+  const num = (k: keyof GoodvibesConfig, d: number): number =>
+    typeof merged[k] === 'number' && Number.isFinite(merged[k]) && (merged[k] as number) > 0
+      ? (merged[k] as number)
+      : d;
+
+  const mode: EnvelopeMode = merged.mode === 'open' ? 'open' : 'restricted';
+
+  const value: GoodvibesConfig = {
+    mode,
+    dangerously_persist_across_sessions: merged.dangerously_persist_across_sessions === true,
+    ppid_poll_ms: num('ppid_poll_ms', DEFAULT_CONFIG.ppid_poll_ms),
+    telemetry_enabled: merged.telemetry_enabled !== false,
+    cache_max_mb: num('cache_max_mb', DEFAULT_CONFIG.cache_max_mb),
+    max_tokens_default: num('max_tokens_default', DEFAULT_CONFIG.max_tokens_default),
+    budgets: mergeBudgets(DEFAULT_CONFIG.budgets, merged.budgets),
+  };
+
+  return value;
+}
+
+/** Retained for source compatibility; configuration is re-read on every call. */
+export function resetConfigCache(): void {
+  // Intentionally empty. Authority revocation must take effect without a server restart.
+}
+
+/**
+ * The read-only mode status echoed into every response envelope.
+ * @param cfg - loaded config (loaded fresh if omitted)
+ */
+export function configForEnvelope(cfg: GoodvibesConfig = loadConfig()): {
+  mode: EnvelopeMode;
+  read_only: boolean;
+} {
+  return { mode: cfg.mode, read_only: cfg.mode === 'restricted' };
+}
+
+/** Human-readable, generated-from-code documentation of every config key. */
+export function describeConfigKeys(): string {
+  const lines = ['# GoodVibes config keys', ''];
+  for (const [key, doc] of Object.entries(CONFIG_KEYS)) {
+    lines.push(`- \`${key}\` (default: ${JSON.stringify(doc.default)}) — ${doc.description}`);
+  }
+  return lines.join('\n');
+}

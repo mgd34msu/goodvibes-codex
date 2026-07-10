@@ -1,0 +1,2 @@
+plugins/goodvibes/server/**/index.cjs -whitespace
+*.wasm binary

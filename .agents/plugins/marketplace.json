@@ -1,0 +1,20 @@
+{
+  "name": "goodvibes",
+  "interface": {
+    "displayName": "GoodVibes"
+  },
+  "plugins": [
+    {
+      "name": "goodvibes",
+      "source": {
+        "source": "local",
+        "path": "./plugins/goodvibes"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

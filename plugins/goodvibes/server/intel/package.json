@@ -1,0 +1,14 @@
+{
+  "name": "goodvibes-intel-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Exact runtime dependencies for the GoodVibes Intel Codex MCP server.",
+  "allowScripts": {
+    "@vscode/ripgrep@1.15.14": true
+  },
+  "dependencies": {
+    "@ast-grep/napi": "0.40.5",
+    "@vscode/ripgrep": "1.15.14",
+    "web-tree-sitter": "0.26.10"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "goodvibes-codex",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GoodVibes for Codex: code intelligence, local analytics, and controlled service access through three MCP servers.",
+  "license": "MIT",
+  "author": "Mike Davis <mgd34msu@gmail.com>",
+  "homepage": "https://github.com/mgd34msu/goodvibes-codex#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mgd34msu/goodvibes-codex.git"
+  },
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @goodvibes/intel && npm run build --workspace @goodvibes/analytics && npm run build --workspace @goodvibes/connect && node scripts/artifact-manifest.mjs",
+    "build:plugin": "npm run build",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "check:versions": "node scripts/check-versions.mjs",
+    "check:artifacts": "node scripts/artifact-manifest.mjs --check",
+    "smoke:mcp": "node scripts/smoke-mcp.mjs",
+    "validate:plugin": "node scripts/validate-plugin.mjs",
+    "verify": "npm run check:versions && npm run typecheck && npm test && npm run lint && npm run build && npm run check:artifacts && npm run validate:plugin && npm run smoke:mcp"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "allowScripts": {
+    "@vscode/ripgrep@1.15.14": true,
+    "esbuild@0.28.1": true
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@vitest/coverage-v8": "^4.0.17",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.0.0",
+    "typescript-eslint": "^8.53.1",
+    "vitest": "^4.0.17"
+  }
+}

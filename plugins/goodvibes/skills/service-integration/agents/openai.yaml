@@ -1,0 +1,13 @@
+interface:
+  display_name: "Service Integration"
+  short_description: "Use approved APIs and databases safely"
+  default_prompt: "Use $service-integration to work through an approved API service or database connection."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "goodvibes_connect"
+      description: "GoodVibes approved service and database MCP server"
+
+policy:
+  allow_implicit_invocation: true
