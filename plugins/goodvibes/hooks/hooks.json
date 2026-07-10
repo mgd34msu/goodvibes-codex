@@ -1,5 +1,5 @@
 {
-  "description": "GoodVibes Codex lifecycle hooks. Hooks are fail-open guardrails and bounded telemetry writers; they never install dependencies or mutate the plugin cache.",
+  "description": "GoodVibes Codex lifecycle hooks. Hooks are fail-open guardrails and bounded telemetry writers; MCP launchers handle automatic dependency repair without mutating the plugin cache.",
   "hooks": {
     "SessionStart": [
       {

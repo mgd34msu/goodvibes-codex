@@ -22,18 +22,18 @@ Likely causes are an unavailable Node executable, plugin installation failure, o
 
 From a checkout, `npm run smoke:mcp` tests initialize and tool listing without involving the Codex UI.
 
-## One server fails or a tool reports a missing module
+## One server reports a failed automatic repair
 
-The server bundles load some runtime packages lazily. Inspect and prepare the exact pinned dependencies:
+The server launchers automatically verify and repair exact pinned runtime packages. Inspect the current result or trigger the same idempotent repair immediately:
 
 ```bash
 node "<plugin-root>/scripts/goodvibes-control.mjs" deps status
 node "<plugin-root>/scripts/goodvibes-control.mjs" deps install
 ```
 
-Do not run an unlocked `npm install` in the plugin cache. The supported installer uses the committed per-server lockfiles and a writable durable dependency directory.
+Neither command needs a TTY or confirmation. Do not run an unlocked `npm install` in the plugin cache. The supported dependency manager uses the committed per-server lockfiles, per-server locks, verified staging directories, and atomic replacement in the writable durable dependency root.
 
-If preparation succeeds but the server still fails, confirm the current OS, architecture, Node version, and dependency path shown by `status`; reinstalling a cache copy does not remove durable dependencies.
+If automatic repair cannot complete, inspect its concrete npm/network/permission/native-binary diagnostic and confirm the current OS, architecture, Node version, and dependency path shown by `status`. Dependency-free tools remain available, and later starts retry without user interaction. Reinstalling a cache copy does not remove durable dependencies.
 
 ## Intel says a path is outside every trusted workspace
 
@@ -53,7 +53,7 @@ Applies are serialized through `<GoodVibes data root>/locks/structural-edit.lock
 
 ## The control utility refuses to change state
 
-Authority changes require both stdin and stdout to be attached to an interactive terminal and require an exact `yes` confirmation. They intentionally fail in a pipe, background process, hook, CI job, or ordinary MCP tool call.
+Authority changes require both stdin and stdout to be attached to an interactive terminal and require an exact `yes` confirmation. They intentionally fail in a pipe, background process, hook, CI job, or ordinary MCP tool call. `deps install` is the deliberate exception: it repairs only GoodVibes runtime packages and is safe to run unattended.
 
 Run the command yourself in a terminal. Use top-level `--help` to confirm the installed command summary; group-level `--help` is not supported. A read-only `list`, `show`, `status`, or top-level `--help` operation should not require confirmation.
 

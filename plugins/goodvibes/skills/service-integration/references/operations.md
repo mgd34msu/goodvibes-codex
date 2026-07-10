@@ -12,7 +12,7 @@
 
 The MCP `service` actions are exactly `list`, `status`, and `get`. No MCP action may change authority.
 
-The separate plugin script `scripts/goodvibes-control.mjs` manages trusted roots, services, credentials, allowlisted origins, database connections, write grants, mode, and prepared dependencies. It requires an interactive terminal and explicit confirmation. Codex must not execute or automate it. If setup is missing, explain the required user-operated command and stop the affected operation.
+The separate plugin script `scripts/goodvibes-control.mjs` manages trusted roots, services, credentials, allowlisted origins, database connections, write grants, mode, and prepared dependencies. Authority-changing commands require an interactive terminal and explicit confirmation; Codex must not execute or automate those commands. Runtime dependency repair is non-interactive and may be executed automatically by MCP launchers or `$goodvibes-maintenance`. If service or database authority is missing, explain the required user-operated authority command and stop the affected operation.
 
 After the user says they completed a control change, call `service` with `status` and report only target names, mode, allowlist, and write-grant status. Never request or reveal credential values.
 

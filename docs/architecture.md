@@ -8,6 +8,7 @@ GoodVibes is one Codex plugin with three independent stdio MCP servers:
 Codex
   |-- skills (nine workflow packages)
   |-- hooks (six optional lifecycle events)
+  |-- launcher self-heal --- locked deps -- durable GoodVibes data root
   |-- goodvibes_intel ----- 15 tools ---- trusted workspace files
   |-- goodvibes_analytics -- 7 tools ----- Codex rollout metadata + local state
   `-- goodvibes_connect ---- 3 tools ----- registered HTTP and DB targets
@@ -20,7 +21,11 @@ interactive terminal
         |-- services and credentials
         |-- connections and write grants
         |-- trust mode
-        `-- pinned runtime dependencies
+        `-- authority configuration
+
+automatic startup / maintenance
+  `-- scripts/lib/runtime-deps.cjs
+        `-- pinned runtime dependency verification and repair
 ```
 
 Each server can initialize, list tools, and fail independently. Intel failure does not prevent Analytics or Connect from starting.
@@ -32,7 +37,8 @@ plugins/goodvibes/
   .codex-plugin/plugin.json       plugin metadata
   .mcp.json                       three stdio server declarations
   hooks/                          authored Codex hook definitions/scripts
-  scripts/goodvibes-control.mjs   interactive control-plane entrypoint
+  scripts/goodvibes-control.mjs   authority and maintenance CLI entrypoint
+  scripts/lib/runtime-deps.cjs    shared automatic dependency manager
   skills/                         nine skill packages and references
   templates/                      scaffold templates
   server/
@@ -43,13 +49,16 @@ plugins/goodvibes/
 
 The manifest points Codex to `.mcp.json` and the skills directory. Codex discovers `hooks/hooks.json` by the plugin-default path.
 
-Each MCP declaration starts `node server/<name>/launcher.cjs` with the installed plugin root as its working directory. A launcher resolves:
+Each MCP declaration starts `node server/<name>/launcher.cjs` with the installed plugin root as its working directory. A launcher:
 
 1. the immutable installed plugin root;
 2. the writable GoodVibes data root;
-3. server-local dependencies for a development tree;
-4. durable dependencies under `<data-root>/deps/<server>/node_modules`;
-5. the generated `index.cjs` bundle.
+3. verifies exact dependency versions, lockfile identity, module loadability, and required executables;
+4. automatically repairs missing, stale, or corrupt packages under `<data-root>/deps/<server>` using a per-server lock, verified staging directory, and atomic promotion;
+5. initializes module resolution from server-local and durable `node_modules` roots;
+6. loads the generated `index.cjs` bundle.
+
+If registry, platform, npm, or filesystem failure prevents repair, the launcher terminates the bounded startup attempt, writes diagnostics only to stderr, and still loads the bundle in degraded mode. Dependency-free tools remain available, and the next launcher start or maintenance invocation retries. Neither startup nor maintenance writes into the immutable plugin tree.
 
 MCP stdout is reserved for JSON-RPC. Diagnostics belong on stderr.
 
@@ -90,7 +99,8 @@ Connect keeps authority decisions out of model-facing MCP calls:
 
 | Plane         | Entry point                                   | Responsibility                                                                                          |
 | ------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Control       | `goodvibes-control.mjs` in an interactive TTY | Register/revoke roots, services, credentials, connections, destinations, modes, and dependency installs |
+| Control       | `goodvibes-control.mjs` in an interactive TTY | Register/revoke roots, services, credentials, connections, destinations, and modes                       |
+| Maintenance   | launchers, skill, or `goodvibes-control.mjs`  | Non-interactively verify and repair exact locked runtime dependencies in durable state                    |
 | Inspection    | MCP `service`                                 | `list`, `get`, and `status` only; credential-free summaries                                             |
 | HTTP data     | MCP `api_request`                             | Bounded calls within the current service/destination policy                                             |
 | Database data | MCP `db_query`                                | Bounded statements against registered connections and write grants                                      |
@@ -105,4 +115,4 @@ The nine skills translate Claude commands and workflows into Codex skill package
 
 The six hook scripts record bounded lifecycle metadata or provide small context/guardrail responses. Hook state prefers `PLUGIN_DATA` because it is hook-private. When unavailable it falls back to `<GoodVibes data root>/hooks`.
 
-Hooks do not install dependencies, mutate the plugin cache, parse raw transcript formats, or treat `Stop` as a session-end event. All hooks fail open; see [state-and-privacy.md](state-and-privacy.md) for the exact metadata retained.
+Hooks do not install dependencies, mutate the plugin cache, parse raw transcript formats, or treat `Stop` as a session-end event. Launchers provide the guaranteed repair path; SessionStart only reports repair state. All hooks fail open; see [state-and-privacy.md](state-and-privacy.md) for the exact metadata retained.

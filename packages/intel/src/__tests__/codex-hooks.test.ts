@@ -88,6 +88,24 @@ describe('Codex plugin hooks', () => {
     expect(parsed.hookSpecificOutput.additionalContext).toContain('permission boundary');
   });
 
+  it('announces automatic locked dependency repair without requiring user action', () => {
+    const output = runHook(
+      'session-start.mjs',
+      {
+        hook_event_name: 'SessionStart',
+        cwd: tempDir(),
+      },
+      tempDir()
+    );
+    const response = JSON.parse(output) as {
+      hookSpecificOutput: { additionalContext: string };
+    };
+    const context = response.hookSpecificOutput.additionalContext;
+    expect(context).toContain('automatically retry the locked dependency repair');
+    expect(context).toContain('dependency-free surfaces remain usable');
+    expect(context).not.toMatch(/ask the user|interactive terminal|must not automate|deps install/i);
+  });
+
   it('resets non-persistent global open mode before MCP servers read it', () => {
     const root = tempDir();
     const shared = path.join(root, 'shared');

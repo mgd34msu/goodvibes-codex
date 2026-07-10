@@ -56,14 +56,14 @@ node <plugin-root>/scripts/goodvibes-control.mjs roots list
 
 The utility displays the canonical path and requires `yes` on a TTY. `<plugin-root>` is `plugins/goodvibes` in a checkout. For a marketplace copy, save the `installedPath` printed by `codex plugin add --json`; `codex plugin list --json` reports source metadata and may not expose the cache path.
 
-Inspect and prepare pinned runtime dependencies explicitly:
+Every MCP launcher checks its pinned runtime dependencies and automatically repairs missing, stale, or corrupt packages before loading the server. Repair uses the committed per-server lockfiles and writes only beneath the durable GoodVibes data root. The same idempotent path is available for status or an immediate retry:
 
 ```bash
 node <plugin-root>/scripts/goodvibes-control.mjs deps status
 node <plugin-root>/scripts/goodvibes-control.mjs deps install
 ```
 
-Run the utility with top-level `--help` before changing service, connection, trust-mode, or dependency state. It prints the supported groups and exact subcommand shapes for the installed version. Those control-plane actions are intentionally unavailable through MCP.
+Dependency repair is unattended and does not require a TTY or confirmation. Run the utility with top-level `--help` before changing service, connection, or trust-mode state; those authority-changing operations remain interactive and unavailable through MCP.
 
 Codex discovers the six hooks from `hooks/hooks.json`, but non-managed hooks require user review and trust. Review them with `/hooks`; GoodVibes remains usable without them. Start a new Codex thread after installation or a plugin update so server and hook discovery begins from a clean session.
 
@@ -71,12 +71,13 @@ See [installation and operations](docs/installation.md) for registration, update
 
 ## Security boundary
 
-GoodVibes separates the model-facing data plane from an interactive control plane:
+GoodVibes separates the model-facing data plane from an authority control plane:
 
 - Intel filesystem operations require a path inside a canonical registered workspace.
 - Connect's `service` MCP tool only supports `list`, `get`, and `status`. Service registration, credentials, destinations, connections, write grants, and trust mode are control-utility operations.
 - Analytics reads bounded metadata and token counters from Codex rollout files. It ignores message text, reasoning content, tool arguments, and tool outputs.
 - Hooks are fail-open lifecycle helpers and an advisory credential-commit guard, not a shell sandbox.
+- Runtime dependency repair is automatic, lockfile-driven, and confined to the durable GoodVibes data root; it never grants access to a workspace or remote target.
 
 The current control plane is a same-user interactive CLI and private files, not a cryptographically separate authority service. Its safety therefore depends on Codex sandboxing and approval policy preventing an agent from modifying GoodVibes control state or completing an interactive authority prompt. Read the [security model](docs/security-model.md) before registering sensitive services or databases.
 

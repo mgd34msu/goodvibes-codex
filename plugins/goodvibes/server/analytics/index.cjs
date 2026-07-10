@@ -18128,7 +18128,7 @@ var configTool = {
 
 // packages/analytics/src/index.ts
 var SERVER_NAME = "goodvibes-analytics";
-var SERVER_VERSION = true ? "0.1.0" : "0.0.0-dev";
+var SERVER_VERSION = true ? "0.1.1" : "0.0.0-dev";
 var CALL_BUDGET_MS = 2e4;
 var TOOL_MODULES = [
   queryTool,

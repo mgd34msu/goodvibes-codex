@@ -22,7 +22,7 @@ Use Node 20.19 or Node 22. CI runs the full quality suite on both lines on Ubunt
 npm ci
 ```
 
-The root lockfile is authoritative for development. Each plugin server also has a committed runtime `package.json` and `package-lock.json` used by explicit dependency preparation.
+The root lockfile is authoritative for development. Each plugin server also has a committed runtime `package.json` and `package-lock.json` used by automatic launcher and maintenance repair.
 
 ## Checks
 

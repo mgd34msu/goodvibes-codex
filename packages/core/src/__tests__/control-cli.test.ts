@@ -6,25 +6,35 @@ import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it } from 'vitest';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const source = path.resolve(here, '../../../../plugins/goodvibes/scripts/goodvibes-control.mjs');
+const sourcePluginRoot = path.resolve(here, '../../../../plugins/goodvibes');
+const source = path.join(sourcePluginRoot, 'scripts', 'goodvibes-control.mjs');
 const temporary: string[] = [];
 
 function installedFixture(): { root: string; script: string; workspace: string } {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'goodvibes-control-test-'));
   temporary.push(root);
-  const script = path.join(
+  const pluginRoot = path.join(
     root,
     'codex',
     'plugins',
     'cache',
     'goodvibes',
     'goodvibes',
-    '0.1.0',
-    'scripts',
-    'goodvibes-control.mjs'
+    '0.1.0'
   );
+  const script = path.join(pluginRoot, 'scripts', 'goodvibes-control.mjs');
   fs.mkdirSync(path.dirname(script), { recursive: true });
   fs.copyFileSync(source, script);
+  const helper = path.join('scripts', 'lib', 'runtime-deps.cjs');
+  fs.mkdirSync(path.join(pluginRoot, 'scripts', 'lib'), { recursive: true });
+  fs.copyFileSync(path.join(sourcePluginRoot, helper), path.join(pluginRoot, helper));
+  for (const server of ['intel', 'analytics', 'connect']) {
+    const target = path.join(pluginRoot, 'server', server);
+    fs.mkdirSync(target, { recursive: true });
+    for (const file of ['package.json', 'package-lock.json']) {
+      fs.copyFileSync(path.join(sourcePluginRoot, 'server', server, file), path.join(target, file));
+    }
+  }
   const workspace = path.join(root, 'workspace');
   fs.mkdirSync(workspace);
   return { root, script, workspace };
@@ -72,5 +82,16 @@ describe('GoodVibes control CLI', () => {
     expect(fs.existsSync(path.join(fixture.root, 'codex', 'goodvibes', 'trusted-roots.json'))).toBe(
       false
     );
+  });
+
+  it('allows dependency repair without an interactive terminal', () => {
+    const fixture = installedFixture();
+    const result = spawnSync(process.execPath, [fixture.script, 'deps', 'install', 'analytics'], {
+      encoding: 'utf8',
+      env: minimalEnv(path.join(fixture.root, 'home')),
+    });
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('Verified analytics dependencies');
+    expect(result.stderr).not.toContain('requires an interactive terminal');
   });
 });

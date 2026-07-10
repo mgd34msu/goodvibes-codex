@@ -1,6 +1,6 @@
 {
   "name": "@goodvibes/intel",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "GoodVibes Intel MCP server for Codex — 15 structure-aware repository tools.",
   "private": true,
   "type": "module",

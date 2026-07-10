@@ -68,6 +68,9 @@ async function smokeServer(name, expectedTools) {
       ...process.env,
       GOODVIBES_DATA_ROOT: smokeDataRoot,
       GOODVIBES_HOST: 'codex',
+      // The dedicated runtime-dependency tests exercise repair with an injected
+      // package manager. MCP inventory smoke must remain deterministic/offline.
+      GOODVIBES_TEST_DISABLE_AUTO_REPAIR: '1',
       NODE_ENV: 'test',
     },
     stdio: ['pipe', 'pipe', 'pipe'],

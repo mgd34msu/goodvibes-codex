@@ -19,7 +19,7 @@ MCP server processes do not assume they receive hook-only `PLUGIN_DATA`. Their l
 
 The launchers and libraries understand `CODEX_HOME`, `GOODVIBES_DATA_ROOT`, and `GOODVIBES_ANALYTICS_HOME` when those variables are actually present. The installed-plugin probe on Codex CLI 0.144.1 found that bundled MCP children receive a minimal environment and do not inherit those parent variables. Only static values declared in `.mcp.json` are passed.
 
-To keep installed copies coherent, each launcher infers `CODEX_HOME` from the standard `<codex-home>/plugins/cache/...` installed path, and the control utility performs the same inference when invoked from its saved `installedPath`. This supports a custom Codex home even though the variable is absent. A checkout path cannot be inferred; direct development launches with a custom home must pass `CODEX_HOME` explicitly. Arbitrary GoodVibes-only path overrides are direct-launch/test features in `0.1.0` and are not automatically propagated by the host. Re-test this contract when upgrading Codex.
+To keep installed copies coherent, each launcher infers `CODEX_HOME` from the standard `<codex-home>/plugins/cache/...` installed path, and the control utility performs the same inference when invoked from its saved `installedPath`. This supports a custom Codex home even though the variable is absent. A checkout path cannot be inferred; direct development launches with a custom home must pass `CODEX_HOME` explicitly. Arbitrary GoodVibes-only path overrides are direct-launch/test features in `0.1.x` and are not automatically propagated by the host. Re-test this contract when upgrading Codex.
 
 ## Shared GoodVibes data
 
@@ -95,13 +95,13 @@ Project state is non-authoritative. A project file cannot register its own works
 
 ## Secrets
 
-Connect credentials live in the shared data root, never in the repository. Secret files are checked for unsafe symlinks and overly broad POSIX permissions. Errors and registry summaries must not echo secret values or database URLs. Version `0.1.0` has no persistent cookie store or browser/session-auth path.
+Connect credentials live in the shared data root, never in the repository. Secret files are checked for unsafe symlinks and overly broad POSIX permissions. Errors and registry summaries must not echo secret values or database URLs. Version `0.1.x` has no persistent cookie store or browser/session-auth path.
 
 The control utility accepts/stores credentials for the selected registration. MCP processes deliberately do not inherit an arbitrary secret namespace and do not resolve legacy environment references. Re-enter a legacy secret through the interactive control plane instead of copying its file.
 
 ## Network behavior
 
-Intel is local. Analytics is local and reads only Codex-owned files. Connect performs network operations only when its MCP data tools are called. Dependency installation uses the network only after an explicit control-utility action and confirmation.
+Intel is local. Analytics is local and reads only Codex-owned files. Connect performs target network operations only when its MCP data tools are called. MCP startup and maintenance may contact the configured npm registry to automatically repair exact packages from committed lockfiles. Downloads, staging files, locks, and installed packages stay beneath the durable GoodVibes data root and are never copied or linked into the plugin cache.
 
 The plugin does not send GoodVibes analytics to an external GoodVibes service.
 

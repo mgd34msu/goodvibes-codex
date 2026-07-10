@@ -105,7 +105,7 @@ export async function handleSessionStart(input) {
       .map(entry => `${entry.server} (${entry.dependencies.join(', ')})`)
       .join('; ');
     lines.push(
-      `GoodVibes runtime dependencies are incomplete: ${detail}. Use $goodvibes-maintenance to inspect or repair them.`
+      `GoodVibes runtime dependencies are incomplete: ${detail}. GoodVibes launchers and $goodvibes-maintenance automatically retry the locked dependency repair; dependency-free surfaces remain usable if repair cannot complete.`
     );
   }
   if (!lines.length) return undefined;

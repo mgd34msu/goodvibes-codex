@@ -52,18 +52,18 @@ export function formatMutualExclusivityError(fieldName: string, providedSources:
 /**
  * Standard "native dependency missing" message for a capability whose backing
  * package is one of the externalized native/WASM deps (tree-sitter, sql.js,
- * ast-grep, ripgrep). Dependency preparation is an explicit user-operated
- * control action; hooks never download code in the background. A tool that
- * reaches a missing dep returns this as a normal error envelope — never a
- * crash or hang.
+ * ast-grep, ripgrep). Launchers and maintenance automatically retry the locked
+ * dependency repair. A tool that reaches a missing dep while repair is still
+ * unavailable returns this as a normal error envelope — never a crash or hang
+ * — and dependency-free surfaces remain usable.
  *
  * @param capability - the user-facing capability name (e.g. "code_read outline mode").
  */
 export function nativeDepMessage(capability: string): string {
   return (
-    `${capability} needs native dependencies that are not installed yet - ` +
-    `ask the user to run the GoodVibes control utility's deps install command ` +
-    `directly in an interactive terminal, then retry. Codex must not automate that control action.`
+    `${capability} needs runtime dependencies that are not available yet. ` +
+    `GoodVibes launchers and $goodvibes-maintenance automatically retry the locked dependency repair. ` +
+    `If repair cannot complete, dependency-free surfaces remain usable.`
   );
 }
 

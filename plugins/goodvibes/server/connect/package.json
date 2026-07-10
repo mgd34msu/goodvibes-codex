@@ -1,6 +1,6 @@
 {
   "name": "goodvibes-connect-runtime",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Exact runtime dependencies for the GoodVibes Connect Codex MCP server.",
   "dependencies": {

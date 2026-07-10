@@ -1,6 +1,6 @@
 {
   "name": "goodvibes-analytics-runtime",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "GoodVibes Analytics is fully bundled and has no external runtime dependencies.",
   "dependencies": {}

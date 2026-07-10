@@ -11,7 +11,7 @@ The Codex plugin is a behavioral port, not an in-place upgrade. Install it along
 | Claude commands                     | Re-expressed as Codex skills and natural-language workflows; no command installer                               |
 | Six knowledge skills                | Expanded to nine Codex skill packages                                                                           |
 | Claude agents                       | Four role references consumed by `task-orchestration`; no silent `.codex/agents` installation                   |
-| Claude setup hook                   | Replaced by `goodvibes-maintenance` and the interactive control utility                                         |
+| Claude setup hook                   | Replaced by automatic MCP-launcher repair plus `goodvibes-maintenance` verification                             |
 | Claude lifecycle hooks              | Six Codex-supported events; unsupported setup/failure/session-end mappings retired or deferred                  |
 | Claude transcript analytics         | Replaced by metadata-only Codex rollout parsing                                                                 |
 | Claude global/project paths         | Replaced by `~/.codex/goodvibes` and `.goodvibes/codex` namespaces                                              |
@@ -25,7 +25,7 @@ The schemas, host assumptions, model identifiers, pricing semantics, and authori
 
 ## Recommended migration
 
-1. Install GoodVibes for Codex and prepare its pinned runtime dependencies.
+1. Install GoodVibes for Codex; its MCP launchers automatically prepare pinned runtime dependencies.
 2. Register each intended Codex workspace with `roots add`; do not register a parent directory merely to reproduce broad old access.
 3. Recreate each service and database connection through the Codex control utility after reviewing its current destination and write policy.
 4. Re-enter credentials. Rotate them first when the old store or repository history may have exposed them.
@@ -71,7 +71,7 @@ Update automation and skill examples that still call old `service` administratio
 
 | Claude behavior                  | Codex status                                        |
 | -------------------------------- | --------------------------------------------------- |
-| Session setup/install            | Retired; setup is explicit maintenance/control      |
+| Session setup/install            | Replaced by automatic locked launcher repair        |
 | Session start/open-mode notice   | Adapted to `SessionStart`                           |
 | Bash credential commit guard     | Adapted to `PreToolUse` for Bash; advisory only     |
 | Pre-compaction transcript backup | Metadata-only checkpoint at `PreCompact`            |

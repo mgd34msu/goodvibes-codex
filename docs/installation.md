@@ -79,16 +79,18 @@ When a workspace no longer needs access, revoke it promptly:
 node "<plugin-root>/scripts/goodvibes-control.mjs" roots remove /absolute/path/to/workspace
 ```
 
-## Prepare runtime dependencies
+## Automatic runtime dependencies
 
-The plugin bundles its server code and WASM assets, but some capabilities use pinned runtime packages. Dependency preparation is explicit and writes only beneath the GoodVibes data root:
+The plugin bundles its server code and WASM assets, but some capabilities use pinned runtime packages. Each MCP launcher verifies and automatically repairs its own dependencies before loading the server bundle. Repair uses the committed lockfile, serializes concurrent starts, stages and verifies the result, and atomically promotes it beneath the GoodVibes data root. It never writes `node_modules` into the installed plugin cache.
+
+The maintenance skill runs the same idempotent repair without asking for another confirmation. You can also inspect or invoke that path directly for diagnostics:
 
 ```bash
 node "<plugin-root>/scripts/goodvibes-control.mjs" deps status
 node "<plugin-root>/scripts/goodvibes-control.mjs" deps install
 ```
 
-Review the displayed destination and network operation before confirming. The installer uses the committed server lockfiles and does not write `node_modules` into the installed plugin cache. A server should still initialize and list tools when an optional dependency is absent; the affected call reports the missing dependency and maintenance action.
+No TTY or confirmation is required for dependency repair. Launcher repair has a bounded startup budget; the direct maintenance path has a longer but still bounded budget. On an unavailable or stalled registry, incompatible binary, missing `npm`, or unwritable data root, the launcher terminates the attempt, reports the failure on stderr, and still loads the server in degraded mode so dependency-free tools remain available. Later server starts and maintenance invocations retry automatically.
 
 ## Configure Connect
 

@@ -9,9 +9,11 @@ Before using filesystem tools, register the workspace directly in a terminal:
 node "<plugin-root>/scripts/goodvibes-control.mjs" roots add /absolute/workspace
 ```
 
-Run the same script with `--help` for dependency preparation and Connect
-service/connection administration. MCP tools cannot perform those authority
-changes, and Codex must not automate the interactive control utility.
+MCP launchers automatically prepare and repair their exact locked runtime
+dependencies beneath the durable GoodVibes data root. Run the same script with
+`--help` for dependency status and Connect service/connection administration.
+Dependency repair is unattended; workspace and Connect authority changes remain
+interactive and cannot be performed by MCP tools.
 
 Review `hooks/hooks.json` through `/hooks` before trusting hooks. The plugin is
 usable without them.

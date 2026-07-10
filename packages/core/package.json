@@ -1,6 +1,6 @@
 {
   "name": "@goodvibes/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared infrastructure for the GoodVibes Codex MCP servers. Source-only and bundled into each server by esbuild.",
   "private": true,
   "type": "module",

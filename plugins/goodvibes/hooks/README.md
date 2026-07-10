@@ -4,7 +4,7 @@ Codex discovers this directory through the plugin-default `hooks/hooks.json` pat
 
 | Script               | Event                   | Behavior                                                                                                                                                     |
 | -------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `session-start.mjs`  | `SessionStart`          | Records bounded lifecycle metadata, reports missing runtime dependencies, and announces or reverts an ephemeral open trust mode. It never installs packages. |
+| `session-start.mjs`  | `SessionStart`          | Records bounded lifecycle metadata, reports automatic-repair state for runtime dependencies, and announces or reverts an ephemeral open trust mode.          |
 | `commit-guard.mjs`   | `PreToolUse` for `Bash` | Warns once, then denies a Git command that would include a known GoodVibes credential file. Safe calls emit no stdout.                                       |
 | `pre-compact.mjs`    | `PreCompact`            | Records the `manual` or `auto` trigger and writes a metadata-only checkpoint. It does not parse transcripts.                                                 |
 | `subagent-start.mjs` | `SubagentStart`         | Records stable agent metadata and injects one short authority-boundary reminder.                                                                             |

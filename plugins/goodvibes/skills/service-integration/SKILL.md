@@ -11,7 +11,7 @@ Use Connect for registered, authenticated targets. Use normal web access for a p
 
 1. Inspect trust mode and registered targets with `mcp__goodvibes_connect__service` before making a request.
 2. The MCP `service` tool is read-only: its only actions are `list`, `get`, and `status`. Never claim that it can register, remove, authenticate, allow, or grant writes.
-3. Service registration, credentials, allowlists, connection definitions, and write grants belong to `goodvibes-control.mjs`, which a human must operate directly in an interactive terminal. Never invoke, script, or feed input to that control utility on the user's behalf.
+3. Service registration, credentials, allowlists, connection definitions, and write grants belong to `goodvibes-control.mjs`, which a human must operate directly in an interactive terminal. Never invoke, script, or feed input to those authority-changing commands on the user's behalf. Locked runtime dependency repair is the narrow exception: MCP launchers and `$goodvibes-maintenance` may invoke `deps install` unattended.
 4. Never echo, log, commit, or place a secret in project memory. Report credential presence as status only.
 5. Keep HTTP and SQL access read-only unless the user requests a write and the target has a matching write grant.
 6. Stored HTTP credentials require HTTPS. Remote PostgreSQL/MySQL connections require the verified-TLS URL forms documented in the operations reference.

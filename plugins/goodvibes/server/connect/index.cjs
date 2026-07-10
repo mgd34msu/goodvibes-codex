@@ -37797,7 +37797,7 @@ async function executePostgres(connectionInfo, query, params = [], readonly2 = t
   const pg = await loadPostgresDriver();
   if (!pg) {
     throw new Error(
-      "PostgreSQL driver (pg) is not prepared. Run the GoodVibes control utility: deps install connect"
+      "PostgreSQL driver (pg) is unavailable. GoodVibes launchers and $goodvibes-maintenance automatically retry the locked dependency repair; dependency-free Connect surfaces remain usable if repair cannot complete."
     );
   }
   const { Client } = pg;
@@ -37877,7 +37877,7 @@ async function executeMysql(connectionInfo, query, params = [], readonly2 = true
   const mysql = await loadMysqlDriver();
   if (!mysql) {
     throw new Error(
-      "MySQL driver (mysql2) is not prepared. Run the GoodVibes control utility: deps install connect"
+      "MySQL driver (mysql2) is unavailable. GoodVibes launchers and $goodvibes-maintenance automatically retry the locked dependency repair; dependency-free Connect surfaces remain usable if repair cannot complete."
     );
   }
   const mysqlDriver = mysql;
@@ -38501,7 +38501,7 @@ var HANDLERS = {
 
 // packages/connect/src/index.ts
 var SERVER_NAME = "goodvibes-connect";
-var SERVER_VERSION = true ? "0.1.0" : "0.0.0-dev";
+var SERVER_VERSION = true ? "0.1.1" : "0.0.0-dev";
 function createServer(onActivity) {
   const server = new Server(
     { name: SERVER_NAME, version: SERVER_VERSION },

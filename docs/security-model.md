@@ -4,7 +4,7 @@
 
 GoodVibes handles three sensitive classes of capability: reading/writing local workspaces, sending authenticated network requests, and querying databases. It uses server-side path and target policy in addition to Codex approvals and MCP tool annotations.
 
-The most important limitation is explicit: the current control plane is a same-user CLI plus owner-private files. It is not cryptographically or OS-principal separated from Codex. The design assumes Codex sandboxing and approval policy prevent an agent from writing GoodVibes authority files directly or invoking the interactive utility with a usable TTY and approving its prompt.
+The most important limitation is explicit: the current authority control plane is a same-user CLI plus owner-private files. It is not cryptographically or OS-principal separated from Codex. The design assumes Codex sandboxing and approval policy prevent an agent from writing GoodVibes authority files directly or completing an interactive authority-changing prompt. Automatic dependency repair uses the same executable but cannot grant roots, destinations, credentials, connections, writes, or wider trust mode.
 
 If Codex is allowed unrestricted writes to `${CODEX_HOME}` or `${GOODVIBES_DATA_ROOT}`, or unrestricted interactive shell execution, an agent may be able to alter the same files the control utility protects. In that environment, do not treat GoodVibes root, service, connection, or write-grant registration as a strong security boundary. Use a restricted sandbox, require approval for shell/network/write operations, and do not register secrets whose compromise would be unacceptable.
 
@@ -20,6 +20,14 @@ The model does not claim protection against a compromised user account, maliciou
 | MCP to database       | Registered connection handles, statement classification, limits, explicit write grant             | SQL classification is defense in depth; database roles should enforce least privilege               |
 | Hook process          | User-reviewed definitions, bounded inputs, fail-open output                                       | Hooks are not a shell sandbox and do not intercept every command path                               |
 | Analytics to rollouts | Read-only bounded scan, metadata extraction only                                                  | Codex rollout metadata can still reveal project names, timestamps, model use, and activity patterns |
+
+## Automatic runtime dependency repair
+
+Every MCP launcher and the maintenance skill may run locked dependency repair without an interactive prompt. This is intentionally not an authority grant: the repair path accepts only the known server names, reads committed runtime manifests and lockfiles, and writes only to `<GoodVibes data root>/deps`. It never changes the installed plugin cache, a project checkout, trusted roots, Connect policy, or credentials.
+
+Repair may contact the configured npm registry and execute lifecycle behavior required by the exact locked packages, including native-platform package selection. npm cache and log paths are overridden into the durable dependency root. Per-server interprocess locks prevent concurrent promotion races. New content is installed in a private staging directory, its declared versions and loadability are verified, required executables are probed, and the prior healthy target is retained until atomic promotion succeeds. Launcher and maintenance attempts have bounded deadlines and terminate spawned npm work on timeout. Treat the npm registry, lockfile contents, Node/npm executable, and same-user durable data root as part of this supply-chain boundary.
+
+Offline or incompatible first start cannot guarantee successful repair. The launcher reports the failure on stderr, preserves dependency-free MCP capabilities, and retries on later starts; it never weakens workspace or Connect policy to compensate.
 
 ## Workspace registration
 
@@ -62,7 +70,7 @@ Server-side database roles and transactions are the final authority. Do not give
 
 ### Secrets
 
-Secrets live outside repositories in `goodvibes.secrets.json`, with owner-only POSIX permissions and symlink checks. Atomic replacement avoids partially written files. The MCP server does not resolve arbitrary inherited environment-variable references; enter credentials through the control utility. Version `0.1.0` supports bearer, Basic, and API-key credentials only. It has no automatic OAuth refresh, browser login, session login, per-request credential, or persistent cookie network path.
+Secrets live outside repositories in `goodvibes.secrets.json`, with owner-only POSIX permissions and symlink checks. Atomic replacement avoids partially written files. The MCP server does not resolve arbitrary inherited environment-variable references; enter credentials through the control utility. Version `0.1.x` supports bearer, Basic, and API-key credentials only. It has no automatic OAuth refresh, browser login, session login, per-request credential, or persistent cookie network path.
 
 Never commit the GoodVibes data root, print a credential in a prompt, or copy secret files into project memory. The Bash pre-tool hook recognizes current GoodVibes secret filenames and the legacy cookie-store filename, but it is only an advisory Git guard and is not comprehensive data-loss prevention.
 
@@ -83,7 +91,7 @@ Metadata is still sensitive. It can expose repository paths, session timing, mod
 Review hook source before trusting it and re-review after a definition change. All six hooks are designed to fail open so an instrumentation problem does not block Codex. Consequently:
 
 - the commit guard is advisory;
-- dependency notices are informational;
+- dependency repair notices are informational; launchers own the actual repair path;
 - lifecycle events may be missing;
 - subagent reminders do not grant authority;
 - no hook should be treated as an enforcement boundary.

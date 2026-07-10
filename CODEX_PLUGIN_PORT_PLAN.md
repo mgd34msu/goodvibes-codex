@@ -1,6 +1,6 @@
 # GoodVibes for Codex: architecture and implementation plan
 
-**Status:** implemented as `0.1.0`; retained as the audited design and decision record
+**Status:** implemented as `0.1.0`; retained as the audited design and decision record. The 2026-07-10 automatic runtime self-heal implementation supersedes earlier recommendations in this record that required explicit dependency-download consent.
 
 **Prepared:** 2026-07-09
 
@@ -398,9 +398,9 @@ For Codex:
 4. Install through a staging directory, fully probe every external module and matching WASM asset, then promote it under a versioned/digest path with an atomic pointer where the platform supports it.
 5. Never symlink or copy `node_modules` into the installed plugin directory.
 6. Have `server/<name>/launcher.cjs` initialize module resolution from the resolved dependency directory before loading `index.cjs`.
-7. Preserve the useful current behavior in which every server can initialize and list tools before optional native/WASM dependencies are installed.
-8. A dependency-backed tool should return a precise maintenance action, not crash the server.
-9. Make downloads an explicit action through the selected user-presence/consent channel. Cold/offline operation must degrade clearly; after dependencies are prepared, warm/offline operation must work. Marketplace `ON_INSTALL` authentication is not a dependency-install hook.
+7. Have every launcher automatically verify and repair its exact locked dependencies before loading the bundle, while preserving degraded initialization and tool listing if an offline or platform failure prevents repair.
+8. A dependency-backed tool should report the failed automatic attempt and retry policy, not crash the server or require a user-operated install.
+9. Treat MCP startup and maintenance-skill invocation as authorization for dependency-only repair. Keep that path non-interactive and unable to mutate authority, project source, or the installed plugin cache. Cold/offline operation must degrade clearly; after dependencies are prepared, warm/offline operation must work.
 10. Add garbage collection for old digests with conservative retention and no deletion of an in-use digest.
 
 ## 5. MCP server migration plan
@@ -551,7 +551,7 @@ Port the six existing skills and convert the useful command workflows into skill
 | `service-integration`   | existing skill plus `/services` | explicit/implicit with Connect dependency                                                                    |
 | `goodvibes-analytics`   | `/analytics`                    | explicit by default                                                                                          |
 | `codebase-review`       | `/codebase-review`              | explicit and implicit when clearly requested                                                                 |
-| `goodvibes-maintenance` | `/plugin` and `/setup`          | explicit only; diagnostics/status and directions to the host user-presence flow; it does not grant authority |
+| `goodvibes-maintenance` | `/plugin` and `/setup`          | explicit/implicit; automatically repairs locked runtime dependencies but grants no workspace/Connect authority |
 
 Each skill needs:
 
@@ -614,7 +614,7 @@ Important contract tests:
 - one fixture per event validates POSIX and Windows commands (`commandWindows` where needed);
 - the commit hook is documented as a guardrail, not a complete shell-enforcement boundary.
 
-Dependency installation cannot be assumed to happen at `SessionStart` before hook trust. The plugin should still install, initialize, and explain its maintenance state without trusted hooks.
+Dependency installation cannot depend on `SessionStart` because hook trust is optional. Each MCP launcher owns automatic repair and still initializes with clear degraded diagnostics when repair cannot complete.
 
 ## 8. Build, packaging, and release design
 
@@ -902,7 +902,7 @@ Exit gate:
 - test path with spaces and Unicode;
 - test clean HOME/CODEX_HOME;
 - test read-only installed plugin directory;
-- test cold/offline startup and actionable degradation, then warm/offline full operation after explicit dependency preparation;
+- test cold/offline startup and actionable automatic-repair degradation, then warm/offline full operation after successful launcher repair;
 - test optional dependency install/repair and executable permissions;
 - run representative Intel ripgrep/tree-sitter and Analytics/Connect sql.js or replacement-store calls.
 
@@ -963,7 +963,7 @@ The `0.1.0` release is ready only when all of the following are true:
 - Analytics reads Codex data through a versioned adapter and makes no actual-billing claim;
 - concurrent sessions cannot corrupt or silently overwrite shared state;
 - the plugin never depends on a writable installation/cache directory;
-- all three MCP handshakes work on a fresh install before optional dependency repair;
+- all three MCP handshakes automatically attempt locked dependency repair on a fresh install and still degrade cleanly if it cannot complete;
 - skills, hooks, templates, and role workflows are verified from the installed artifact;
 - the same canonical artifact passes Linux, macOS, Windows, Node 20, and Node 22 gates, with platform-specific runtime dependencies prepared separately;
 - source, built artifact, checksums, dependency licenses, and upstream provenance are available;
@@ -1000,7 +1000,7 @@ These are genuine product/security choices, not naming details:
 3. **Analytics scope:** whether Claude history import belongs in `0.1.x`. Recommendation: defer it until Codex-native analytics is stable.
 4. **Cost display:** whether to show API-equivalent estimates at all. Recommendation: token-only v1; estimates later and unmistakably labeled.
 5. **Connect administration:** host settings/protected broker versus a sandbox-approval-dependent interactive CLI. Recommendation: require real user presence, keep it outside model-facing MCP, and never hide it in `service`.
-6. **Dependency acquisition:** vendor all platform payloads versus explicit maintenance download. Recommendation: use reproducible explicit download keyed by platform/ABI unless vendoring remains practical; cold offline must degrade cleanly and warm offline must work fully.
+6. **Dependency acquisition:** implemented as reproducible automatic download from committed per-server lockfiles, keyed and verified for the runtime platform, with atomic durable-root promotion; cold offline degrades cleanly and warm offline works fully.
 7. **Source maps:** include, omit, or publish separately. Recommendation: omit from marketplace artifacts and keep debug artifacts in CI/releases.
 8. **Custom agents:** whether to offer an opt-in `.codex/agents` installer later. Recommendation: ship role references first and evaluate only after real orchestration dogfood.
 

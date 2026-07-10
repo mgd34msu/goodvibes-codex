@@ -7,12 +7,18 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { emitKeypressEvents } from 'node:readline';
 import readline from 'node:readline/promises';
 
 const pluginRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const require = createRequire(import.meta.url);
+const {
+  SERVERS,
+  ensureRuntimeDependencies,
+  inspectRuntimeDependencies,
+} = require('./lib/runtime-deps.cjs');
 function inferCodexHome(root) {
   const marker = `${path.sep}plugins${path.sep}cache${path.sep}`;
   const index = root.toLowerCase().lastIndexOf(marker.toLowerCase());
@@ -537,74 +543,24 @@ async function configCommand(action, rest) {
   throw new Error('Use config show|set-mode.');
 }
 
-function run(command, args, options = {}) {
-  return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { stdio: 'inherit', ...options });
-    child.once('error', reject);
-    child.once('exit', (code, signal) => {
-      if (code === 0) resolve();
-      else reject(new Error(`${command} exited with ${signal || code}.`));
-    });
-  });
-}
-
-async function verifyPreparedDependencies(name, staging) {
-  const manifest = JSON.parse(fs.readFileSync(path.join(staging, 'package.json'), 'utf8'));
-  for (const dependency of Object.keys(manifest.dependencies || {})) {
-    const installed = path.join(staging, 'node_modules', ...dependency.split('/'));
-    if (!fs.existsSync(installed))
-      throw new Error(`${name} dependency did not install: ${dependency}`);
-  }
-  const loadChecks =
-    name === 'intel'
-      ? ['@ast-grep/napi', '@vscode/ripgrep']
-      : name === 'connect'
-        ? ['sql.js', 'pg', 'mysql2']
-        : [];
-  if (loadChecks.length) {
-    await run(
-      process.execPath,
-      ['-e', `for (const name of ${JSON.stringify(loadChecks)}) require(name)`],
-      { cwd: staging, stdio: 'ignore' }
-    );
-  }
-  if (name === 'intel') {
-    const binary = path.join(
-      staging,
-      'node_modules',
-      '@vscode',
-      'ripgrep',
-      'bin',
-      process.platform === 'win32' ? 'rg.exe' : 'rg'
-    );
-    const stat = await fsp.stat(binary).catch(() => null);
-    if (!stat?.isFile() || stat.size === 0) throw new Error('Intel ripgrep binary is missing.');
-    await run(binary, ['--version'], { stdio: 'ignore' });
-  }
-}
-
 async function depsCommand(action, rest) {
-  const names = ['intel', 'analytics', 'connect'];
+  const names = [...SERVERS];
   if (action === 'status') {
-    const status = Object.fromEntries(
-      names.map(name => {
-        const manifest = JSON.parse(
-          fs.readFileSync(path.join(pluginRoot, 'server', name, 'package.json'), 'utf8')
-        );
-        const dependencies = Object.keys(manifest.dependencies || {});
-        const target = path.join(dataRoot, 'deps', name);
+    const entries = await Promise.all(
+      names.map(async name => {
+        const inspected = await inspectRuntimeDependencies({ pluginRoot, dataRoot, server: name });
         return [
           name,
           {
-            prepared: dependencies.every(dependency =>
-              fs.existsSync(path.join(target, 'node_modules', ...dependency.split('/')))
-            ),
-            dependencies,
-            path: target,
+            prepared: inspected.prepared,
+            dependencies: Object.keys(inspected.dependencies),
+            path: inspected.path,
+            issues: inspected.issues,
           },
         ];
       })
     );
+    const status = Object.fromEntries(entries);
     process.stdout.write(`${JSON.stringify(status, null, 2)}\n`);
     return;
   }
@@ -613,35 +569,11 @@ async function depsCommand(action, rest) {
   const selected = requested === 'all' ? names : [requested];
   if (selected.some(name => !names.includes(name)))
     throw new Error('Dependency target must be intel, analytics, connect, or all.');
-  await confirm(`Download and prepare locked runtime dependencies for: ${selected.join(', ')}`);
   for (const name of selected) {
-    const source = path.join(pluginRoot, 'server', name);
-    const target = path.join(dataRoot, 'deps', name);
-    const staging = `${target}.${process.pid}.${crypto.randomBytes(6).toString('hex')}.tmp`;
-    const backup = `${target}.${process.pid}.old`;
-    await fsp.mkdir(staging, { recursive: true, mode: 0o700 });
-    try {
-      await fsp.copyFile(path.join(source, 'package.json'), path.join(staging, 'package.json'));
-      await fsp.copyFile(
-        path.join(source, 'package-lock.json'),
-        path.join(staging, 'package-lock.json')
-      );
-      const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-      await run(npm, ['ci', '--omit=dev', '--no-audit', '--no-fund', '--prefix', staging]);
-      await verifyPreparedDependencies(name, staging);
-      await fsp.rm(backup, { recursive: true, force: true });
-      if (fs.existsSync(target)) await fsp.rename(target, backup);
-      try {
-        await fsp.rename(staging, target);
-      } catch (error) {
-        if (fs.existsSync(backup)) await fsp.rename(backup, target);
-        throw error;
-      }
-      await fsp.rm(backup, { recursive: true, force: true });
-      process.stdout.write(`Prepared ${name} dependencies.\n`);
-    } finally {
-      await fsp.rm(staging, { recursive: true, force: true }).catch(() => {});
-    }
+    const result = await ensureRuntimeDependencies({ pluginRoot, dataRoot, server: name });
+    process.stdout.write(
+      `${result.repaired ? 'Repaired' : 'Verified'} ${name} dependencies at ${path.join(dataRoot, 'deps', name)}.\n`
+    );
   }
 }
 
@@ -662,7 +594,8 @@ Usage:
   goodvibes-control.mjs config set-mode restricted|open [--persist]
   goodvibes-control.mjs deps status|install [intel|analytics|connect|all]
 
-All authority mutations require an interactive terminal and an explicit phrase.`;
+Authority mutations require an interactive terminal and an explicit phrase. Runtime dependency
+repair is automatic and may also be invoked non-interactively with deps install.`;
 }
 
 const [group, action, ...rest] = process.argv.slice(2);

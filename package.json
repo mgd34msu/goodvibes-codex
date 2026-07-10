@@ -1,6 +1,6 @@
 {
   "name": "goodvibes-codex",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "GoodVibes for Codex: code intelligence, local analytics, and controlled service access through three MCP servers.",
   "license": "MIT",

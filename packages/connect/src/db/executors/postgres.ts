@@ -46,7 +46,7 @@ export async function executePostgres(
   const pg = await loadPostgresDriver();
   if (!pg) {
     throw new Error(
-      'PostgreSQL driver (pg) is not prepared. Run the GoodVibes control utility: deps install connect'
+      'PostgreSQL driver (pg) is unavailable. GoodVibes launchers and $goodvibes-maintenance automatically retry the locked dependency repair; dependency-free Connect surfaces remain usable if repair cannot complete.'
     );
   }
 

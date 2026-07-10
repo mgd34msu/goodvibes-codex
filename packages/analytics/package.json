@@ -1,6 +1,6 @@
 {
   "name": "@goodvibes/analytics",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "GoodVibes Analytics MCP server for Codex — local token, session, and health analytics (7 tools).",
   "private": true,
   "type": "module",

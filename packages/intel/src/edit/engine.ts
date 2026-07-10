@@ -28,6 +28,7 @@
 import * as ts from 'typescript';
 import * as path from 'path';
 import { nativeDepMessage } from '@goodvibes/core/envelope';
+import { importRuntimeModule } from '../lib/runtime-module.js';
 
 /** The three permitted match modes (no fuzzy / no regex, per plan §14.B). */
 export type EditMatchMode = 'exact' | 'ast' | 'ast_pattern';
@@ -225,10 +226,10 @@ function astMatchSpans(filePath: string, original: string, find: string): Span[]
 }
 
 /**
- * Lazily load `@ast-grep/napi` without letting TypeScript or esbuild resolve the
- * specifier statically (it is neither declared nor installed in this build). A
- * computed specifier keeps `import()` dynamic; a load failure returns null so
- * `ast_pattern` degrades to an honest error instead of crashing the server.
+ * Lazily load `@ast-grep/napi` from the launcher-controlled runtime roots.
+ * CommonJS resolution is required because Node's ESM resolver ignores the
+ * launcher's durable NODE_PATH. A load failure returns null so `ast_pattern`
+ * degrades to an honest error instead of crashing the server.
  */
 interface SgPos {
   line: number;
@@ -245,14 +246,7 @@ async function loadAstGrep(): Promise<{
   parse: (lang: unknown, src: string) => { root: () => { findAll: (p: string) => SgNodeLike[] } };
   Lang: Record<string, unknown>;
 } | null> {
-  try {
-    const spec = ['@ast-grep', 'napi'].join('/');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mod = (await import(spec as string)) as any;
-    return mod;
-  } catch {
-    return null;
-  }
+  return importRuntimeModule('@ast-grep/napi');
 }
 
 const AST_GREP_LANG: Record<string, string> = {

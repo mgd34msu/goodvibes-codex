@@ -33,10 +33,21 @@ const expectedServers = ['goodvibes_analytics', 'goodvibes_connect', 'goodvibes_
 if (JSON.stringify(serverNames) !== JSON.stringify(expectedServers)) {
   fail(`unexpected MCP server keys: ${serverNames.join(', ')}`);
 }
+
+for (const file of ['scripts/goodvibes-control.mjs', 'scripts/lib/runtime-deps.cjs']) {
+  if (!fs.existsSync(path.join(pluginRoot, file))) fail(`${file} is missing`);
+}
 for (const [name, config] of Object.entries(servers)) {
   if (config.command !== 'node' || config.cwd !== '.') fail(`${name} must launch node from plugin cwd`);
   const launcher = config.args?.[0];
   if (!launcher || !fs.existsSync(path.join(pluginRoot, launcher))) fail(`${name} launcher does not exist: ${launcher}`);
+  const launcherSource = fs.readFileSync(path.join(pluginRoot, launcher), 'utf8');
+  if (
+    !launcherSource.includes("require('../../scripts/lib/runtime-deps.cjs')") ||
+    !launcherSource.includes('ensureRuntimeDependencies({')
+  ) {
+    fail(`${name} launcher does not invoke automatic runtime dependency repair`);
+  }
 }
 
 const hookConfig = path.join(pluginRoot, 'hooks', 'hooks.json');

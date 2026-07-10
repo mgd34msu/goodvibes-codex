@@ -1,12 +1,13 @@
 /**
- * Fresh-install gate for a marketplace copy before optional dependency preparation.
+ * Fresh-install fallback gate for a marketplace copy when automatic locked
+ * dependency repair cannot complete (for example, while offline).
  *
  * Mike's install exposed the invariant this locks down: a freshly-cloned plugin
- * whose servers have no node_modules (preparation has not run, or an update just
- * replaced the installed deps) must still boot every server, answer the MCP
- * handshake, keep every dep-free capability working, and hand back an honest
- * maintenance pointer for anything that needs a native/WASM dep — never a crash, never
- * a hang, never a raw "Cannot find module".
+ * whose servers have no node_modules must still boot every server, answer the MCP
+ * handshake, keep every dependency-free capability working, and explain that
+ * launchers or maintenance will automatically retry locked repair for anything
+ * that needs a native/WASM dep — never a crash, hang, raw "Cannot find module",
+ * or instruction for the user to install packages manually.
  *
  * The test copies each COMMITTED server bundle to a bare temp dir with no
  * node_modules anywhere above it and drives it over the same stdio protocol Codex
@@ -146,7 +147,7 @@ describe('fresh-install gate — committed bundles with zero node_modules', () =
   );
 
   it.skipIf(!BUNDLES_EXIST)(
-    'intel: a native-dependent call returns the maintenance pointer, a dep-free call succeeds',
+    'intel: offline native-dependent fallback describes automatic repair while a dep-free call succeeds',
     async () => {
       const d = drive(path.join(root, 'intel', 'index.cjs'), root);
       try {
@@ -164,11 +165,13 @@ describe('fresh-install gate — committed bundles with zero node_modules', () =
           result?: { content?: Array<{ text?: string }> };
         };
         const outlineText = outlineReply.result?.content?.[0]?.text ?? '';
-        expect(outlineText).toContain('needs native dependencies that are not installed yet');
-        expect(outlineText).toContain('control utility');
-        expect(outlineText).toContain('deps install');
+        expect(outlineText).toContain('automatically retry the locked dependency repair');
+        expect(outlineText).toContain('dependency-free surfaces remain usable');
         // The honest envelope — never the raw module-resolution failure.
         expect(outlineText).not.toContain('Cannot find module');
+        expect(outlineText).not.toMatch(
+          /ask the user|interactive terminal|must not automate|deps install/i
+        );
 
         // Dep-free: code_read lines needs nothing native and must return content.
         d.send({
@@ -188,7 +191,34 @@ describe('fresh-install gate — committed bundles with zero node_modules', () =
         const fileEntry = Object.values(parsed.data?.files ?? {})[0];
         expect(fileEntry?.lines?.join('\n')).toContain('export function hello');
 
-        expect(d.child.exitCode, 'intel should still be alive after both calls').toBeNull();
+        // Direct-bundle launch has no GOODVIBES_PLUGIN_ROOT. Ripgrep resolution
+        // must safely reach the system fallback instead of depending on an ESM
+        // import.meta URL that is absent from the generated CommonJS bundle.
+        d.send({
+          jsonrpc: '2.0',
+          id: 5,
+          method: 'tools/call',
+          params: {
+            name: 'code_glob',
+            arguments: {
+              patterns: ['fixtures/*.ts'],
+              base_path: root,
+              backend: 'ripgrep',
+              output: { mode: 'paths_only' },
+            },
+          },
+        });
+        const globReply = (await d.waitFor(5, 20_000)) as {
+          result?: { content?: Array<{ text?: string }> };
+        };
+        const glob = JSON.parse(globReply.result?.content?.[0]?.text ?? '{}') as {
+          success?: boolean;
+          data?: { files?: string[] };
+        };
+        expect(glob.success).toBe(true);
+        expect(glob.data?.files).toContain('fixtures/sample.ts');
+
+        expect(d.child.exitCode, 'intel should still be alive after all calls').toBeNull();
       } finally {
         d.child.kill('SIGTERM');
       }

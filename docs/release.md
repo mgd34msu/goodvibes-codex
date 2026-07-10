@@ -50,9 +50,9 @@ Use an isolated temporary home and a copy of the exact staged artifact. Add the 
 
 At minimum verify:
 
-- all three servers initialize before optional dependency preparation;
-- missing dependencies fail with a precise maintenance action rather than a process crash;
-- prepared dependencies survive offline restart;
+- all three launchers automatically prepare exact locked runtime dependencies in an isolated durable data root;
+- a failed offline first-start repair preserves MCP initialization, clean JSON-RPC stdout, and precise automatic-retry diagnostics;
+- automatically prepared dependencies survive and pass representative dependency-backed calls on an offline restart;
 - a path with spaces works;
 - an unregistered sibling and symlink escape are denied;
 - scaffold remains dry-run by default;
@@ -68,7 +68,7 @@ At minimum verify:
 
 The cross-platform CI job proves repository installation, bundle generation, portable manifest validation, and MCP initialize/tool listing on the three hosted operating systems. It does not prove every optional native package, filesystem ACL, DNS behavior, shell hook, database driver, or real Codex app integration on every platform.
 
-Before claiming a platform fully supported, perform the installed-artifact cases relevant to that platform, including owner-only secret storage (or documented Windows ACL), executable discovery, path separators/spaces/Unicode, optional runtime dependency preparation, and read-only installed plugin files.
+Before claiming a platform fully supported, perform the installed-artifact cases relevant to that platform, including owner-only secret storage (or documented Windows ACL), executable discovery, path separators/spaces/Unicode, automatic runtime dependency repair, and read-only installed plugin files.
 
 ## Reproducibility and provenance
 

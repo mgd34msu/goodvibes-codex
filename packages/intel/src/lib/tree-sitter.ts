@@ -25,9 +25,9 @@
  */
 
 // `web-tree-sitter` is an externalized WASM dependency (intel build.mjs) that
-// explicit dependency preparation installs into a durable runtime directory. It is
-// loaded LAZILY on first parse — never at module load — so a fresh install (or
-// a post-update install whose dependencies are not prepared yet) boots and answers
+// automatic launcher repair installs into a durable runtime directory. It is
+// loaded LAZILY on first parse — never at module load — so an offline fresh install
+// whose automatic repair cannot complete still boots and answers
 // `initialize`/`tools/list` instead of crashing on a missing
 // `require('web-tree-sitter')`. Only the runtime VALUE import (the `Parser` and
 // `Language` classes) is deferred; the type imports are erased by the compiler
@@ -41,6 +41,7 @@ import type {
 } from 'web-tree-sitter';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { importRuntimeModule } from './runtime-module.js';
 
 /** The `web-tree-sitter` classes this module needs at runtime, loaded lazily. */
 interface TreeSitterRuntime {
@@ -54,40 +55,27 @@ interface TreeSitterRuntime {
 }
 
 let treeSitterRuntime: TreeSitterRuntime | null = null;
-let treeSitterLoadFailed = false;
 
 /**
- * Lazily load the `web-tree-sitter` runtime with a cached failure state.
- * Mirrors the `loadAstGrep()` pattern in `edit/engine.ts`: a computed specifier
- * keeps esbuild from resolving the external at build time, and a load failure
- * returns null (cached) so the honest-unavailable path fires instead of a
- * crash. Returns null when the dep is not installed yet.
+ * Lazily load the `web-tree-sitter` runtime.
+ * Resolve through the launcher-controlled runtime roots because Node's ESM
+ * resolver ignores NODE_PATH. Successful loads are cached, but failures are
+ * retried so a maintenance repair can heal the running server without a restart.
  */
 async function loadTreeSitterRuntime(): Promise<TreeSitterRuntime | null> {
   if (treeSitterRuntime) {
     return treeSitterRuntime;
   }
-  if (treeSitterLoadFailed) {
+  const mod = await importRuntimeModule<TreeSitterRuntime>('web-tree-sitter');
+  if (
+    !mod ||
+    typeof mod.Parser?.init !== 'function' ||
+    typeof mod.Language?.load !== 'function'
+  ) {
     return null;
   }
-  try {
-    const spec = ['web-tree', 'sitter'].join('-');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mod = (await import(spec as string)) as any;
-    if (
-      !mod ||
-      typeof mod.Parser?.init !== 'function' ||
-      typeof mod.Language?.load !== 'function'
-    ) {
-      treeSitterLoadFailed = true;
-      return null;
-    }
-    treeSitterRuntime = { Parser: mod.Parser, Language: mod.Language };
-    return treeSitterRuntime;
-  } catch {
-    treeSitterLoadFailed = true;
-    return null;
-  }
+  treeSitterRuntime = { Parser: mod.Parser, Language: mod.Language };
+  return treeSitterRuntime;
 }
 
 /**

@@ -48,7 +48,7 @@ export async function executeMysql(
   const mysql = await loadMysqlDriver();
   if (!mysql) {
     throw new Error(
-      'MySQL driver (mysql2) is not prepared. Run the GoodVibes control utility: deps install connect'
+      'MySQL driver (mysql2) is unavailable. GoodVibes launchers and $goodvibes-maintenance automatically retry the locked dependency repair; dependency-free Connect surfaces remain usable if repair cannot complete.'
     );
   }
 

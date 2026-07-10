@@ -2,19 +2,18 @@
  * ripgrep binary wrapper — the search backend for code_grep and (via
  * `--files`) code_glob.
  *
- * Ported from v1 `precision-engine/src/core/ripgrep.ts` verbatim aside from
- * one change: binary resolution. `@vscode/ripgrep` is not installed in this
- * workspace yet (it is declared as a runtime dep in
- * `plugins/goodvibes/server/intel/package.json`, installed on first plugin
- * run — see build.mjs externals). `resolveRgPath()` prefers the pinned
- * `@vscode/ripgrep` binary when present, and falls back to a `rg` on PATH
- * otherwise (covers this dev sandbox, which has a system ripgrep, and any
- * environment where the plugin's first-run install has not happened yet).
- * FLAG: once `npm install` resolves `@vscode/ripgrep` for this workspace, the
- * fallback branch simply stops firing — no code change needed.
+ * Ported from v1 `precision-engine/src/core/ripgrep.ts` aside from binary
+ * resolution. `resolveRgPath()` prefers the pinned runtime package and falls
+ * back to `rg` on PATH while automatic repair is unavailable. The fallback is
+ * deliberately not cached so a running server can use a later durable repair.
  */
 
 import { spawn } from 'child_process';
+import { existsSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import * as path from 'node:path';
+
+declare const __filename: string;
 
 export interface RipgrepSearchOptions {
   pattern: string;
@@ -93,28 +92,67 @@ interface RipgrepJsonSummary {
 
 type RipgrepJsonOutput = RipgrepJsonMatch | RipgrepJsonContext | RipgrepJsonSummary;
 
-// Plain global `require` — NOT `createRequire(import.meta.url)`. This module
-// is authored as ESM but bundled to CJS by esbuild (build.mjs); esbuild's CJS
-// output provides a real, working `require` global, whereas `import.meta` is
-// spec'd to be EMPTY in CJS output (esbuild warns and `import.meta.url` would
-// be `undefined`, crashing `createRequire`). The vitest/vite-node dev
-// transform also provides a working `require` global, so this resolves the
-// same way in both source-run tests and the bundled server.
-declare const require: (id: string) => unknown;
-let cachedRgPath: string | null = null;
+let cachedPackagedRgPath: string | null = null;
+
+function loadPackagedRipgrep(): { rgPath?: unknown } | null {
+  const anchor = process.env.GOODVIBES_PLUGIN_ROOT
+    ? path.join(process.env.GOODVIBES_PLUGIN_ROOT, 'server', 'intel', 'launcher.cjs')
+    : typeof __filename === 'string'
+      ? __filename
+      : path.resolve(process.cwd(), 'package.json');
+  const runtimeRequire = createRequire(anchor);
+
+  // A failed bare-package lookup can remain negatively cached by Node after a
+  // maintenance repair creates the package. Probe known NODE_PATH roots first
+  // and require the absolute package directory only after its manifest exists.
+  for (const nodeModules of (process.env.NODE_PATH || '').split(path.delimiter).filter(Boolean)) {
+    const packageRoot = path.join(nodeModules, '@vscode', 'ripgrep');
+    const packageFile = path.join(packageRoot, 'package.json');
+    if (!existsSync(packageFile)) {
+      continue;
+    }
+    try {
+      const manifest = JSON.parse(readFileSync(packageFile, 'utf8')) as { main?: unknown };
+      const main = typeof manifest.main === 'string' ? manifest.main : 'index.js';
+      const entry = path.resolve(packageRoot, main);
+      const relative = path.relative(packageRoot, entry);
+      if (
+        relative === '..' ||
+        relative.startsWith(`..${path.sep}`) ||
+        path.isAbsolute(relative) ||
+        !existsSync(entry)
+      ) {
+        continue;
+      }
+      return runtimeRequire(entry) as { rgPath?: unknown };
+    } catch {
+      // A corrupt candidate may be replaced by a later repair; try other roots.
+    }
+  }
+
+  try {
+    return runtimeRequire('@vscode/ripgrep') as { rgPath?: unknown };
+  } catch {
+    return null;
+  }
+}
 
 /** Resolve the ripgrep binary path: pinned `@vscode/ripgrep` first, PATH `rg` fallback. */
 function resolveRgPath(): string {
-  if (cachedRgPath) {
-    return cachedRgPath;
+  if (cachedPackagedRgPath && existsSync(cachedPackagedRgPath)) {
+    return cachedPackagedRgPath;
   }
-  try {
-    const mod = require('@vscode/ripgrep') as { rgPath: string };
-    cachedRgPath = mod.rgPath;
-  } catch {
-    cachedRgPath = 'rg';
+  cachedPackagedRgPath = null;
+  const mod = loadPackagedRipgrep();
+  if (
+    typeof mod?.rgPath !== 'string' ||
+    !path.isAbsolute(mod.rgPath) ||
+    !existsSync(mod.rgPath)
+  ) {
+    return 'rg';
   }
-  return cachedRgPath;
+  cachedPackagedRgPath = mod.rgPath;
+  return cachedPackagedRgPath;
 }
 
 /** Core wrapper around the ripgrep binary for search and file discovery. */
@@ -250,10 +288,14 @@ export class RipgrepCore {
       proc.stderr.on('data', (data: Buffer) => (stderr += data.toString()));
       proc.on('error', error => {
         clearTimeout(timeoutId);
+        if (cachedPackagedRgPath === rgPath) {
+          cachedPackagedRgPath = null;
+        }
         reject(
           new Error(
             `Failed to spawn ripgrep ('${rgPath}'): ${error.message}. ` +
-              `Install @vscode/ripgrep or ensure 'rg' is on PATH.`
+              `Automatic locked dependency repair will retry @vscode/ripgrep; ` +
+              `a system 'rg' fallback is not currently available.`
           )
         );
       });

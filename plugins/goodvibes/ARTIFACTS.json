@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
   "plugin": "goodvibes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "algorithm": "sha256",
   "files": [
     {
       "path": ".codex-plugin/plugin.json",
       "bytes": 1330,
-      "sha256": "a0508577ef96b5dbcd93861e61ea4b7c6dc8912476ea7eeb7e1800ed126c40cc"
+      "sha256": "2f9ca5da97c3c2edbd08a177f96db1049b38427fcec393365bbe3379ba8bfd75"
     },
     {
       "path": ".mcp.json",
@@ -21,8 +21,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 902,
-      "sha256": "afabd4d88c0246124766905255bccb52d1088b1ff5f99efeade9c926d6f0fe4f"
+      "bytes": 1044,
+      "sha256": "f1e113cd4def947b4ca35b122020d6a535d8720c55c72dda25b12ed8fd55ce22"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -37,7 +37,7 @@
     {
       "path": "hooks/README.md",
       "bytes": 2277,
-      "sha256": "64950f5a9ff7af5bde5bb1fc42d10c33451cbb3ffba2d09e2cc7e3864d8936c8"
+      "sha256": "3e4a17fc6a12191885fd2d66d614f7e7ba9ae2286a7789db119dfbf3adcb12f9"
     },
     {
       "path": "hooks/commit-guard.mjs",
@@ -46,8 +46,8 @@
     },
     {
       "path": "hooks/hooks.json",
-      "bytes": 2312,
-      "sha256": "fab3c29037cfaee94a3a88c654b525f0aca2f7dd44ec66148f449e6106991722"
+      "bytes": 2336,
+      "sha256": "fd8053e275cd06dd9a54d98306cf160af5d1fe0a138d1ec316f15ec27d65fd94"
     },
     {
       "path": "hooks/lib/data-root.mjs",
@@ -71,8 +71,8 @@
     },
     {
       "path": "hooks/session-start.mjs",
-      "bytes": 4174,
-      "sha256": "22e44ef5dfa07c2285c6c352b9be848f9d6ee5241ed1d8e457970361c0d503a3"
+      "bytes": 4283,
+      "sha256": "754ee53a635edbd8d7a6e35e4b923e347b43d9d8723d8aaeaaa28e812adefd13"
     },
     {
       "path": "hooks/stop.mjs",
@@ -91,48 +91,53 @@
     },
     {
       "path": "scripts/goodvibes-control.mjs",
-      "bytes": 26569,
-      "sha256": "4e74e6ae05451c252fa14b3dccf1a2b7d6c809b2c5b2b189ad130cb951e51c12"
+      "bytes": 23933,
+      "sha256": "818ae546a79ea5c2e0b336da7a9ed50b9c62fe96413b0effbe11d73e0f172e05"
+    },
+    {
+      "path": "scripts/lib/runtime-deps.cjs",
+      "bytes": 23284,
+      "sha256": "2438aa1d15bf61891f7ea84febc2cb22b11a7a30cf7a6c722a48f7c1051ae022"
     },
     {
       "path": "server/analytics/index.cjs",
       "bytes": 649724,
-      "sha256": "431ff3cda4fdd113ba8e4c64a9caca980b51de757b0da30bea49b7fc43d6dd15"
+      "sha256": "c7bf4e74e6a2e95582ac62054324ec34d3302b40e7d8126027b3624e48b408f3"
     },
     {
       "path": "server/analytics/launcher.cjs",
-      "bytes": 1173,
-      "sha256": "e7f9eff476447388c53b8fc50ea0d2775a7af44eba1d61ea186528aad2e49258"
+      "bytes": 2052,
+      "sha256": "6b33d2890d3850b5cb513ebe04ed26506f70317c6efe39f64cc6dc696d04c2b0"
     },
     {
       "path": "server/analytics/package-lock.json",
       "bytes": 217,
-      "sha256": "e3650f147a8800b493e782e8eee74927c4ac3bd477935b158fd0c2125808116d"
+      "sha256": "64a7d358005268522f711aa69cd0ded90b014ccd93d949fdaea04be27e44a6ea"
     },
     {
       "path": "server/analytics/package.json",
       "bytes": 206,
-      "sha256": "5c0f0e16fe5ced547a076eaf18ec80a3f95ecbafff85fde9e99316fee0b68309"
+      "sha256": "a19ee81dba98a125d5a6539f17cc320c0d192af661414ee89168107eeacafb3b"
     },
     {
       "path": "server/connect/index.cjs",
-      "bytes": 1481609,
-      "sha256": "f9694eef81706fd1691d2dd3f6a0b4318f55615b162c991ce99823868f05733a"
+      "bytes": 1481837,
+      "sha256": "ca5c37c61a4bc82a2b86ff3d096d3622b952b1b74e372e92c6046f24fa4ed762"
     },
     {
       "path": "server/connect/launcher.cjs",
-      "bytes": 1171,
-      "sha256": "ca4c06debf3d1646cb73bc695d88a8434dc83476d9d643280bfc349a6fda0d10"
+      "bytes": 2042,
+      "sha256": "c35c786e7c0235ea0f7cc1a5acf41693c89aa3af9b4b7f8f49253085d77b1f64"
     },
     {
       "path": "server/connect/package-lock.json",
       "bytes": 10652,
-      "sha256": "89af1f9cc9a42926d93b8e54d53d262a6855aa3841b77a1c3f7a15cc8ef3d4be"
+      "sha256": "b6ec6edfb4b9088835b465c45f30cfacf7b04517cad1a63149814143ecbed180"
     },
     {
       "path": "server/connect/package.json",
       "bytes": 266,
-      "sha256": "e9ba84e296e3ccbf2e7f59469e2219932382a02f76f7718868a07031eaa889d2"
+      "sha256": "9022d2862e676ea788b32ba1ecb59c4471d209473f9dc725f5eec37d4cefe31f"
     },
     {
       "path": "server/connect/wasm/sql-wasm.wasm",
@@ -141,23 +146,23 @@
     },
     {
       "path": "server/intel/index.cjs",
-      "bytes": 12382524,
-      "sha256": "d3b037fe16ebe6219e2140200913132e3420b9b335e37b1172699bd68697c7ba"
+      "bytes": 12387880,
+      "sha256": "e93d8cdd0266a80b266cb8b66095625343221fc51c93a4c0d0743a1234ab74fe"
     },
     {
       "path": "server/intel/launcher.cjs",
-      "bytes": 1159,
-      "sha256": "f97222bc2ddb5866fffb183431a2f71d7bd242a97da0a23d390579fffae4b42f"
+      "bytes": 2016,
+      "sha256": "a5037ad8736538e1eceec579dd3f27d825148e334ad3f683b9ad472d2154289b"
     },
     {
       "path": "server/intel/package-lock.json",
       "bytes": 9735,
-      "sha256": "d563ef01b6eccc11972c70ff072bceeeb3e1ccd5f32ee8ac6d50d7964f23fa54"
+      "sha256": "a55f59ff235f88f497b2d53cd2f3b777b26a6fd30bb9612bcab75af39c026cf5"
     },
     {
       "path": "server/intel/package.json",
       "bytes": 355,
-      "sha256": "d4ceaf19ef21b15f28e2999633f29ca299f8d9b75c4991c75d6048267b5aa694"
+      "sha256": "ea61314f7082474764ac8fb7631b29d44a74f61922ae2adff5d406418becf855"
     },
     {
       "path": "server/intel/wasm/tree-sitter-go.wasm",
@@ -221,18 +226,18 @@
     },
     {
       "path": "skills/goodvibes-maintenance/SKILL.md",
-      "bytes": 2089,
-      "sha256": "3451e94ca2084ce7a1c09ac648c1679b000005ea82ad0d8de7d78424f5696b26"
+      "bytes": 3182,
+      "sha256": "c3ac72ef9843b1e739968a7b0a689ae2efe76346524ec56b6d2c7f96662f219d"
     },
     {
       "path": "skills/goodvibes-maintenance/agents/openai.yaml",
-      "bytes": 272,
-      "sha256": "237552d45aed1bbaee56be9738707216c5f80a2a8191fea2643a201ef4dbd7db"
+      "bytes": 318,
+      "sha256": "f428c44f17bee97f5aec40f3cc808e9b961151084dff6c3baae2d6e15b46a2ff"
     },
     {
       "path": "skills/goodvibes-maintenance/references/diagnostics.md",
-      "bytes": 1978,
-      "sha256": "19b58a2c01a915034005f189489bb6c5c66fab0fda058ea811b04b45bdfa93e9"
+      "bytes": 2628,
+      "sha256": "8b5933e0bf5d5ec1710ffb2a199917e76b545cd6d17794f0cb1a8cf54c9033cb"
     },
     {
       "path": "skills/goodvibes-memory/SKILL.md",
@@ -286,8 +291,8 @@
     },
     {
       "path": "skills/service-integration/SKILL.md",
-      "bytes": 2448,
-      "sha256": "ca7dbcef81eb4ecafd3ac8f336fb033eb038af6bf6031a5efa6439dfa46d2b12"
+      "bytes": 2600,
+      "sha256": "c0f9b3a5582770b06e6fbda260ea125b3960eca94a0a42c5a87c1e668a4622b8"
     },
     {
       "path": "skills/service-integration/agents/openai.yaml",
@@ -296,8 +301,8 @@
     },
     {
       "path": "skills/service-integration/references/operations.md",
-      "bytes": 2366,
-      "sha256": "c4acf9d2e628c89d3a5e35ce7df2884b22a1a37ec997f7184116ab1b00f476eb"
+      "bytes": 2561,
+      "sha256": "b7ca6ae6eeda5bfa62e4b4cbc93dea60bc855168d3835d4ee89e7f58ebe1a9f6"
     },
     {
       "path": "skills/task-orchestration/SKILL.md",

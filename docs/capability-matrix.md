@@ -1,6 +1,6 @@
 # Capability and deferral matrix
 
-This file is the user-visible `0.1.0` parity record. “Available” means the capability is present in the Codex plugin surface; it does not mean every analyzer supports every framework or that a missing optional dependency cannot degrade an individual call.
+This file is the user-visible `0.1.x` parity record. “Available” means the capability is present in the Codex plugin surface; it does not mean every analyzer supports every framework or that an external registry or platform failure cannot temporarily degrade an individual call.
 
 ## MCP servers and tools
 
@@ -63,7 +63,7 @@ All service/credential/destination/connection/write-grant mutations moved to the
 | `service-integration`   | Available | Connect data-plane workflow with control-plane boundary      |
 | `goodvibes-analytics`   | Available | Codex metadata analytics workflow                            |
 | `codebase-review`       | Available | Diff/check-driven review and optional WRFC cycle             |
-| `goodvibes-maintenance` | Available | Plugin health, hook trust, dependencies, and repair guidance |
+| `goodvibes-maintenance` | Available | Plugin health, hook trust, automatic locked dependency repair, and verification |
 
 Claude slash-command files are not installed. Codex invokes these skills from matching requests or explicit `$skill-name` references.
 
@@ -88,18 +88,18 @@ The plugin does not install custom-agent TOML into `~/.codex` or `.codex/agents`
 
 ## Intentional deferrals
 
-| Claude-era capability                   | `0.1.0` decision      | Rationale                                                                                                     |
+| Claude-era capability                   | `0.1.x` decision      | Rationale                                                                                                     |
 | --------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------- |
 | Claude transcript/history import        | Deferred              | Codex analytics needs a stable native baseline before one-way historical import                               |
 | Anthropic model pricing and cost recap  | Retired for v1        | Local rollout token counters are not authoritative billing data                                               |
 | Prompt/reasoning/tool-payload analytics | Not collected         | Privacy boundary and unstable transcript internals                                                            |
-| Setup-time automatic dependency install | Retired               | Downloads require explicit consent through `deps install`                                                     |
+| Automatic dependency install/self-heal  | Available             | Every launcher and maintenance invocation verifies and repairs locked packages in the durable data root       |
 | Claude command installer                | Retired               | Codex skills are the workflow surface                                                                         |
 | Silent custom-agent install             | Deferred              | Role references work without mutating user/project configuration                                              |
 | Post-tool failure automation            | Deferred              | Requires a stable Codex event/output contract and golden fixtures                                             |
 | Session-end analytics                   | Retired               | Codex `Stop` is per turn, not session end                                                                     |
 | MCP resources/prompts/completions       | Not applicable        | The source plugin exposes tools only                                                                          |
 | Strong host-separated authority broker  | Deferred/host-limited | Current fallback is an interactive same-user CLI dependent on Codex sandbox and approvals                     |
-| OAuth2/browser/session auth             | Deferred              | `0.1.0` supports stored bearer, Basic, and API-key auth only; hidden refresh/login network paths were removed |
+| OAuth2/browser/session auth             | Deferred              | `0.1.x` supports stored bearer, Basic, and API-key auth only; hidden refresh/login network paths were removed |
 
 Security-motivated narrowing is considered parity: preserving an unsafe model-facing authority mutation would be a regression, not a required feature.
