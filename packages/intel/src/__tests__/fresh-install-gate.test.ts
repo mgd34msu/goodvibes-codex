@@ -192,8 +192,9 @@ describe('fresh-install gate — committed bundles with zero node_modules', () =
         expect(fileEntry?.lines?.join('\n')).toContain('export function hello');
 
         // Direct-bundle launch has no GOODVIBES_PLUGIN_ROOT. Ripgrep resolution
-        // must safely reach the system fallback instead of depending on an ESM
-        // import.meta URL that is absent from the generated CommonJS bundle.
+        // must safely attempt the optional system fallback instead of depending
+        // on an ESM import.meta URL that is absent from the generated CommonJS
+        // bundle. CI images are not required to have a system `rg` installed.
         d.send({
           jsonrpc: '2.0',
           id: 5,
@@ -211,12 +212,19 @@ describe('fresh-install gate — committed bundles with zero node_modules', () =
         const globReply = (await d.waitFor(5, 20_000)) as {
           result?: { content?: Array<{ text?: string }> };
         };
-        const glob = JSON.parse(globReply.result?.content?.[0]?.text ?? '{}') as {
+        const globText = globReply.result?.content?.[0]?.text ?? '{}';
+        const glob = JSON.parse(globText) as {
           success?: boolean;
           data?: { files?: string[] };
         };
-        expect(glob.success).toBe(true);
-        expect(glob.data?.files).toContain('fixtures/sample.ts');
+        if (glob.success) {
+          expect(glob.data?.files).toContain('fixtures/sample.ts');
+        } else {
+          expect(globText).toContain(
+            'Automatic locked dependency repair will retry @vscode/ripgrep'
+          );
+        }
+        expect(globText).not.toMatch(/createRequire|ERR_INVALID_ARG_VALUE|import\.meta\.url/i);
 
         expect(d.child.exitCode, 'intel should still be alive after all calls').toBeNull();
       } finally {
