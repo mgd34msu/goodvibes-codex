@@ -29,19 +29,33 @@ The uploaded GitHub Actions artifact contains that tarball, its `*.tar.gz.sha256
 ## Candidate checklist
 
 1. Confirm `UPSTREAM.md` identifies the source baseline and carried Codex-specific patches.
+
 2. Confirm the plugin/workspace/runtime versions and lockfiles are intentional.
+
 3. Run `npm ci` from a clean checkout.
+
 4. Run every local check in [development.md](development.md).
+
 5. Rebuild and require clean generated-bundle and `ARTIFACTS.json` diffs.
+
 6. Confirm `.mcp.json` declares only `goodvibes_intel`, `goodvibes_analytics`, and `goodvibes_connect`.
+
 7. Confirm MCP tool inventories are exactly 15, 7, and 3.
+
 8. Confirm nine skills, six supported hooks, templates, launchers, runtime locks, and required WASM files are present.
+
 9. Scan generated bundles/artifacts for absolute developer paths, credentials, unresolved internal workspace imports, Claude-only runtime variables, and source maps.
+
 10. Inspect the CI archive and verify `SHA256SUMS` before testing it.
+
 11. Install the staged marketplace under an isolated custom `CODEX_HOME` and verify every launcher plus the control utility infer that home from the cached `installedPath` without inherited path variables.
+
 12. Run an installed-plugin/new-thread handshake and a representative dependency-backed Intel, Analytics, and Connect call.
+
 13. Test no-hook-trust and trusted-hook states; confirm tools remain understandable without hooks.
+
 14. Register/revoke a temporary workspace and service; confirm revocation takes effect after process refresh.
+
 15. Record any intentional deferral in [capability-matrix.md](capability-matrix.md) and the release notes.
 
 ## Manual installed-artifact test
@@ -51,17 +65,29 @@ Use an isolated temporary home and a copy of the exact staged artifact. Add the 
 At minimum verify:
 
 - all three launchers automatically prepare exact locked runtime dependencies in an isolated durable data root;
+
 - a failed offline first-start repair preserves MCP initialization, clean JSON-RPC stdout, and precise automatic-retry diagnostics;
+
 - automatically prepared dependencies survive and pass representative dependency-backed calls on an offline restart;
+
 - a path with spaces works;
+
 - an unregistered sibling and symlink escape are denied;
+
 - scaffold remains dry-run by default;
+
 - a structural-edit token cannot be reused;
+
 - Connect MCP cannot mutate authority;
+
 - a redirect cannot forward credentials across origins;
+
 - a registered read-only database rejects writes;
+
 - Analytics ignores message/tool payload text and confines exports;
+
 - hook trust is explicit and changed hook definitions request re-review;
+
 - reinstall selects the new version/cachebuster.
 
 ## Platform interpretation

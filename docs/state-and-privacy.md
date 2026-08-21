@@ -19,7 +19,11 @@ MCP server processes do not assume they receive hook-only `PLUGIN_DATA`. Their l
 
 The launchers and libraries understand `CODEX_HOME`, `GOODVIBES_DATA_ROOT`, and `GOODVIBES_ANALYTICS_HOME` when those variables are actually present. The installed-plugin probe on Codex CLI 0.144.1 found that bundled MCP children receive a minimal environment and do not inherit those parent variables. Only static values declared in `.mcp.json` are passed.
 
-To keep installed copies coherent, each launcher infers `CODEX_HOME` from the standard `<codex-home>/plugins/cache/...` installed path, and the control utility performs the same inference when invoked from its saved `installedPath`. This supports a custom Codex home even though the variable is absent. A checkout path cannot be inferred; direct development launches with a custom home must pass `CODEX_HOME` explicitly. Arbitrary GoodVibes-only path overrides are direct-launch/test features in `0.1.x` and are not automatically propagated by the host. Re-test this contract when upgrading Codex.
+To keep installed copies coherent, each launcher infers `CODEX_HOME` from the standard `<codex-home>/plugins/cache/...` installed path, and the control utility performs the same inference when invoked from its saved `installedPath`. This supports a custom Codex home even though the variable is absent.
+
+A checkout path cannot be inferred; direct development launches with a custom home must pass `CODEX_HOME` explicitly. Arbitrary GoodVibes-only path overrides are direct-launch/test features in `0.1.x` and are not automatically propagated by the host.
+
+Re-test this contract when upgrading Codex.
 
 ## Shared GoodVibes data
 
