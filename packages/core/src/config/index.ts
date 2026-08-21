@@ -6,7 +6,7 @@
  * files so revocation affects a long-lived server immediately.
  *
  * Project state lives under `.goodvibes/` in the target project. `getStatePath`
- * is the single helper the telemetry, cache, logging, and overflow modules use
+ * is the single helper the cache, logging, and overflow modules use
  * to locate their files. Codex project state uses the explicit `codex`
  * namespace and never imports a legacy host's state implicitly.
  *
@@ -43,8 +43,6 @@ export interface GoodvibesConfig {
   dangerously_persist_across_sessions: boolean;
   /** Parent-liveness ppid poll interval (ms). */
   ppid_poll_ms: number;
-  /** Whether telemetry writing is enabled. */
-  telemetry_enabled: boolean;
   /** File-state cache memory budget (MB). */
   cache_max_mb: number;
   /** Default response token cap when a caller omits `output.max_tokens`. */
@@ -77,10 +75,6 @@ export const CONFIG_KEYS: Record<string, KeyDoc> = {
   ppid_poll_ms: {
     default: 5000,
     description: 'Interval for the parent-liveness poll that catches reparent-to-init.',
-  },
-  telemetry_enabled: {
-    default: true,
-    description: 'Whether the server records telemetry to the local SQLite database.',
   },
   cache_max_mb: {
     default: 200,
@@ -121,7 +115,6 @@ export const DEFAULT_CONFIG: GoodvibesConfig = Object.freeze({
   mode: 'restricted',
   dangerously_persist_across_sessions: false,
   ppid_poll_ms: 5000,
-  telemetry_enabled: true,
   cache_max_mb: 200,
   max_tokens_default: 4000,
   budgets: Object.freeze({
@@ -220,7 +213,6 @@ export function loadConfig(cwd?: string): GoodvibesConfig {
     mode,
     dangerously_persist_across_sessions: merged.dangerously_persist_across_sessions === true,
     ppid_poll_ms: num('ppid_poll_ms', DEFAULT_CONFIG.ppid_poll_ms),
-    telemetry_enabled: merged.telemetry_enabled !== false,
     cache_max_mb: num('cache_max_mb', DEFAULT_CONFIG.cache_max_mb),
     max_tokens_default: num('max_tokens_default', DEFAULT_CONFIG.max_tokens_default),
     budgets: mergeBudgets(DEFAULT_CONFIG.budgets, merged.budgets),

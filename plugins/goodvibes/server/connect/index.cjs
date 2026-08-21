@@ -35353,7 +35353,6 @@ var DEFAULT_CONFIG = Object.freeze({
   mode: "restricted",
   dangerously_persist_across_sessions: false,
   ppid_poll_ms: 5e3,
-  telemetry_enabled: true,
   cache_max_mb: 200,
   max_tokens_default: 4e3,
   budgets: Object.freeze({
@@ -35419,7 +35418,6 @@ function loadConfig(cwd) {
     mode,
     dangerously_persist_across_sessions: merged.dangerously_persist_across_sessions === true,
     ppid_poll_ms: num("ppid_poll_ms", DEFAULT_CONFIG.ppid_poll_ms),
-    telemetry_enabled: merged.telemetry_enabled !== false,
     cache_max_mb: num("cache_max_mb", DEFAULT_CONFIG.cache_max_mb),
     max_tokens_default: num("max_tokens_default", DEFAULT_CONFIG.max_tokens_default),
     budgets: mergeBudgets(DEFAULT_CONFIG.budgets, merged.budgets)

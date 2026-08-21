@@ -3,8 +3,8 @@
  *
  * The estimate is computed from the exact string that is returned to the caller
  * (never from a pre-serialization guess), at ~3.5 characters per token. This is
- * the single source of truth for token accounting in every envelope, cache
- * cost figure, and telemetry payload count so the numbers agree.
+ * the single source of truth for token accounting in every envelope and cache
+ * cost figure so the numbers agree.
  */
 
 /** Characters-per-token divisor. Calibrated so estimates land within ~10%. */

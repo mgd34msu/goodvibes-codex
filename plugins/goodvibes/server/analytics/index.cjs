@@ -16114,7 +16114,6 @@ var DEFAULT_CONFIG = Object.freeze({
   mode: "restricted",
   dangerously_persist_across_sessions: false,
   ppid_poll_ms: 5e3,
-  telemetry_enabled: true,
   cache_max_mb: 200,
   max_tokens_default: 4e3,
   budgets: Object.freeze({

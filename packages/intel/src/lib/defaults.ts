@@ -9,7 +9,7 @@
  * The read size-gate numbers (`MAX_FILE_BYTES`/`MAX_TOKEN_ESTIMATE`/
  * `PAGE_SIZE_LINES`) mirror v1 `runtime-config.ts` defaults. They are NOT
  * `@goodvibes/core/config` keys (that module's `CONFIG_KEYS` covers process
- * hygiene / trust / telemetry, owned by lane 0), these are intel-local
+ * hygiene / trust, owned by lane 0), these are intel-local
  * read-pagination thresholds, kept as local constants per this lane's scope.
  */
 

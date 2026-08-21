@@ -68,8 +68,8 @@ describe('config defaults', () => {
 
 describe('state directory', () => {
   it('resolves all project state under .goodvibes/codex/', () => {
-    expect(getStatePath('/proj', 'telemetry', 'telemetry.db')).toBe(
-      path.join('/proj', '.goodvibes', 'codex', 'telemetry', 'telemetry.db')
+    expect(getStatePath('/proj', 'cache', 'cache.db')).toBe(
+      path.join('/proj', '.goodvibes', 'codex', 'cache', 'cache.db')
     );
     expect(projectConfigPath('/proj')).toBe(
       path.join('/proj', '.goodvibes', 'codex', 'config.json')

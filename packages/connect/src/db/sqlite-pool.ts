@@ -2,9 +2,9 @@
  * SQLite connection pool for connect `db_query`.
  *
  * Ported from v1 project-engine `core/database/sqlite-pool.ts`. v2 changes: the
- * WASM is located the same way `core/telemetry` does it (candidates beside the
- * bundle, falling back to sql.js's node_modules default in tests), and the v1
- * `logWarn` shared logger is replaced by a local `console.warn`.
+ * WASM is located by checking candidates beside the bundle, falling back to
+ * sql.js's node_modules default in tests, and the v1 `logWarn` shared logger
+ * is replaced by a local `console.warn`.
  *
  * Ownership model. sql.js has no file locking and no shared state between
  * instances: `new SQL.Database(buffer)` is a private in-memory *copy* of the

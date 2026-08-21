@@ -4,7 +4,7 @@
 
 | Path                               | Responsibility                                                                              |
 | ---------------------------------- | ------------------------------------------------------------------------------------------- |
-| `packages/core`                    | Shared envelopes, config/state paths, process hygiene, telemetry, and workspace enforcement |
+| `packages/core`                    | Shared envelopes, config/state paths, process hygiene, and workspace enforcement            |
 | `packages/intel`                   | Fifteen structure-aware code tools and templates integration                                |
 | `packages/analytics`               | Seven Codex rollout-metadata tools                                                          |
 | `packages/connect`                 | Three policy-bound HTTP/database tools and control-plane support                            |

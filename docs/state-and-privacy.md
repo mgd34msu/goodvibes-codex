@@ -42,7 +42,6 @@ The exact set grows as features are used. Important paths include:
     connect/node_modules/
   hooks/                         fallback only
   logs/
-  telemetry/
 ```
 
 `trusted-roots.json`, service/connection policy, and credential files are control state. They must not be copied into a workspace or edited by an MCP tool. On POSIX systems, private directories/files are created as `0700`/`0600` where supported. Important writes use same-directory temporary files and atomic rename.

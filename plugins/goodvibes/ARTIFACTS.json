@@ -101,8 +101,8 @@
     },
     {
       "path": "server/analytics/index.cjs",
-      "bytes": 649724,
-      "sha256": "c7bf4e74e6a2e95582ac62054324ec34d3302b40e7d8126027b3624e48b408f3"
+      "bytes": 649697,
+      "sha256": "3d53fab401dfcbfed48bbb341cb9048e04bf16a48ba6b9fb003c33dffff7f5ed"
     },
     {
       "path": "server/analytics/launcher.cjs",
@@ -121,8 +121,8 @@
     },
     {
       "path": "server/connect/index.cjs",
-      "bytes": 1488328,
-      "sha256": "e554b4d3c7d1e37076d5450d2903ec2be5320ab095cfdf177a2b4a314c2cb749"
+      "bytes": 1488242,
+      "sha256": "1e0b8ed8efbfe051cd73c1bf692fa06e449b4ea5dedfcef166528fcf796d9dd3"
     },
     {
       "path": "server/connect/launcher.cjs",
@@ -146,8 +146,8 @@
     },
     {
       "path": "server/intel/index.cjs",
-      "bytes": 12390195,
-      "sha256": "f621c27f5294578a2ae4bad541d2f6c52ec5682becaeb79dc19da2caa9f48a75"
+      "bytes": 12390109,
+      "sha256": "9b7f1ab6df17284df1443e09f8b1aa9fc89fe14c4aee4dec67905935740071e4"
     },
     {
       "path": "server/intel/launcher.cjs",
