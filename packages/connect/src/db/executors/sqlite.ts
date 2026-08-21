@@ -1,5 +1,5 @@
 /**
- * SQLite query executor — ported from v1 project-engine
+ * SQLite query executor, ported from v1 project-engine
  * `core/database/executors/sqlite.ts` (parameterized SELECT + write paths via
  * the pool). This is the tested db_query path (sql.js is connect's own dep).
  */
@@ -58,12 +58,12 @@ export async function executeSqlite(
     filepath,
     readonly,
     foreignKeys: true,
-    walMode: !readonly,
   };
 
   try {
+    // The pool owns the handle's access mode: a `readonly` connection is already
+    // running under `PRAGMA query_only = ON` by the time this callback runs.
     return await withConnection(connectionOptions, db => {
-      db.run(`PRAGMA query_only = ${readonly ? 'ON' : 'OFF'}`);
       const isSelect = isReadOnlyQuery(query);
 
       if (isSelect) {

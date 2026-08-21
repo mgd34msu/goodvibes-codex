@@ -1,5 +1,5 @@
 /**
- * `db_query` tool tests — a real SQLite fixture (seeded via the ported executor)
+ * `db_query` tool tests, a real SQLite fixture (seeded via the ported executor)
  * plus driver-resolution unit tests and the connect trust rules (registered
  * connection only, read-only default, write opt-in, open-mode bare url).
  */

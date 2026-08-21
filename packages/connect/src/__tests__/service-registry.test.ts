@@ -205,4 +205,38 @@ describe('service-registry', () => {
       expect(summaries.map(s => s.name)).toContain('y');
     });
   });
+
+  describe('concurrent mutations', () => {
+    it('keeps every service when registrations overlap', async () => {
+      const names = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot'];
+      await Promise.all(
+        names.map(name => registry.addService(name, { base_url: `https://${name}.test` }))
+      );
+      expect(Object.keys(registry.getFetchServices()).sort()).toEqual([...names].sort());
+    });
+
+    it('keeps every connection and allowlist host when mutations overlap', async () => {
+      await Promise.all([
+        registry.addConnection('one', { secret_ref: 'connection:one' }),
+        registry.addConnection('two', { secret_ref: 'connection:two' }),
+        registry.addAllowlistHost('a.test'),
+        registry.addAllowlistHost('b.test'),
+      ]);
+      expect(registry.listConnectionNames().sort()).toEqual(['one', 'two']);
+      expect(registry.getAllowlist().sort()).toEqual(['a.test', 'b.test']);
+    });
+
+    it('removes only the named service while other registrations overlap', async () => {
+      await registry.addService('keep', { base_url: 'https://keep.test' });
+      await registry.addService('drop', { base_url: 'https://drop.test' });
+
+      const [removed] = await Promise.all([
+        registry.removeService('drop'),
+        registry.addService('late', { base_url: 'https://late.test' }),
+      ]);
+
+      expect(removed).toBe(true);
+      expect(Object.keys(registry.getFetchServices()).sort()).toEqual(['keep', 'late']);
+    });
+  });
 });

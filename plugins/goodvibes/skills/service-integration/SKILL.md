@@ -3,7 +3,7 @@ name: service-integration
 description: "Use the GoodVibes Connect MCP server for authenticated HTTP requests and live PostgreSQL, MySQL, or SQLite queries. Use when a task needs a service or database that the user has already approved through the separate interactive control plane."
 ---
 
-# Service Integration
+# Service integration
 
 Use Connect for registered, authenticated targets. Use normal web access for a public page or an unauthenticated one-off URL.
 

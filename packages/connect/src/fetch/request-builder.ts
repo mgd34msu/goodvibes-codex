@@ -1,5 +1,5 @@
 /**
- * connect request builder — assembles fetch-ready requests from a spec + service.
+ * connect request builder, assembles fetch-ready requests from a spec + service.
  *
  * Assembles URL/query parameters, bounded body encodings, and non-credential
  * headers. Per-request authentication is deliberately absent; the api_request

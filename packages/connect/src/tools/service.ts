@@ -1,5 +1,5 @@
 /**
- * `service` — credential-free registry and trust-status inspection.
+ * `service`, credential-free registry and trust-status inspection.
  *
  * Its public actions are exactly list, get, and status. Responses never contain
  * credentials, and no action can register a destination, change a grant, store

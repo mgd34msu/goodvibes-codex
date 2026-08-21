@@ -11,7 +11,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..', '..', '..', '..');
 const BUNDLE = path.join(REPO, 'plugins', 'goodvibes', 'server', 'analytics', 'index.cjs');
 
-describe('analytics bundle — real tool call over stdio', () => {
+describe('analytics bundle: real tool call over stdio', () => {
   it.skipIf(!existsSync(BUNDLE))(
     'answers a token query from a clean Codex home and remains alive',
     async () => {

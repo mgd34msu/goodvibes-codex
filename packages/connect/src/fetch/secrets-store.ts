@@ -1,7 +1,7 @@
 /**
  * Credential store for connect service authentication.
  *
- * Ported from v1 precision-engine `utils/fetch/secrets-store.ts` — the
+ * Ported from v1 precision-engine `utils/fetch/secrets-store.ts`, the
  * Credentials are stored outside workspaces with owner-only permissions,
  * symlink refusal, and atomic replacement. Environment references are
  * recognized only to reject legacy values; they never read process.env.
@@ -177,27 +177,39 @@ export async function getGlobalSecret(ref: string): Promise<string | undefined> 
 }
 
 /**
- * Deep-resolve every `$env` reference in an auth config, returning a new object.
+ * An auth record whose secret fields hold literal values only. A legacy
+ * `{$env}` reference resolves to nothing, so each field stays optional and
+ * every consumer has to handle its absence.
+ */
+export type ResolvedServiceAuth = Omit<ServiceAuth, 'token' | 'username' | 'password' | 'key'> & {
+  token?: string;
+  username?: string;
+  password?: string;
+  key?: string;
+};
+
+/**
+ * Resolve every secret field in an auth config, returning a new object.
  * Unresolvable refs become undefined (consumers must validate before use).
  */
-export function resolveAuthConfig(auth: ServiceAuth): ServiceAuth {
-  const resolved: ServiceAuth = { type: auth.type };
+export function resolveAuthConfig(auth: ServiceAuth): ResolvedServiceAuth {
+  const resolved: ResolvedServiceAuth = { type: auth.type };
 
   if (auth.service_origin !== undefined) {
     resolved.service_origin = auth.service_origin;
   }
 
   if (auth.token !== undefined) {
-    resolved.token = resolveSecretValue(auth.token) as string;
+    resolved.token = resolveSecretValue(auth.token);
   }
   if (auth.username !== undefined) {
-    resolved.username = resolveSecretValue(auth.username) as string;
+    resolved.username = resolveSecretValue(auth.username);
   }
   if (auth.password !== undefined) {
-    resolved.password = resolveSecretValue(auth.password) as string;
+    resolved.password = resolveSecretValue(auth.password);
   }
   if (auth.key !== undefined) {
-    resolved.key = resolveSecretValue(auth.key) as string;
+    resolved.key = resolveSecretValue(auth.key);
   }
   if (auth.header !== undefined) {
     resolved.header = auth.header;

@@ -1,5 +1,5 @@
 /**
- * `scaffold` — create a new project from a template (§4.1).
+ * `scaffold`, create a new project from a template (§4.1).
  *
  * Ported from `PJ/extensions/standalone/scaffold.ts` (`plugins/goodvibes/tools/
  * implementations/project-engine/src/extensions/standalone/scaffold.ts`, read-only
@@ -14,10 +14,10 @@
  *  - Runs under `core/proc` `withBudget` so a hung install command degrades to
  *    a partial, honestly-accounted result instead of hanging the client.
  *  - `dry_run` mode: reports what would be created/run without touching disk
- *    or spawning a shell — this is what the regression test in
+ *    or spawning a shell, this is what the regression test in
  *    `src/__tests__/scaffold.test.ts` exercises.
  *  - Copies whatever is physically present in the template's `files/` tree
- *    (matching v1's actual behavior — the `template.yaml` `files:` list is
+ *    (matching v1's actual behavior, the `template.yaml` `files:` list is
  *    documentation, never consulted for the copy itself); a per-template
  *    consistency test (also in `scaffold.test.ts`) is the regression guard
  *    against manifest/tree drift so that documentation issue cannot recur
@@ -47,7 +47,7 @@ import type { ToolDefinition } from './types.js';
 
 /** Scaffold has no dedicated §3.1 budget row; it may shell out to `npm install`,
  * so it gets a longer-than-analyzer budget. Config-overridable would require a
- * new config key — deferred; this is a fixed, documented ruling for alpha. */
+ * new config key, deferred; this is a fixed, documented ruling for alpha. */
 const SCAFFOLD_BUDGET_MS = 90_000;
 /** Hard ceiling for any single post-create shell command (install/git init). */
 const POST_CREATE_TIMEOUT_MS = 60_000;
@@ -83,7 +83,7 @@ interface ScaffoldArgs {
 }
 
 interface ScaffoldData {
-  content: string; // envelope enforceMaxTokens contract — human-readable summary
+  content: string; // envelope enforceMaxTokens contract; human-readable summary
   template: string;
   output_dir: string;
   resolved_path: string;
@@ -214,7 +214,7 @@ async function ensureSafeDirectory(candidate: string, selectedRoot: string): Pro
   assertExistingPathWithinSelectedRoot(candidate, canonicalRoot);
 }
 
-/** Run a shell command with a hard timeout; never throws — reports failure in the result. */
+/** Run a shell command with a hard timeout; never throws, reports failure in the result. */
 function runShell(command: string, cwd: string, timeoutMs: number): Promise<PostCreateResult> {
   return new Promise(resolve => {
     const [cmd, ...args] = command.split(' ');
@@ -330,7 +330,7 @@ async function runScaffold(args: ScaffoldArgs): Promise<ScaffoldData> {
     postCreateResults.push({
       command: installCommand(pm),
       success: true,
-      output: '(dry run — not executed)',
+      output: '(dry run, not executed)',
     });
   }
   if (!dryRun && args.run_git_init === true) {
@@ -339,7 +339,7 @@ async function runScaffold(args: ScaffoldArgs): Promise<ScaffoldData> {
     postCreateResults.push({
       command: 'git init',
       success: true,
-      output: '(dry run — not executed)',
+      output: '(dry run, not executed)',
     });
   }
 
@@ -441,7 +441,7 @@ export const scaffoldTool: ToolDefinition = {
         dry_run: {
           type: 'boolean',
           description:
-            'Preview only — no filesystem writes or shell commands (default true; set false explicitly to create files).',
+            'Preview only: no filesystem writes or shell commands (default true; set false explicitly to create files).',
         },
         output: {
           type: 'object',

@@ -91,7 +91,7 @@ Tool annotations describe read-only, destructive, idempotent, and open-world beh
 
 Analytics is a Codex-native adapter rather than a Claude transcript compatibility layer. In the supported installed layout, it scans bounded JSONL rollouts beneath `~/.codex/sessions`, retaining only session identifiers, timestamps, canonical project metadata, model/CLI identifiers, token counters, tool names/counts, and parent/subagent relationships needed by its summaries.
 
-Message text, reasoning, tool arguments, and tool outputs are ignored. Local budgets, tags, limits, sanitized indexes, reports, and exports live beneath the Codex home’s `goodvibes/analytics` directory. State updates are lock-protected and use same-directory atomic replacement. Budget/tag mutations require an exact session ID unless the host supplies one, and export parents are checked against symlink escape before writing. Installed launchers infer the Codex home from their cache path because the host does not propagate path overrides; see [state and privacy](state-and-privacy.md#environment-override-limitation).
+Message text, reasoning, tool arguments, and tool outputs are ignored. Local budgets, tags, limits, sanitized indexes, reports, and exports live beneath the Codex home's `goodvibes/analytics` directory. State updates are lock-protected and use same-directory atomic replacement. Budget/tag mutations require an exact session ID unless the host supplies one, and export parents are checked against symlink escape before writing. Installed launchers infer the Codex home from their cache path because the host does not propagate path overrides; see [state and privacy](state-and-privacy.md#environment-override-limitation).
 
 ## Connect
 

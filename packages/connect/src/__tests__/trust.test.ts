@@ -28,7 +28,7 @@ describe('trust boundary', () => {
     });
   });
 
-  describe('rule 2 — destination allowlist (default-on in restricted mode)', () => {
+  describe('rule 2: destination allowlist (default-on in restricted mode)', () => {
     const registeredOrigins = ['https://api.stripe.com'];
     const allowlist = ['raw.githubusercontent.com'];
 
@@ -75,12 +75,12 @@ describe('trust boundary', () => {
     });
   });
 
-  describe('rule 1 — credential pinning is NOT toggleable', () => {
+  describe('rule 1: credential pinning is NOT toggleable', () => {
     it('attaches only on an exact origin match, in either mode', () => {
       expect(
         isCredentialAttachAllowed('https://api.stripe.com/v1/x', 'https://api.stripe.com')
       ).toBe(true);
-      // A same-host different-port target is a different origin — no attach.
+      // A same-host different-port target is a different origin, no attach.
       expect(
         isCredentialAttachAllowed('https://api.stripe.com:8443/v1/x', 'https://api.stripe.com')
       ).toBe(false);
@@ -91,7 +91,7 @@ describe('trust boundary', () => {
     });
   });
 
-  describe('rule 3 — per-service read-only default with write opt-in', () => {
+  describe('rule 3: per-service read-only default with write opt-in', () => {
     it('always allows safe methods', () => {
       expect(isSafeMethod('get')).toBe(true);
       expect(isMethodAllowed('GET', { mode: 'restricted', hasService: false }).allowed).toBe(true);
@@ -121,7 +121,7 @@ describe('trust boundary', () => {
     });
   });
 
-  describe('rule 5 — redaction', () => {
+  describe('rule 5: redaction', () => {
     it('collects the secret plaintexts used for a request', () => {
       const secrets = collectSecretValues({
         type: 'basic',

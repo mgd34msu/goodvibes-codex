@@ -6,7 +6,7 @@
  * whose servers have no node_modules must still boot every server, answer the MCP
  * handshake, keep every dependency-free capability working, and explain that
  * launchers or maintenance will automatically retry locked repair for anything
- * that needs a native/WASM dep — never a crash, hang, raw "Cannot find module",
+ * that needs a native/WASM dep, never a crash, hang, raw "Cannot find module",
  * or instruction for the user to install packages manually.
  *
  * The test copies each COMMITTED server bundle to a bare temp dir with no
@@ -104,7 +104,7 @@ async function handshake(d: Driver): Promise<{ tools: Array<{ name: string }> }>
 let root: string;
 
 beforeAll(() => {
-  // A bare temp dir — no node_modules here or above it (tmpdir lives outside the repo).
+  // A bare temp dir, no node_modules here or above it (tmpdir lives outside the repo).
   root = mkdtempSync(path.join(tmpdir(), 'gv-fresh-gate-'));
   for (const s of SERVERS) {
     cpSync(path.join(SERVER_SRC, s), path.join(root, s), { recursive: true });
@@ -128,7 +128,7 @@ afterAll(() => {
   }
 });
 
-describe('fresh-install gate — committed bundles with zero node_modules', () => {
+describe('fresh-install gate: committed bundles with zero node_modules', () => {
   it.skipIf(!BUNDLES_EXIST)(
     'boots all three servers and answers initialize + tools/list',
     async () => {
@@ -167,7 +167,7 @@ describe('fresh-install gate — committed bundles with zero node_modules', () =
         const outlineText = outlineReply.result?.content?.[0]?.text ?? '';
         expect(outlineText).toContain('automatically retry the locked dependency repair');
         expect(outlineText).toContain('dependency-free surfaces remain usable');
-        // The honest envelope — never the raw module-resolution failure.
+        // The honest envelope, never the raw module-resolution failure.
         expect(outlineText).not.toContain('Cannot find module');
         expect(outlineText).not.toMatch(
           /ask the user|interactive terminal|must not automate|deps install/i

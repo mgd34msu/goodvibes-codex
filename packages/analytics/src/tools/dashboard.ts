@@ -1,4 +1,4 @@
-/** `dashboard` — bounded Codex metadata report, doctor, or status. */
+/** `dashboard`, bounded Codex metadata report, doctor, or status. */
 import type { ToolModule } from './types.js';
 
 export const dashboardTool: ToolModule = {

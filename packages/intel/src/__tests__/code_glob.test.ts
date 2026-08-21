@@ -37,7 +37,7 @@ afterEach(async () => {
   await cleanupTempDir(dir);
 });
 
-describe('code_glob — input validation', () => {
+describe('code_glob: input validation', () => {
   it('errors when patterns/preset are all missing', async () => {
     const result = await handler({ base_path: dir });
     const parsed = expectError(result);
@@ -45,7 +45,7 @@ describe('code_glob — input validation', () => {
   });
 });
 
-describe('code_glob — basic functionality', () => {
+describe('code_glob: basic functionality', () => {
   beforeEach(async () => {
     await writeFiles(dir, {
       'file1.ts': 'a',
@@ -89,7 +89,7 @@ describe('code_glob — basic functionality', () => {
   });
 });
 
-describe('code_glob — output modes', () => {
+describe('code_glob: output modes', () => {
   beforeEach(async () => {
     await writeFile(dir, 'file.ts', 'content');
   });
@@ -118,7 +118,7 @@ describe('code_glob — output modes', () => {
   });
 });
 
-describe('code_glob — filters', () => {
+describe('code_glob: filters', () => {
   beforeEach(async () => {
     await writeFiles(dir, {
       'small.ts': 'x',
@@ -172,7 +172,7 @@ describe('code_glob — filters', () => {
   });
 });
 
-describe('code_glob — sorting', () => {
+describe('code_glob: sorting', () => {
   beforeEach(async () => {
     await writeFiles(dir, { 'a.ts': 'x', 'b.ts': 'xxx', 'c.ts': 'xx' });
   });
@@ -205,7 +205,7 @@ describe('code_glob — sorting', () => {
   });
 });
 
-describe('code_glob — exclusions and gitignore', () => {
+describe('code_glob: exclusions and gitignore', () => {
   it('excludes nested node_modules at defaults (un-anchored DEFAULT_EXCLUDES)', async () => {
     await writeFiles(dir, { 'keep.ts': 'x', 'packages/app/node_modules/dep/index.ts': 'x' });
     const result = await handler({
@@ -257,7 +257,7 @@ describe('code_glob — exclusions and gitignore', () => {
   });
 });
 
-describe('code_glob — hidden files', () => {
+describe('code_glob: hidden files', () => {
   beforeEach(async () => {
     await writeFiles(dir, { 'visible.ts': 'x', '.hidden.ts': 'x', '.hidden-dir/inside.ts': 'x' });
   });
@@ -285,7 +285,7 @@ describe('code_glob — hidden files', () => {
   });
 });
 
-describe('code_glob — presets and base64 patterns', () => {
+describe('code_glob: presets and base64 patterns', () => {
   beforeEach(async () => {
     await writeFiles(dir, { 'a.ts': 'x', 'b.js': 'x', 'special[chars].ts': 'x' });
   });
@@ -313,7 +313,7 @@ describe('code_glob — presets and base64 patterns', () => {
   });
 });
 
-describe('code_glob — base_path (F1)', () => {
+describe('code_glob: base_path (F1)', () => {
   it('errors for a nonexistent base_path', async () => {
     const result = await handler({ patterns: ['*.ts'], base_path: path.join(dir, 'nope') });
     expectError(result);
@@ -326,7 +326,7 @@ describe('code_glob — base_path (F1)', () => {
   });
 });
 
-describe('code_glob — backend selection', () => {
+describe('code_glob: backend selection', () => {
   beforeEach(async () => {
     await writeFiles(dir, { 'keep.ts': 'x', 'dir/nested.ts': 'x' });
   });
@@ -355,7 +355,7 @@ describe('code_glob — backend selection', () => {
   });
 });
 
-describe('code_glob — honest truncation summary', () => {
+describe('code_glob: honest truncation summary', () => {
   it('reports true total_files and effective_caps when max_results trims', async () => {
     const manyFiles: Record<string, string> = {};
     for (let i = 0; i < 30; i++) {

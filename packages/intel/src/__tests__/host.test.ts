@@ -42,7 +42,7 @@ describe('CompilerHost', () => {
     host.dispose();
   });
 
-  it('resolves references semantically — comment/string mentions are NOT references', () => {
+  it('resolves references semantically: comment/string mentions are NOT references', () => {
     const host = new CompilerHost();
     const { service } = host.getServiceForFiles([targetFile, consumerFile], safeDeleteDir);
 

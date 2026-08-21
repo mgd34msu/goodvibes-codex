@@ -3243,7 +3243,7 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve2.call(this, root, ref);
+      let _sch = resolve3.call(this, root, ref);
       if (_sch === void 0) {
         const schema = (_a3 = root.localRefs) === null || _a3 === void 0 ? void 0 : _a3[ref];
         const { schemaId } = this.opts;
@@ -3274,13 +3274,13 @@ var require_compile = __commonJS({
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
     __name(sameSchemaEnv, "sameSchemaEnv");
-    function resolve2(root, ref) {
+    function resolve3(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
       return sch || this.schemas[ref] || resolveSchema.call(this, root, ref);
     }
-    __name(resolve2, "resolve");
+    __name(resolve3, "resolve");
     function resolveSchema(root, ref) {
       const p = this.opts.uriResolver.parse(ref);
       const refPath = (0, resolve_1._getFullPath)(this.opts.uriResolver, p);
@@ -3932,13 +3932,13 @@ var require_fast_uri = __commonJS({
       return uri;
     }
     __name(normalize, "normalize");
-    function resolve2(baseURI, relativeURI, options) {
+    function resolve3(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse3(baseURI, schemelessOptions), parse3(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
       return serialize(resolved, schemelessOptions);
     }
-    __name(resolve2, "resolve");
+    __name(resolve3, "resolve");
     function resolveComponent(base, relative2, options, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
@@ -4200,7 +4200,7 @@ var require_fast_uri = __commonJS({
     var fastUri = {
       SCHEMES,
       normalize,
-      resolve: resolve2,
+      resolve: resolve3,
       resolveComponent,
       equal,
       serialize,
@@ -9244,9 +9244,9 @@ var require_dispatcher_base = __commonJS({
       }
       close(callback) {
         if (callback === void 0) {
-          return new Promise((resolve2, reject) => {
+          return new Promise((resolve3, reject) => {
             this.close((err, data) => {
-              return err ? reject(err) : resolve2(data);
+              return err ? reject(err) : resolve3(data);
             });
           });
         }
@@ -9284,12 +9284,12 @@ var require_dispatcher_base = __commonJS({
           err = null;
         }
         if (callback === void 0) {
-          return new Promise((resolve2, reject) => {
+          return new Promise((resolve3, reject) => {
             this.destroy(err, (err2, data) => {
               return err2 ? (
                 /* istanbul ignore next: should never error */
                 reject(err2)
-              ) : resolve2(data);
+              ) : resolve3(data);
             });
           });
         }
@@ -9673,14 +9673,14 @@ var require_connect = __commonJS({
       const sessionCache = new SessionCache(maxCachedSessions == null ? 100 : maxCachedSessions);
       timeout = timeout == null ? 1e4 : timeout;
       allowH2 = allowH2 != null ? allowH2 : false;
-      return /* @__PURE__ */ __name(function connect({ hostname, host, protocol, port, servername, localAddress, httpSocket }, callback) {
+      return /* @__PURE__ */ __name(function connect({ hostname: hostname2, host, protocol, port, servername, localAddress, httpSocket }, callback) {
         let socket;
         if (protocol === "https:") {
           if (!tls) {
             tls = require("node:tls");
           }
           servername = servername || options.servername || util.getServerName(host) || null;
-          const sessionKey = servername || hostname;
+          const sessionKey = servername || hostname2;
           assert2(sessionKey);
           const session = customSession || sessionCache.get(sessionKey) || null;
           port = port || 443;
@@ -9696,7 +9696,7 @@ var require_connect = __commonJS({
             socket: httpSocket,
             // upgrade socket connection
             port,
-            host: hostname
+            host: hostname2
           });
           socket.on("session", function(session2) {
             sessionCache.set(sessionKey, session2);
@@ -9710,14 +9710,14 @@ var require_connect = __commonJS({
             ...options,
             localAddress,
             port,
-            host: hostname
+            host: hostname2
           });
         }
         if (options.keepAlive == null || options.keepAlive) {
           const keepAliveInitialDelay = options.keepAliveInitialDelay === void 0 ? 6e4 : options.keepAliveInitialDelay;
           socket.setKeepAlive(true, keepAliveInitialDelay);
         }
-        const clearConnectTimeout = setupConnectTimeout(new WeakRef(socket), { timeout, hostname, port });
+        const clearConnectTimeout = setupConnectTimeout(new WeakRef(socket), { timeout, hostname: hostname2, port });
         socket.setNoDelay(true).once(protocol === "https:" ? "secureConnect" : "connect", function() {
           queueMicrotask(clearConnectTimeout);
           if (callback) {
@@ -11624,8 +11624,8 @@ var require_util3 = __commonJS({
     function createDeferredPromise() {
       let res;
       let rej;
-      const promise = new Promise((resolve2, reject) => {
-        res = resolve2;
+      const promise = new Promise((resolve3, reject) => {
+        res = resolve3;
         rej = reject;
       });
       return { promise, resolve: res, reject: rej };
@@ -13383,7 +13383,7 @@ var require_client_h1 = __commonJS({
         } else {
           socket[kReset] = true;
         }
-        const pause = request.onHeaders(statusCode, headers, this.resume, statusText) === false;
+        const pause2 = request.onHeaders(statusCode, headers, this.resume, statusText) === false;
         if (request.aborted) {
           return -1;
         }
@@ -13397,7 +13397,7 @@ var require_client_h1 = __commonJS({
           socket[kBlocking] = false;
           client[kResume]();
         }
-        return pause ? constants.ERROR.PAUSED : 0;
+        return pause2 ? constants.ERROR.PAUSED : 0;
       }
       onBody(buf) {
         const { client, socket, statusCode, maxResponseSize } = this;
@@ -13938,12 +13938,12 @@ upgrade: ${upgrade}\r
         }
       }
       __name(onDrain, "onDrain");
-      const waitForDrain = /* @__PURE__ */ __name(() => new Promise((resolve2, reject) => {
+      const waitForDrain = /* @__PURE__ */ __name(() => new Promise((resolve3, reject) => {
         assert2(callback === null);
         if (socket[kError]) {
           reject(socket[kError]);
         } else {
-          callback = resolve2;
+          callback = resolve3;
         }
       }), "waitForDrain");
       socket.on("close", onDrain).on("drain", onDrain);
@@ -14312,8 +14312,8 @@ var require_client_h2 = __commonJS({
         }
       }
       let stream;
-      const { hostname, port } = client[kUrl];
-      headers[HTTP2_HEADER_AUTHORITY] = host || `${hostname}${port ? `:${port}` : ""}`;
+      const { hostname: hostname2, port } = client[kUrl];
+      headers[HTTP2_HEADER_AUTHORITY] = host || `${hostname2}${port ? `:${port}` : ""}`;
       headers[HTTP2_HEADER_METHOD] = method;
       const abort = /* @__PURE__ */ __name((err) => {
         if (request.aborted || request.completed) {
@@ -14599,12 +14599,12 @@ var require_client_h2 = __commonJS({
         }
       }
       __name(onDrain, "onDrain");
-      const waitForDrain = /* @__PURE__ */ __name(() => new Promise((resolve2, reject) => {
+      const waitForDrain = /* @__PURE__ */ __name(() => new Promise((resolve3, reject) => {
         assert2(callback === null);
         if (socket[kError]) {
           reject(socket[kError]);
         } else {
-          callback = resolve2;
+          callback = resolve3;
         }
       }), "waitForDrain");
       h2stream.on("close", onDrain).on("drain", onDrain);
@@ -15097,16 +15097,16 @@ var require_client = __commonJS({
         return this[kNeedDrain] < 2;
       }
       async [kClose]() {
-        return new Promise((resolve2) => {
+        return new Promise((resolve3) => {
           if (this[kSize]) {
-            this[kClosedResolve] = resolve2;
+            this[kClosedResolve] = resolve3;
           } else {
-            resolve2(null);
+            resolve3(null);
           }
         });
       }
       async [kDestroy](err) {
-        return new Promise((resolve2) => {
+        return new Promise((resolve3) => {
           const requests = this[kQueue].splice(this[kPendingIdx]);
           for (let i = 0; i < requests.length; i++) {
             const request = requests[i];
@@ -15117,7 +15117,7 @@ var require_client = __commonJS({
               this[kClosedResolve]();
               this[kClosedResolve] = null;
             }
-            resolve2(null);
+            resolve3(null);
           }, "callback");
           if (this[kHTTPContext]) {
             this[kHTTPContext].destroy(err, callback);
@@ -15145,20 +15145,20 @@ var require_client = __commonJS({
     async function connect(client) {
       assert2(!client[kConnecting]);
       assert2(!client[kHTTPContext]);
-      let { host, hostname, protocol, port } = client[kUrl];
-      if (hostname[0] === "[") {
-        const idx = hostname.indexOf("]");
+      let { host, hostname: hostname2, protocol, port } = client[kUrl];
+      if (hostname2[0] === "[") {
+        const idx = hostname2.indexOf("]");
         assert2(idx !== -1);
-        const ip = hostname.substring(1, idx);
+        const ip = hostname2.substring(1, idx);
         assert2(net.isIP(ip));
-        hostname = ip;
+        hostname2 = ip;
       }
       client[kConnecting] = true;
       if (channels.beforeConnect.hasSubscribers) {
         channels.beforeConnect.publish({
           connectParams: {
             host,
-            hostname,
+            hostname: hostname2,
             protocol,
             port,
             version: client[kHTTPContext]?.version,
@@ -15169,10 +15169,10 @@ var require_client = __commonJS({
         });
       }
       try {
-        const socket = await new Promise((resolve2, reject) => {
+        const socket = await new Promise((resolve3, reject) => {
           client[kConnector]({
             host,
-            hostname,
+            hostname: hostname2,
             protocol,
             port,
             servername: client[kServerName],
@@ -15181,7 +15181,7 @@ var require_client = __commonJS({
             if (err) {
               reject(err);
             } else {
-              resolve2(socket2);
+              resolve3(socket2);
             }
           });
         });
@@ -15205,7 +15205,7 @@ var require_client = __commonJS({
           channels.connected.publish({
             connectParams: {
               host,
-              hostname,
+              hostname: hostname2,
               protocol,
               port,
               version: client[kHTTPContext]?.version,
@@ -15226,7 +15226,7 @@ var require_client = __commonJS({
           channels.connectError.publish({
             connectParams: {
               host,
-              hostname,
+              hostname: hostname2,
               protocol,
               port,
               version: client[kHTTPContext]?.version,
@@ -15533,8 +15533,8 @@ var require_pool_base = __commonJS({
         if (this[kQueue].isEmpty()) {
           await Promise.all(this[kClients].map((c) => c.close()));
         } else {
-          await new Promise((resolve2) => {
-            this[kClosedResolve] = resolve2;
+          await new Promise((resolve3) => {
+            this[kClosedResolve] = resolve3;
           });
         }
       }
@@ -16241,10 +16241,10 @@ var require_env_http_proxy_agent = __commonJS({
         }
       }
       #getProxyAgentForUrl(url) {
-        let { protocol, host: hostname, port } = url;
-        hostname = hostname.replace(/:\d*$/, "").toLowerCase();
+        let { protocol, host: hostname2, port } = url;
+        hostname2 = hostname2.replace(/:\d*$/, "").toLowerCase();
         port = Number.parseInt(port, 10) || DEFAULT_PORTS[protocol] || 0;
-        if (!this.#shouldProxy(hostname, port)) {
+        if (!this.#shouldProxy(hostname2, port)) {
           return this[kNoProxyAgent];
         }
         if (protocol === "https:") {
@@ -16252,7 +16252,7 @@ var require_env_http_proxy_agent = __commonJS({
         }
         return this[kHttpProxyAgent];
       }
-      #shouldProxy(hostname, port) {
+      #shouldProxy(hostname2, port) {
         if (this.#noProxyChanged) {
           this.#parseNoProxy();
         }
@@ -16268,11 +16268,11 @@ var require_env_http_proxy_agent = __commonJS({
             continue;
           }
           if (!/^[.*]/.test(entry.hostname)) {
-            if (hostname === entry.hostname) {
+            if (hostname2 === entry.hostname) {
               return false;
             }
           } else {
-            if (hostname.endsWith(entry.hostname.replace(/^\*/, ""))) {
+            if (hostname2.endsWith(entry.hostname.replace(/^\*/, ""))) {
               return false;
             }
           }
@@ -16787,7 +16787,7 @@ var require_readable = __commonJS({
         if (this._readableState.closeEmitted) {
           return null;
         }
-        return await new Promise((resolve2, reject) => {
+        return await new Promise((resolve3, reject) => {
           if (this[kContentLength] > limit) {
             this.destroy(new AbortError());
           }
@@ -16800,7 +16800,7 @@ var require_readable = __commonJS({
             if (signal?.aborted) {
               reject(signal.reason ?? new AbortError());
             } else {
-              resolve2(null);
+              resolve3(null);
             }
           }).on("error", noop).on("data", function(chunk) {
             limit -= chunk.length;
@@ -16821,7 +16821,7 @@ var require_readable = __commonJS({
     __name(isUnusable, "isUnusable");
     async function consume(stream, type) {
       assert2(!stream[kConsume]);
-      return new Promise((resolve2, reject) => {
+      return new Promise((resolve3, reject) => {
         if (isUnusable(stream)) {
           const rState = stream._readableState;
           if (rState.destroyed && rState.closeEmitted === false) {
@@ -16838,7 +16838,7 @@ var require_readable = __commonJS({
             stream[kConsume] = {
               type,
               stream,
-              resolve: resolve2,
+              resolve: resolve3,
               reject,
               length: 0,
               body: []
@@ -16912,18 +16912,18 @@ var require_readable = __commonJS({
     }
     __name(chunksConcat, "chunksConcat");
     function consumeEnd(consume2) {
-      const { type, body, resolve: resolve2, stream, length } = consume2;
+      const { type, body, resolve: resolve3, stream, length } = consume2;
       try {
         if (type === "text") {
-          resolve2(chunksDecode(body, length));
+          resolve3(chunksDecode(body, length));
         } else if (type === "json") {
-          resolve2(JSON.parse(chunksDecode(body, length)));
+          resolve3(JSON.parse(chunksDecode(body, length)));
         } else if (type === "arrayBuffer") {
-          resolve2(chunksConcat(body, length).buffer);
+          resolve3(chunksConcat(body, length).buffer);
         } else if (type === "blob") {
-          resolve2(new Blob(body, { type: stream[kContentType] }));
+          resolve3(new Blob(body, { type: stream[kContentType] }));
         } else if (type === "bytes") {
-          resolve2(chunksConcat(body, length));
+          resolve3(chunksConcat(body, length));
         }
         consumeFinish(consume2);
       } catch (err) {
@@ -17187,9 +17187,9 @@ var require_api_request = __commonJS({
     };
     function request(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve2, reject) => {
+        return new Promise((resolve3, reject) => {
           request.call(this, opts, (err, data) => {
-            return err ? reject(err) : resolve2(data);
+            return err ? reject(err) : resolve3(data);
           });
         });
       }
@@ -17419,9 +17419,9 @@ var require_api_stream = __commonJS({
     };
     function stream(opts, factory, callback) {
       if (callback === void 0) {
-        return new Promise((resolve2, reject) => {
+        return new Promise((resolve3, reject) => {
           stream.call(this, opts, factory, (err, data) => {
-            return err ? reject(err) : resolve2(data);
+            return err ? reject(err) : resolve3(data);
           });
         });
       }
@@ -17720,9 +17720,9 @@ var require_api_upgrade = __commonJS({
     };
     function upgrade(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve2, reject) => {
+        return new Promise((resolve3, reject) => {
           upgrade.call(this, opts, (err, data) => {
-            return err ? reject(err) : resolve2(data);
+            return err ? reject(err) : resolve3(data);
           });
         });
       }
@@ -17818,9 +17818,9 @@ var require_api_connect = __commonJS({
     };
     function connect(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve2, reject) => {
+        return new Promise((resolve3, reject) => {
           connect.call(this, opts, (err, data) => {
-            return err ? reject(err) : resolve2(data);
+            return err ? reject(err) : resolve3(data);
           });
         });
       }
@@ -21796,7 +21796,7 @@ var require_fetch = __commonJS({
       function dispatch({ body }) {
         const url = requestCurrentURL(request);
         const agent = fetchParams.controller.dispatcher;
-        return new Promise((resolve2, reject) => agent.dispatch(
+        return new Promise((resolve3, reject) => agent.dispatch(
           {
             path: url.pathname + url.search,
             origin: url.origin,
@@ -21872,7 +21872,7 @@ var require_fetch = __commonJS({
                 }
               }
               const onError = this.onError.bind(this);
-              resolve2({
+              resolve3({
                 status,
                 statusText,
                 headersList,
@@ -21918,7 +21918,7 @@ var require_fetch = __commonJS({
               for (let i = 0; i < rawHeaders.length; i += 2) {
                 headersList.append(bufferToLowerCasedHeaderName(rawHeaders[i]), rawHeaders[i + 1].toString("latin1"), true);
               }
-              resolve2({
+              resolve3({
                 status,
                 statusText: STATUS_CODES[status],
                 headersList,
@@ -25700,8 +25700,8 @@ var require_util9 = __commonJS({
     }
     __name(isASCIINumber, "isASCIINumber");
     function delay(ms) {
-      return new Promise((resolve2) => {
-        setTimeout(resolve2, ms).unref();
+      return new Promise((resolve3) => {
+        setTimeout(resolve3, ms).unref();
       });
     }
     __name(delay, "delay");
@@ -33933,7 +33933,7 @@ var Protocol = class {
           return;
         }
         const pollInterval = task2.pollInterval ?? this._options?.defaultTaskPollInterval ?? 1e3;
-        await new Promise((resolve2) => setTimeout(resolve2, pollInterval));
+        await new Promise((resolve3) => setTimeout(resolve3, pollInterval));
         options?.signal?.throwIfAborted();
       }
     } catch (error2) {
@@ -33950,7 +33950,7 @@ var Protocol = class {
    */
   request(request, resultSchema, options) {
     const { relatedRequestId, resumptionToken, onresumptiontoken, task, relatedTask } = options ?? {};
-    return new Promise((resolve2, reject) => {
+    return new Promise((resolve3, reject) => {
       const earlyReject = /* @__PURE__ */ __name((error2) => {
         reject(error2);
       }, "earlyReject");
@@ -34028,7 +34028,7 @@ var Protocol = class {
           if (!parseResult.success) {
             reject(parseResult.error);
           } else {
-            resolve2(parseResult.data);
+            resolve3(parseResult.data);
           }
         } catch (error2) {
           reject(error2);
@@ -34289,12 +34289,12 @@ var Protocol = class {
       }
     } catch {
     }
-    return new Promise((resolve2, reject) => {
+    return new Promise((resolve3, reject) => {
       if (signal.aborted) {
         reject(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
         return;
       }
-      const timeoutId = setTimeout(resolve2, interval);
+      const timeoutId = setTimeout(resolve3, interval);
       signal.addEventListener("abort", () => {
         clearTimeout(timeoutId);
         reject(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
@@ -35186,12 +35186,12 @@ var StdioServerTransport = class {
     this.onclose?.();
   }
   send(message) {
-    return new Promise((resolve2) => {
+    return new Promise((resolve3) => {
       const json = serializeMessage(message);
       if (this._stdout.write(json)) {
-        resolve2();
+        resolve3();
       } else {
-        this._stdout.once("drain", resolve2);
+        this._stdout.once("drain", resolve3);
       }
     });
   }
@@ -35203,10 +35203,10 @@ async function withBudget(ms, task) {
   const start = Date.now();
   const signal = { aborted: false };
   let timer;
-  const budgetHit = new Promise((resolve2) => {
+  const budgetHit = new Promise((resolve3) => {
     timer = setTimeout(() => {
       signal.aborted = true;
-      resolve2(BUDGET_EXPIRED);
+      resolve3(BUDGET_EXPIRED);
     }, ms);
     timer.unref?.();
   });
@@ -35466,6 +35466,130 @@ __name(startTimer, "startTimer");
 
 // packages/connect/src/fetch/registry-store.ts
 var fs2 = __toESM(require("fs"), 1);
+
+// packages/core/src/lockfile/index.ts
+var import_node_crypto = require("node:crypto");
+var import_promises = require("node:fs/promises");
+var import_node_os = require("node:os");
+var import_node_path = require("node:path");
+var DEFAULT_WAIT_MS = 1e4;
+var DEFAULT_ABANDONED_AFTER_MS = 12e4;
+var POLL_MS = 25;
+function processExists(pid) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error2) {
+    return error2.code === "EPERM";
+  }
+}
+__name(processExists, "processExists");
+function isAbandoned(record2, abandonedAfterMs) {
+  if (record2.hostname === (0, import_node_os.hostname)() && typeof record2.pid === "number" && record2.pid > 0) {
+    return !processExists(record2.pid);
+  }
+  const age = typeof record2.created_at === "number" ? Date.now() - record2.created_at : Number.POSITIVE_INFINITY;
+  return age >= abandonedAfterMs;
+}
+__name(isAbandoned, "isAbandoned");
+async function clearAbandoned(lockFile, abandonedAfterMs) {
+  let raw;
+  try {
+    raw = await (0, import_promises.readFile)(lockFile, "utf8");
+  } catch (error2) {
+    return error2.code === "ENOENT";
+  }
+  let record2 = {};
+  try {
+    record2 = JSON.parse(raw);
+  } catch {
+    record2 = {};
+  }
+  if (!isAbandoned(record2, abandonedAfterMs)) {
+    return false;
+  }
+  try {
+    if (await (0, import_promises.readFile)(lockFile, "utf8") !== raw) {
+      return false;
+    }
+    await (0, import_promises.unlink)(lockFile);
+    return true;
+  } catch (error2) {
+    return error2.code === "ENOENT";
+  }
+}
+__name(clearAbandoned, "clearAbandoned");
+async function pause(ms) {
+  await new Promise((resolve3) => {
+    const timer = setTimeout(resolve3, ms);
+    timer.unref?.();
+  });
+}
+__name(pause, "pause");
+function defaultBusyMessage(lockFile, waitMs) {
+  return `Timed out after ${waitMs}ms waiting for the lock '${lockFile}'. Another holder is still running; locks left behind by processes that no longer exist are reclaimed automatically.`;
+}
+__name(defaultBusyMessage, "defaultBusyMessage");
+async function acquireLockFile(lockFile, options = {}) {
+  const waitMs = options.waitMs ?? DEFAULT_WAIT_MS;
+  const abandonedAfterMs = options.abandonedAfterMs ?? DEFAULT_ABANDONED_AFTER_MS;
+  const busyMessage = options.busyMessage ?? defaultBusyMessage;
+  const ownerId = (0, import_node_crypto.randomBytes)(16).toString("hex");
+  const deadline = Date.now() + Math.max(waitMs, 1);
+  await (0, import_promises.mkdir)((0, import_node_path.dirname)(lockFile), { recursive: true, mode: 448 });
+  for (; ; ) {
+    let handle;
+    try {
+      handle = await (0, import_promises.open)(lockFile, "wx", 384);
+    } catch (error2) {
+      if (error2.code !== "EEXIST") {
+        throw error2;
+      }
+      if (await clearAbandoned(lockFile, abandonedAfterMs)) {
+        continue;
+      }
+      if (Date.now() >= deadline) {
+        throw new Error(busyMessage(lockFile, waitMs));
+      }
+      await pause(POLL_MS);
+      continue;
+    }
+    try {
+      await handle.writeFile(
+        JSON.stringify({
+          owner_id: ownerId,
+          pid: process.pid,
+          hostname: (0, import_node_os.hostname)(),
+          created_at: Date.now()
+        })
+      );
+      await handle.sync();
+    } catch (error2) {
+      await handle.close().catch(() => {
+      });
+      await (0, import_promises.unlink)(lockFile).catch(() => {
+      });
+      throw error2;
+    }
+    await handle.close().catch(() => {
+    });
+    return async () => {
+      try {
+        const current = JSON.parse(await (0, import_promises.readFile)(lockFile, "utf8"));
+        if (current.owner_id !== ownerId) {
+          return;
+        }
+      } catch {
+        return;
+      }
+      await (0, import_promises.unlink)(lockFile).catch(() => {
+      });
+    };
+  }
+}
+__name(acquireLockFile, "acquireLockFile");
+
+// packages/connect/src/fetch/registry-store.ts
 function registryPath() {
   return statePath("services.json");
 }
@@ -35473,11 +35597,11 @@ __name(registryPath, "registryPath");
 function getRegistry() {
   try {
     const file = registryPath();
-    const stat = fs2.lstatSync(file);
-    if (!stat.isFile() || stat.isSymbolicLink()) {
+    const stat2 = fs2.lstatSync(file);
+    if (!stat2.isFile() || stat2.isSymbolicLink()) {
       return {};
     }
-    if (process.platform !== "win32" && (stat.mode & 63) !== 0) {
+    if (process.platform !== "win32" && (stat2.mode & 63) !== 0) {
       return {};
     }
     const content = fs2.readFileSync(file, "utf-8");
@@ -35497,11 +35621,11 @@ __name(getSecretsPath, "getSecretsPath");
 async function loadSecrets() {
   const secretsPath = getSecretsPath();
   try {
-    const stat = await fs3.promises.lstat(secretsPath);
-    if (!stat.isFile() || stat.isSymbolicLink()) {
+    const stat2 = await fs3.promises.lstat(secretsPath);
+    if (!stat2.isFile() || stat2.isSymbolicLink()) {
       throw new Error(`Refusing unsafe secrets path: ${secretsPath}`);
     }
-    if (process.platform !== "win32" && (stat.mode & 63) !== 0) {
+    if (process.platform !== "win32" && (stat2.mode & 63) !== 0) {
       throw new Error(`Refusing secrets file with permissions broader than 0600: ${secretsPath}`);
     }
     const content = await fs3.promises.readFile(secretsPath, "utf-8");
@@ -35588,13 +35712,13 @@ function getUrlPatterns() {
 }
 __name(getUrlPatterns, "getUrlPatterns");
 function matchServiceByUrl(url) {
-  let hostname;
+  let hostname2;
   try {
-    hostname = new URL(url).hostname;
+    hostname2 = new URL(url).hostname;
   } catch {
     return void 0;
   }
-  return getUrlPatterns().find((p) => p.hostname === hostname)?.service;
+  return getUrlPatterns().find((p) => p.hostname === hostname2)?.service;
 }
 __name(matchServiceByUrl, "matchServiceByUrl");
 function getFetchGlobalDefaults() {
@@ -35825,10 +35949,10 @@ var RateLimiter = class {
   getDomain(url) {
     try {
       const parsed = new URL(url);
-      const hostname = parsed.hostname;
+      const hostname2 = parsed.hostname;
       const port = parsed.port;
       const isStandardPort = parsed.protocol === "http:" && port === "80" || parsed.protocol === "https:" && port === "443" || port === "";
-      return isStandardPort ? hostname : `${hostname}:${port}`;
+      return isStandardPort ? hostname2 : `${hostname2}:${port}`;
     } catch {
       return url;
     }
@@ -35890,8 +36014,8 @@ var RateLimiter = class {
       state.last_request_at = Date.now();
       return;
     }
-    return new Promise((resolve2, reject) => {
-      const item = { resolve: resolve2, reject, signal };
+    return new Promise((resolve3, reject) => {
+      const item = { resolve: resolve3, reject, signal };
       if (signal) {
         const onAbort = /* @__PURE__ */ __name(() => {
           const index = state.queue.indexOf(item);
@@ -36102,10 +36226,10 @@ async function getAuthStatus(serviceName, serviceBaseUrl, expectedType) {
 __name(getAuthStatus, "getAuthStatus");
 
 // packages/connect/src/fetch/network-policy.ts
-var import_promises = require("node:dns/promises");
+var import_promises2 = require("node:dns/promises");
 var import_node_net = require("node:net");
 var import_undici2 = __toESM(require_undici(), 1);
-var resolver = /* @__PURE__ */ __name(async (hostname) => (0, import_promises.lookup)(hostname, { all: true, verbatim: true }), "resolver");
+var resolver = /* @__PURE__ */ __name(async (hostname2) => (0, import_promises2.lookup)(hostname2, { all: true, verbatim: true }), "resolver");
 function ipv4Number(address) {
   if ((0, import_node_net.isIP)(address) !== 4) {
     return null;
@@ -36225,8 +36349,8 @@ function isForbiddenAddress(address) {
   return V6_DENY.some(([base, prefix]) => ipv6In(v6, base, prefix));
 }
 __name(isForbiddenAddress, "isForbiddenAddress");
-function hostnameWithoutBrackets(hostname) {
-  return hostname.startsWith("[") && hostname.endsWith("]") ? hostname.slice(1, -1) : hostname;
+function hostnameWithoutBrackets(hostname2) {
+  return hostname2.startsWith("[") && hostname2.endsWith("]") ? hostname2.slice(1, -1) : hostname2;
 }
 __name(hostnameWithoutBrackets, "hostnameWithoutBrackets");
 var METADATA_HOSTS = /* @__PURE__ */ new Set([
@@ -36270,26 +36394,26 @@ async function pinHttpDestination(rawUrl, allowPrivateNetwork) {
   if (url.username || url.password) {
     throw new Error("URLs containing user-info credentials are not permitted.");
   }
-  const hostname = hostnameWithoutBrackets(url.hostname).toLowerCase().replace(/\.$/, "");
-  if (!hostname || hostname.includes("%")) {
+  const hostname2 = hostnameWithoutBrackets(url.hostname).toLowerCase().replace(/\.$/, "");
+  if (!hostname2 || hostname2.includes("%")) {
     throw new Error("Malformed or zone-scoped hostname.");
   }
-  if (METADATA_HOSTS.has(hostname)) {
+  if (METADATA_HOSTS.has(hostname2)) {
     throw new Error("Cloud metadata destinations are never permitted.");
   }
-  if (hostname === "localhost" || hostname.endsWith(".localhost") || hostname.endsWith(".local") || hostname.endsWith(".internal")) {
+  if (hostname2 === "localhost" || hostname2.endsWith(".localhost") || hostname2.endsWith(".local") || hostname2.endsWith(".internal")) {
     if (!allowPrivateNetwork) {
-      throw new Error(`Private hostname '${hostname}' requires an explicit control-plane grant.`);
+      throw new Error(`Private hostname '${hostname2}' requires an explicit control-plane grant.`);
     }
   }
   let addresses;
-  if ((0, import_node_net.isIP)(hostname)) {
-    addresses = [{ address: hostname, family: (0, import_node_net.isIP)(hostname) }];
+  if ((0, import_node_net.isIP)(hostname2)) {
+    addresses = [{ address: hostname2, family: (0, import_node_net.isIP)(hostname2) }];
   } else {
-    addresses = await resolver(hostname);
+    addresses = await resolver(hostname2);
   }
   if (addresses.length === 0) {
-    throw new Error(`DNS returned no addresses for '${hostname}'.`);
+    throw new Error(`DNS returned no addresses for '${hostname2}'.`);
   }
   for (const answer of addresses) {
     const normalized = hostnameWithoutBrackets(answer.address).toLowerCase();
@@ -36298,7 +36422,7 @@ async function pinHttpDestination(rawUrl, allowPrivateNetwork) {
     }
     if (isForbiddenAddress(normalized)) {
       if (!allowPrivateNetwork || !isExplicitPrivateAddress(normalized)) {
-        throw new Error(`Destination '${hostname}' resolved to a private or reserved address.`);
+        throw new Error(`Destination '${hostname2}' resolved to a private or reserved address.`);
       }
     }
   }
@@ -36311,7 +36435,7 @@ async function pinHttpDestination(rawUrl, allowPrivateNetwork) {
           ...options,
           hostname: pinned,
           host: pinned,
-          servername: hostname
+          servername: hostname2
         },
         callback
       );
@@ -36729,114 +36853,83 @@ function collectAppliedCredentialValues(headers, secrets) {
   }
 }
 __name(collectAppliedCredentialValues, "collectAppliedCredentialValues");
+function deniedOutcome(error2, options = {}) {
+  return {
+    status: options.status ?? null,
+    resolved_url: options.resolved_url ?? null,
+    truncated: false,
+    error: error2,
+    warning: options.warning
+  };
+}
+__name(deniedOutcome, "deniedOutcome");
 async function runEntry(entry, mode, policy, hardTimeoutMs, maxResponseBytes) {
   const { spec, warning } = toRequestSpec(entry);
   if (entry.service && (entry.url !== void 0 || !entry.path)) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error: "A registered-service request must use `service` plus a relative `path`, not `url`.",
-      warning
-    };
+    return deniedOutcome(
+      "A registered-service request must use `service` plus a relative `path`, not `url`.",
+      { warning }
+    );
   }
   if (entry.service && /^[A-Za-z][A-Za-z0-9+.-]*:/.test(entry.path ?? "")) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error: "A registered-service `path` must be relative so credentials cannot cross origins.",
-      warning
-    };
+    return deniedOutcome(
+      "A registered-service `path` must be relative so credentials cannot cross origins.",
+      { warning }
+    );
   }
   if (entry.service && !policy.services[entry.service]) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error: `Service "${entry.service}" is not registered.`,
-      warning
-    };
+    return deniedOutcome(`Service "${entry.service}" is not registered.`, { warning });
   }
   if ("auth" in entry) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error: "Per-request authentication is not accepted. Configure an opaque service credential through the control utility.",
-      warning
-    };
+    return deniedOutcome(
+      "Per-request authentication is not accepted. Configure an opaque service credential through the control utility.",
+      { warning }
+    );
   }
   for (const name of Object.keys(entry.headers ?? {})) {
     const normalized = name.toLowerCase();
     if (SENSITIVE_REQUEST_HEADERS.has(normalized) || normalized.includes("api-key") || normalized.includes("apikey") || normalized.includes("auth-token") || normalized.includes("access-token") || normalized.includes("secret")) {
-      return {
-        status: null,
-        resolved_url: null,
-        truncated: false,
-        error: `Request header '${name}' is control-plane managed and cannot be supplied in an MCP call.`,
-        warning
-      };
+      return deniedOutcome(
+        `Request header '${name}' is control-plane managed and cannot be supplied in an MCP call.`,
+        { warning }
+      );
     }
   }
   if (!spec.url) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error: "Each request needs a service+path or an absolute url."
-    };
+    return deniedOutcome("Each request needs a service+path or an absolute url.", { warning });
   }
   let built;
   try {
     built = await buildRequest(spec);
   } catch (e) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error: e instanceof Error ? e.message : String(e),
-      warning
-    };
+    return deniedOutcome(e instanceof Error ? e.message : String(e), { warning });
   }
   const finalUrl = built.url;
   let method = built.method.toUpperCase();
   if (!/^[A-Z]+$/.test(method)) {
-    return {
-      status: null,
+    return deniedOutcome(`Invalid HTTP method '${built.method}'.`, {
       resolved_url: finalUrl,
-      truncated: false,
-      error: `Invalid HTTP method '${built.method}'.`,
       warning
-    };
+    });
   }
   if (bodyBytes(built.body) > 4 * 1024 * 1024) {
-    return {
-      status: null,
+    return deniedOutcome("Request body exceeds the 4 MiB limit.", {
       resolved_url: finalUrl,
-      truncated: false,
-      error: "Request body exceeds the 4 MiB limit.",
       warning
-    };
+    });
   }
   const registeredOrigins = Object.values(policy.services).map((s) => originOf(s.base_url)).filter((o) => o !== null);
   if (built.service && !isCredentialAttachAllowed(finalUrl, built.service.config.base_url)) {
-    return {
-      status: null,
+    return deniedOutcome("The resolved service URL left its registered origin.", {
       resolved_url: finalUrl,
-      truncated: false,
-      error: "The resolved service URL left its registered origin.",
       warning
-    };
+    });
   }
   if (!Number.isFinite(built.timeout_ms) || built.timeout_ms <= 0) {
-    return {
-      status: null,
+    return deniedOutcome("`timeout_ms` must be a positive number.", {
       resolved_url: finalUrl,
-      truncated: false,
-      error: "`timeout_ms` must be a positive number.",
       warning
-    };
+    });
   }
   const timeoutMs = Math.min(Math.floor(built.timeout_ms), hardTimeoutMs);
   const extract = entry.extract ?? "json";
@@ -36852,13 +36945,10 @@ async function runEntry(entry, mode, policy, hardTimeoutMs, maxResponseBytes) {
         allowlist: policy.allowlist
       });
       if (!destination.allowed) {
-        return {
-          status: null,
+        return deniedOutcome(destination.reason ?? "Destination denied.", {
           resolved_url: currentUrl,
-          truncated: false,
-          error: destination.reason ?? "Destination denied.",
           warning
-        };
+        });
       }
       const targetService = policyServiceForUrl(currentUrl, policy);
       const methodDecision = isMethodAllowed(method, {
@@ -36867,26 +36957,20 @@ async function runEntry(entry, mode, policy, hardTimeoutMs, maxResponseBytes) {
         writeMethods: targetService?.write_methods
       });
       if (!methodDecision.allowed) {
-        return {
-          status: null,
+        return deniedOutcome(methodDecision.reason ?? "Method denied.", {
           resolved_url: currentUrl,
-          truncated: false,
-          error: methodDecision.reason ?? "Method denied.",
           warning
-        };
+        });
       }
       const sameCredentialOrigin = !!built.service && isCredentialAttachAllowed(currentUrl, built.service.config.base_url);
       const expectedAuthType = built.service?.config.auth_type;
       const headers = sameCredentialOrigin ? { ...built.headers } : stripCrossOriginHeaders(built.headers, [...redactionSecrets]);
       if (sameCredentialOrigin && expectedAuthType && expectedAuthType !== "none") {
         if (new URL(currentUrl).protocol !== "https:") {
-          return {
-            status: null,
-            resolved_url: currentUrl,
-            truncated: false,
-            error: `Registered credentials for service '${built.service.name}' require HTTPS.`,
-            warning
-          };
+          return deniedOutcome(
+            `Registered credentials for service '${built.service.name}' require HTTPS.`,
+            { resolved_url: currentUrl, warning }
+          );
         }
         try {
           const applied = await applyAuth(
@@ -36897,22 +36981,16 @@ async function runEntry(entry, mode, policy, hardTimeoutMs, maxResponseBytes) {
             expectedAuthType
           );
           if (!applied) {
-            return {
-              status: null,
-              resolved_url: currentUrl,
-              truncated: false,
-              error: `Registered credentials for service '${built.service.name}' are unavailable.`,
-              warning
-            };
+            return deniedOutcome(
+              `Registered credentials for service '${built.service.name}' are unavailable.`,
+              { resolved_url: currentUrl, warning }
+            );
           }
         } catch {
-          return {
-            status: null,
-            resolved_url: currentUrl,
-            truncated: false,
-            error: `Registered credentials for service '${built.service.name}' could not be read safely.`,
-            warning
-          };
+          return deniedOutcome(
+            `Registered credentials for service '${built.service.name}' could not be read safely.`,
+            { resolved_url: currentUrl, warning }
+          );
         }
       }
       collectAppliedCredentialValues(headers, redactionSecrets);
@@ -36933,31 +37011,25 @@ async function runEntry(entry, mode, policy, hardTimeoutMs, maxResponseBytes) {
         });
         await timed.finish();
         if (!location) {
-          return {
+          return deniedOutcome("Redirect response omitted Location.", {
             status: response.status,
             resolved_url: currentUrl,
-            truncated: false,
-            error: "Redirect response omitted Location.",
             warning
-          };
+          });
         }
         if (!["GET", "HEAD", "OPTIONS"].includes(method)) {
-          return {
+          return deniedOutcome("Redirects for write requests are not permitted.", {
             status: response.status,
             resolved_url: currentUrl,
-            truncated: false,
-            error: "Redirects for write requests are not permitted.",
             warning
-          };
+          });
         }
         if (hops++ >= 5) {
-          return {
+          return deniedOutcome("Redirect limit exceeded.", {
             status: response.status,
             resolved_url: currentUrl,
-            truncated: false,
-            error: "Redirect limit exceeded.",
             warning
-          };
+          });
         }
         currentUrl = new URL(location, currentUrl).toString();
         if (response.status === 303) {
@@ -36990,13 +37062,10 @@ async function runEntry(entry, mode, policy, hardTimeoutMs, maxResponseBytes) {
   } catch (e) {
     const err = e instanceof Error ? e : new Error(String(e));
     const isTimeout = err.name === "AbortError";
-    return {
-      status: null,
+    return deniedOutcome(isTimeout ? `Request timed out after ${timeoutMs}ms` : err.message, {
       resolved_url: currentUrl,
-      truncated: false,
-      error: isTimeout ? `Request timed out after ${timeoutMs}ms` : err.message,
       warning
-    };
+    });
   }
 }
 __name(runEntry, "runEntry");
@@ -37085,12 +37154,9 @@ async function handleApiRequest(args) {
   const outcome = await withBudget(budgetMs, async () => {
     const settled = await Promise.all(
       entries.map(
-        (entry) => runEntry(entry, mode, policy, cfg.budgets.http_max_ms, maxResponseBytes).catch((e) => ({
-          status: null,
-          resolved_url: null,
-          truncated: false,
-          error: e instanceof Error ? e.message : String(e)
-        }))
+        (entry) => runEntry(entry, mode, policy, cfg.budgets.http_max_ms, maxResponseBytes).catch(
+          (e) => deniedOutcome(e instanceof Error ? e.message : String(e))
+        )
       )
     );
     const results2 = {};
@@ -37217,8 +37283,8 @@ function requireVerifiedTls(parsed, context, parameter, expectedValue) {
   }
 }
 __name(requireVerifiedTls, "requireVerifiedTls");
-function validateHostname(hostname, context) {
-  if (!hostname || hostname.trim() === "") {
+function validateHostname(hostname2, context) {
+  if (!hostname2 || hostname2.trim() === "") {
     throw new Error(`Invalid or empty hostname in ${context} URL.`);
   }
 }
@@ -37923,8 +37989,9 @@ async function executeMysql(connectionInfo, query, params = [], readonly2 = true
 __name(executeMysql, "executeMysql");
 
 // packages/connect/src/db/sqlite-pool.ts
+var import_node_crypto2 = require("node:crypto");
 var import_node_fs = require("node:fs");
-var import_promises2 = require("node:fs/promises");
+var import_promises3 = require("node:fs/promises");
 var import_node_module = require("node:module");
 var nodePath = __toESM(require("node:path"), 1);
 var import_meta2 = {};
@@ -37968,112 +38035,214 @@ async function getSqlJs() {
   }
 }
 __name(getSqlJs, "getSqlJs");
+async function canonicalPath(filepath) {
+  if (filepath === ":memory:") {
+    return filepath;
+  }
+  try {
+    return await (0, import_promises3.realpath)(filepath);
+  } catch {
+    try {
+      return nodePath.join(await (0, import_promises3.realpath)(nodePath.dirname(filepath)), nodePath.basename(filepath));
+    } catch {
+      return nodePath.resolve(filepath);
+    }
+  }
+}
+__name(canonicalPath, "canonicalPath");
+async function readFileIdentity(filepath) {
+  try {
+    const info = await (0, import_promises3.stat)(filepath, { bigint: true });
+    return {
+      ino: info.ino,
+      size: info.size,
+      mtimeNs: info.mtimeNs,
+      mode: Number(info.mode) & 511
+    };
+  } catch (error2) {
+    if (error2.code === "ENOENT") {
+      return null;
+    }
+    throw error2;
+  }
+}
+__name(readFileIdentity, "readFileIdentity");
+function sameFile(a, b) {
+  if (a === null || b === null) {
+    return a === b;
+  }
+  return a.ino === b.ino && a.size === b.size && a.mtimeNs === b.mtimeNs;
+}
+__name(sameFile, "sameFile");
+async function writeDatabaseFile(filepath, data, mode) {
+  const temporary = nodePath.join(
+    nodePath.dirname(filepath),
+    `.${nodePath.basename(filepath)}.${process.pid}.${(0, import_node_crypto2.randomBytes)(6).toString("hex")}.tmp`
+  );
+  try {
+    await (0, import_promises3.writeFile)(temporary, Buffer.from(data), { flag: "wx" });
+    if (mode !== null) {
+      await (0, import_promises3.chmod)(temporary, mode);
+    }
+    await (0, import_promises3.rename)(temporary, filepath);
+  } finally {
+    await (0, import_promises3.rm)(temporary, { force: true }).catch(() => {
+    });
+  }
+}
+__name(writeDatabaseFile, "writeDatabaseFile");
+var WRITE_LOCK_ABANDONED_MS = 6e4;
+function sqliteWriteLockPath(filepath) {
+  return `${filepath}.goodvibes-write.lock`;
+}
+__name(sqliteWriteLockPath, "sqliteWriteLockPath");
+function acquireWriteLock(filepath, timeoutMs) {
+  return acquireLockFile(sqliteWriteLockPath(filepath), {
+    waitMs: timeoutMs,
+    abandonedAfterMs: WRITE_LOCK_ABANDONED_MS,
+    busyMessage: /* @__PURE__ */ __name((lockFile, waitMs) => `Timed out after ${waitMs}ms waiting for the SQLite write lock '${lockFile}'. Another writer holds it; locks left by processes that no longer exist are reclaimed automatically.`, "busyMessage")
+  });
+}
+__name(acquireWriteLock, "acquireWriteLock");
 var SqliteConnectionPool = class {
   static {
     __name(this, "SqliteConnectionPool");
   }
   connections = /* @__PURE__ */ new Map();
   waiters = /* @__PURE__ */ new Map();
-  maxConnectionsPerDb = 5;
   idleTimeoutMs = 6e4;
   cleanupInterval = null;
   constructor() {
     this.cleanupInterval = setInterval(() => this.cleanupIdleConnections(), 3e4);
     this.cleanupInterval.unref?.();
   }
-  getPoolKey(filepath, readonly2) {
-    return `${filepath}:${readonly2 ? "ro" : "rw"}`;
-  }
-  async acquire(options) {
-    const key = this.getPoolKey(options.filepath, options.readonly ?? true);
-    let poolConnections = this.connections.get(key);
-    if (!poolConnections) {
-      poolConnections = [];
-      this.connections.set(key, poolConnections);
-    }
-    const available = poolConnections.find((c) => !c.inUse && c.isOpen);
-    if (available) {
-      available.inUse = true;
-      available.lastUsed = Date.now();
-      return available;
-    }
-    if (poolConnections.length < this.maxConnectionsPerDb) {
-      const db = await this.createConnection(options);
-      const pooled = {
-        database: db,
-        filepath: options.filepath,
-        readonly: options.readonly ?? true,
+  /**
+   * Take exclusive ownership of a file's connection slot. The map is mutated
+   * before any await, so two callers in the same tick cannot both decide the
+   * slot is free.
+   */
+  claim(filepath, timeoutMs) {
+    const existing = this.connections.get(filepath);
+    if (!existing) {
+      const created = {
+        database: null,
+        filepath,
+        readonly: true,
+        identity: null,
         lastUsed: Date.now(),
         inUse: true,
-        isOpen: true
+        isOpen: false,
+        releaseWriteLock: null
       };
-      poolConnections.push(pooled);
-      return pooled;
+      this.connections.set(filepath, created);
+      return Promise.resolve(created);
     }
-    const timeout = options.timeout ?? 5e3;
-    const conns = poolConnections;
-    return new Promise((resolve2, reject) => {
+    if (!existing.inUse) {
+      existing.inUse = true;
+      existing.lastUsed = Date.now();
+      return Promise.resolve(existing);
+    }
+    return new Promise((resolve3, reject) => {
       const timer = setTimeout(() => {
-        const keyWaiters = this.waiters.get(key);
-        if (keyWaiters) {
-          const idx = keyWaiters.indexOf(waiter);
-          if (idx !== -1) {
-            keyWaiters.splice(idx, 1);
-          }
+        const queue2 = this.waiters.get(filepath);
+        const index = queue2 ? queue2.indexOf(waiter) : -1;
+        if (queue2 && index !== -1) {
+          queue2.splice(index, 1);
         }
-        reject(new Error(`SQLite connection timeout after ${timeout}ms`));
-      }, timeout);
+        reject(new Error(`SQLite connection timeout after ${timeoutMs}ms`));
+      }, timeoutMs);
       timer.unref?.();
       const waiter = /* @__PURE__ */ __name((conn) => {
         clearTimeout(timer);
-        resolve2(conn);
+        resolve3(conn);
       }, "waiter");
-      const immediate = conns.find((c) => !c.inUse && c.isOpen);
-      if (immediate) {
-        clearTimeout(timer);
-        immediate.inUse = true;
-        immediate.lastUsed = Date.now();
-        resolve2(immediate);
-        return;
-      }
-      if (!this.waiters.has(key)) {
-        this.waiters.set(key, []);
-      }
-      this.waiters.get(key).push(waiter);
+      const queue = this.waiters.get(filepath) ?? [];
+      queue.push(waiter);
+      this.waiters.set(filepath, queue);
     });
   }
-  release(connection) {
-    const key = this.getPoolKey(connection.filepath, connection.readonly);
-    const keyWaiters = this.waiters.get(key);
-    if (keyWaiters && keyWaiters.length > 0) {
-      const waiter = keyWaiters.shift();
-      connection.lastUsed = Date.now();
-      waiter(connection);
-      return;
+  async acquire(options) {
+    const readonly2 = options.readonly ?? true;
+    const timeout = options.timeout ?? 5e3;
+    const filepath = await canonicalPath(options.filepath);
+    const resolved = { ...options, filepath };
+    const connection = await this.claim(filepath, timeout);
+    try {
+      if (!readonly2 && filepath !== ":memory:") {
+        connection.releaseWriteLock = await acquireWriteLock(filepath, timeout);
+      }
+      await this.refresh(connection, resolved, readonly2);
+      return connection;
+    } catch (error2) {
+      await this.release(connection);
+      throw error2;
     }
-    connection.inUse = false;
-    connection.lastUsed = Date.now();
+  }
+  /** Load or revalidate the snapshot, then set the handle's access mode. */
+  async refresh(connection, options, readonly2) {
+    if (options.filepath !== ":memory:") {
+      const identity = await readFileIdentity(options.filepath);
+      if (connection.database && !sameFile(connection.identity, identity)) {
+        this.closeConnection(connection);
+      }
+    }
+    if (!connection.database) {
+      const opened = await this.createConnection(options);
+      connection.database = opened.database;
+      connection.identity = opened.identity;
+      connection.isOpen = true;
+    }
+    connection.readonly = readonly2;
+    try {
+      connection.database.run(`PRAGMA query_only = ${readonly2 ? "ON" : "OFF"}`);
+    } catch (error2) {
+      throw new Error(
+        `SQLite could not enter ${readonly2 ? "read-only" : "read-write"} mode: ${error2 instanceof Error ? error2.message : String(error2)}`
+      );
+    }
+  }
+  release(connection) {
+    const releaseLock = connection.releaseWriteLock;
+    connection.releaseWriteLock = null;
+    const done = releaseLock ? releaseLock().catch((error2) => logWarn("Failed to release the SQLite write lock", error2)) : Promise.resolve();
+    return done.then(() => {
+      connection.lastUsed = Date.now();
+      const queue = this.waiters.get(connection.filepath);
+      if (queue && queue.length > 0) {
+        const waiter = queue.shift();
+        waiter(connection);
+        return;
+      }
+      connection.inUse = false;
+    });
   }
   async saveToFile(connection) {
-    if (connection.filepath === ":memory:" || connection.readonly) {
+    if (connection.filepath === ":memory:" || connection.readonly || !connection.database) {
       return;
     }
-    const data = connection.database.export();
-    await (0, import_promises2.writeFile)(connection.filepath, Buffer.from(data));
+    await writeDatabaseFile(
+      connection.filepath,
+      connection.database.export(),
+      connection.identity?.mode ?? null
+    );
+    connection.identity = await readFileIdentity(connection.filepath);
   }
   async createConnection(options) {
     const SQL = await getSqlJs();
     let db;
+    let identity = null;
     if (options.filepath === ":memory:") {
       db = new SQL.Database();
-    } else if ((0, import_node_fs.existsSync)(options.filepath)) {
-      const fileBuffer = await (0, import_promises2.readFile)(options.filepath);
-      db = new SQL.Database(fileBuffer);
     } else {
-      db = new SQL.Database();
-      if (!options.readonly) {
-        const data = db.export();
-        await (0, import_promises2.writeFile)(options.filepath, Buffer.from(data));
+      identity = await readFileIdentity(options.filepath);
+      if (identity !== null) {
+        db = new SQL.Database(await (0, import_promises3.readFile)(options.filepath));
+      } else {
+        db = new SQL.Database();
+        if (!(options.readonly ?? true)) {
+          await writeDatabaseFile(options.filepath, db.export(), null);
+          identity = await readFileIdentity(options.filepath);
+        }
       }
     }
     try {
@@ -38084,28 +38253,28 @@ var SqliteConnectionPool = class {
     } catch (err) {
       logWarn("SQLite PRAGMA setup failed", err);
     }
-    return db;
+    return { database: db, identity };
+  }
+  closeConnection(connection) {
+    if (connection.database && connection.isOpen) {
+      try {
+        connection.database.close();
+      } catch (err) {
+        logWarn("Failed to close SQLite connection", err);
+      }
+    }
+    connection.database = null;
+    connection.identity = null;
+    connection.isOpen = false;
   }
   cleanupIdleConnections() {
     const now = Date.now();
-    for (const [key, connections] of this.connections.entries()) {
-      const active = connections.filter((c) => {
-        const isIdle = !c.inUse && now - c.lastUsed > this.idleTimeoutMs;
-        if (isIdle && c.isOpen) {
-          try {
-            c.database.close();
-            c.isOpen = false;
-          } catch (err) {
-            logWarn("Failed to close idle SQLite connection", err);
-          }
-        }
-        return !isIdle;
-      });
-      if (active.length === 0) {
-        this.connections.delete(key);
-      } else {
-        this.connections.set(key, active);
+    for (const [key, connection] of this.connections.entries()) {
+      if (connection.inUse || now - connection.lastUsed <= this.idleTimeoutMs) {
+        continue;
       }
+      this.closeConnection(connection);
+      this.connections.delete(key);
     }
   }
   shutdown() {
@@ -38113,19 +38282,11 @@ var SqliteConnectionPool = class {
       clearInterval(this.cleanupInterval);
       this.cleanupInterval = null;
     }
-    for (const connections of this.connections.values()) {
-      for (const conn of connections) {
-        if (conn.isOpen) {
-          try {
-            conn.database.close();
-            conn.isOpen = false;
-          } catch (err) {
-            logWarn("Failed to close SQLite connection during shutdown", err);
-          }
-        }
-      }
+    for (const connection of this.connections.values()) {
+      this.closeConnection(connection);
     }
     this.connections.clear();
+    this.waiters.clear();
   }
 };
 var poolInstance = null;
@@ -38141,12 +38302,12 @@ async function withConnection(options, callback) {
   const connection = await pool.acquire(options);
   try {
     const result = await callback(connection.database);
-    if (!options.readonly) {
+    if (!(options.readonly ?? true)) {
       await pool.saveToFile(connection);
     }
     return result;
   } finally {
-    pool.release(connection);
+    await pool.release(connection);
   }
 }
 __name(withConnection, "withConnection");
@@ -38181,12 +38342,10 @@ async function executeSqlite(connectionInfo, query, params = [], readonly2 = tru
   const connectionOptions = {
     filepath,
     readonly: readonly2,
-    foreignKeys: true,
-    walMode: !readonly2
+    foreignKeys: true
   };
   try {
     return await withConnection(connectionOptions, (db) => {
-      db.run(`PRAGMA query_only = ${readonly2 ? "ON" : "OFF"}`);
       const isSelect = isReadOnlyQuery(query);
       if (isSelect) {
         const stmt = db.prepare(query);
@@ -38236,7 +38395,7 @@ __name(executeSqlite, "executeSqlite");
 // packages/connect/src/tools/db-query.ts
 var dbQueryTool = {
   name: "db_query",
-  description: "Run a SQL query under the connect trust boundary. Restricted mode requires a connection registered through the interactive GoodVibes control utility. Read-only by default \u2014 writes require write:true AND a connection-level allow_writes grant. Unknown and multi-statement SQL is rejected.",
+  description: "Run a SQL query under the connect trust boundary. Restricted mode requires a connection registered through the interactive GoodVibes control utility. Read-only by default: writes require write:true AND a connection-level allow_writes grant. Unknown and multi-statement SQL is rejected.",
   inputSchema: {
     type: "object",
     properties: {

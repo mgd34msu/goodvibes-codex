@@ -1,6 +1,6 @@
 # Capability and deferral matrix
 
-This file is the user-visible `0.1.x` parity record. “Available” means the capability is present in the Codex plugin surface; it does not mean every analyzer supports every framework or that an external registry or platform failure cannot temporarily degrade an individual call.
+This file is the user-visible `0.1.x` parity record. "Available" means the capability is present in the Codex plugin surface; it does not mean every analyzer supports every framework or that an external registry or platform failure cannot temporarily degrade an individual call.
 
 ## MCP servers and tools
 
@@ -82,7 +82,7 @@ Claude slash-command files are not installed. Codex invokes these skills from ma
 
 ## Templates and roles
 
-The minimal Next.js, minimal Vite React, and full Next.js SaaS template trees are included for `scaffold`. Four orchestration role references—architect, engineer, tester, and refutation reviewer—are included inside `task-orchestration`.
+The minimal Next.js, minimal Vite React, and full Next.js SaaS template trees are included for `scaffold`. Four orchestration role references, architect, engineer, tester, and refutation reviewer, are included inside `task-orchestration`.
 
 The plugin does not install custom-agent TOML into `~/.codex` or `.codex/agents`. That remains an opt-in future possibility, not first-release behavior.
 

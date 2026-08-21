@@ -7,7 +7,7 @@
  * live in their own owner-only file, and version 0.1.0 has no cookie store.
  *
  * The file is read fresh on every access (small, infrequent) so a write by one
- * call is visible to the next without cache-invalidation bugs — the same
+ * call is visible to the next without cache-invalidation bugs, the same
  * property required for prompt revocation.
  */
 
@@ -15,6 +15,7 @@ import * as crypto from 'node:crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import { statePath } from '@goodvibes/core/config';
+import { acquireLockFile } from '@goodvibes/core/lockfile';
 
 /** HTTP methods considered non-mutating (always allowed under read-only default). */
 export const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS'] as const;
@@ -35,7 +36,7 @@ export interface ServiceConfig {
   description?: string;
   /**
    * Trust boundary (BUILD NEW): write methods this service is allowed to use.
-   * Absent/empty means read-only — only SAFE_METHODS are permitted. Opting into
+   * Absent/empty means read-only, only SAFE_METHODS are permitted. Opting into
    * writes is explicit and per-service.
    */
   write_methods?: string[];
@@ -139,5 +140,38 @@ export async function saveRegistry(config: FetchConfig): Promise<void> {
     }
   } finally {
     await fs.promises.rm(temporary, { force: true }).catch(() => {});
+  }
+}
+
+/** How long a registry mutation waits for another mutation to finish. */
+const REGISTRY_LOCK_WAIT_MS = 5_000;
+
+/**
+ * Apply a change to the registry as one serialized read-modify-write.
+ *
+ * Every mutation reads the whole file, edits it in memory, and writes the whole
+ * file back. Two of those interleaving would make the second write erase the
+ * first caller's service, connection, or allowlist entry with no error to
+ * either side, so the registry has one shared write path guarded by a lock file
+ * and `mutate` always sees state read fresh inside that lock.
+ *
+ * @param mutate - receives the current registry and returns the result to pass
+ *   back to the caller; the (possibly mutated) config is saved afterwards
+ */
+export async function updateRegistry<T>(
+  mutate: (config: FetchConfig) => T | Promise<T>
+): Promise<T> {
+  const release = await acquireLockFile(`${registryPath()}.lock`, {
+    waitMs: REGISTRY_LOCK_WAIT_MS,
+    busyMessage: (lockFile, waitMs) =>
+      `Timed out after ${waitMs}ms waiting for the connect registry lock '${lockFile}'.`,
+  });
+  try {
+    const config = getRegistry();
+    const result = await mutate(config);
+    await saveRegistry(config);
+    return result;
+  } finally {
+    await release();
   }
 }

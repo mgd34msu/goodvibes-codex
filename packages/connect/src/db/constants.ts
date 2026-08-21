@@ -1,6 +1,6 @@
 /**
  * SQL write keywords, ported from v1 project-engine
- * `core/database/constants.ts` (query-execution subset only — the Prisma/loop
+ * `core/database/constants.ts` (query-execution subset only, the Prisma/loop
  * constants stay with intel's `db_schema`).
  */
 

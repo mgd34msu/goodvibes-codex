@@ -1,5 +1,5 @@
 /**
- * ripgrep binary wrapper — the search backend for code_grep and (via
+ * ripgrep binary wrapper, the search backend for code_grep and (via
  * `--files`) code_glob.
  *
  * Ported from v1 `precision-engine/src/core/ripgrep.ts` aside from binary
@@ -265,7 +265,7 @@ export class RipgrepCore {
    * Run ripgrep. `cwd` is set to the search root whenever one is known: ripgrep
    * resolves relative `--glob` patterns (e.g. `dir/*.ts`, produced by
    * `splitGlobPattern`/subdirectory-anchored code_glob patterns) against the
-   * PROCESS's working directory, not the positional search-path argument —
+   * PROCESS's working directory, not the positional search-path argument,
    * confirmed empirically (`rg --files --glob 'dir/*.ts' /abs/path` only
    * matches when the process cwd is `/abs/path`). Without this, subdirectory
    * glob patterns silently returned zero results whenever the server's cwd

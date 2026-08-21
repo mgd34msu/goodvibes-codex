@@ -1,5 +1,5 @@
 /**
- * F1 — base_path / resolved-path echo (release gate).
+ * F1, base_path / resolved-path echo (release gate).
  *
  * Locks the field issue 1 contract: absolute inputs pass through, relative
  * inputs resolve against base_path, and a relative input with NO base_path still

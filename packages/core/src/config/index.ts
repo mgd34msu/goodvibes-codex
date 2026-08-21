@@ -1,5 +1,5 @@
 /**
- * `@goodvibes/core/config` — configuration file loader for the servers.
+ * `@goodvibes/core/config`, configuration file loader for the servers.
  *
  * Configuration is file-backed and never writable through MCP. Open mode is
  * controlled out of band by the interactive utility, and each load rereads the
@@ -195,7 +195,7 @@ function mergeBudgets(base: Budgets, override: unknown): Budgets {
 
 /**
  * Load the effective config: defaults, overlaid by the user file, overlaid by
- * the project file. `mode: 'open'` is only honoured from a file on disk — there
+ * the project file. `mode: 'open'` is only honoured from a file on disk, there
  * is no in-process setter, so a tool can never toggle it.
  *
  * @param cwd - project root (defaults to process.cwd())
@@ -249,7 +249,7 @@ export function configForEnvelope(cfg: GoodvibesConfig = loadConfig()): {
 export function describeConfigKeys(): string {
   const lines = ['# GoodVibes config keys', ''];
   for (const [key, doc] of Object.entries(CONFIG_KEYS)) {
-    lines.push(`- \`${key}\` (default: ${JSON.stringify(doc.default)}) — ${doc.description}`);
+    lines.push(`- \`${key}\` (default: ${JSON.stringify(doc.default)}): ${doc.description}`);
   }
   return lines.join('\n');
 }

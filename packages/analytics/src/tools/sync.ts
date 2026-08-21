@@ -1,4 +1,4 @@
-/** `sync` — build a sanitized index from Codex rollout JSONL files. */
+/** `sync`, build a sanitized index from Codex rollout JSONL files. */
 import type { ToolModule } from './types.js';
 
 export const syncTool: ToolModule = {

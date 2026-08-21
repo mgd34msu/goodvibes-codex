@@ -1,5 +1,5 @@
 /**
- * structural_edit (intel tool 15) — the write-path regression net.
+ * structural_edit (intel tool 15), the write-path regression net.
  *
  * Every non-negotiable condition from carve-out §8 lane 10 / plan §14.B has a
  * test here: preview→apply round trip, stale-hash refusal, first-class rollback
@@ -12,6 +12,7 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { createRequire } from 'node:module';
 import * as fs from 'fs/promises';
+import * as os from 'os';
 import * as path from 'path';
 import { getStatePath } from '@goodvibes/core/config';
 import { structuralEditTool, setBeforeReplaceHookForTests } from '../tools/structural_edit.js';
@@ -53,7 +54,7 @@ function tokenFilePath(token: string): string {
   return getStatePath(stateRoot, 'edit-tokens', `${token}.json`);
 }
 
-describe('structural_edit — preview/apply round trip (exact mode)', () => {
+describe('structural_edit: preview/apply round trip (exact mode)', () => {
   it('previews a diff + token without writing, then applies it', async () => {
     const file = await writeFile(dir, 'a.ts', 'const value = 1;\nconst other = 2;\n');
 
@@ -182,7 +183,7 @@ describe('structural_edit — preview/apply round trip (exact mode)', () => {
   });
 });
 
-describe('structural_edit — ast mode (TypeScript compiler)', () => {
+describe('structural_edit: ast mode (TypeScript compiler)', () => {
   it('replaces a whole function declaration node', async () => {
     const file = await writeFile(dir, 'fn.ts', 'export function foo(): number {\n  return 1;\n}\n');
     const preview = expectSuccess<{
@@ -213,7 +214,7 @@ describe('structural_edit — ast mode (TypeScript compiler)', () => {
   });
 });
 
-describe('structural_edit — stale-hash refusal (never silently re-matches)', () => {
+describe('structural_edit: stale-hash refusal (never silently re-matches)', () => {
   it('refuses an entry whose file changed since preview', async () => {
     const file = await writeFile(dir, 's.ts', 'value = 1\n');
     const preview = expectSuccess<{ preview_token: string }>(
@@ -234,7 +235,7 @@ describe('structural_edit — stale-hash refusal (never silently re-matches)', (
     expect(apply.success).toBe(false);
     expect(apply.data!.entries.e.status).toBe('refused_stale');
     expect(apply.data!.summary.refused_stale).toBe(1);
-    // The stale content is untouched — we did NOT re-match or overwrite it.
+    // The stale content is untouched, we did NOT re-match or overwrite it.
     expect(await fs.readFile(file, 'utf-8')).toBe('value = 999\n');
   });
 
@@ -267,7 +268,7 @@ describe('structural_edit — stale-hash refusal (never silently re-matches)', (
   });
 });
 
-describe('structural_edit — atomic preflight and serialization', () => {
+describe('structural_edit: atomic preflight and serialization', () => {
   it('does not touch a fresh file when another entry is stale', async () => {
     const fileA = await writeFile(dir, 'A.ts', 'AAA one\n');
     const fileB = await writeFile(dir, 'B.ts', 'BBB one\n');
@@ -360,7 +361,7 @@ describe('structural_edit — atomic preflight and serialization', () => {
   });
 });
 
-describe('structural_edit — CRLF preservation (v1 silent-conversion lesson)', () => {
+describe('structural_edit: CRLF preservation (v1 silent-conversion lesson)', () => {
   it('leaves CRLF bytes outside the edit span exactly, and renders the replacement in CRLF too', async () => {
     const crlf = 'const a = 1;\r\nconst b = 2;\r\nconst c = 3;\r\n';
     const file = await writeFile(dir, 'crlf.ts', crlf);
@@ -379,7 +380,7 @@ describe('structural_edit — CRLF preservation (v1 silent-conversion lesson)', 
 
     const after = await fs.readFile(file, 'utf-8');
     expect(after).toBe('const a = 1;\r\nconst b = 20;\r\nconst bb = 22;\r\nconst c = 3;\r\n');
-    // Not a single lone LF anywhere — every newline is a full CRLF.
+    // Not a single lone LF anywhere, every newline is a full CRLF.
     for (let i = 0; i < after.length; i++) {
       if (after[i] === '\n') {
         expect(after[i - 1]).toBe('\r');
@@ -388,7 +389,7 @@ describe('structural_edit — CRLF preservation (v1 silent-conversion lesson)', 
   });
 });
 
-describe('structural_edit — token expiry (10-minute TTL)', () => {
+describe('structural_edit: token expiry (10-minute TTL)', () => {
   it('rejects an expired token', async () => {
     const file = await writeFile(dir, 'exp.ts', 'k = 1\n');
     const preview = expectSuccess<{ preview_token: string }>(
@@ -413,7 +414,7 @@ describe('structural_edit — token expiry (10-minute TTL)', () => {
   });
 });
 
-describe('structural_edit — ast_pattern behavior tracks @ast-grep/napi availability', () => {
+describe('structural_edit: ast_pattern behavior tracks @ast-grep/napi availability', () => {
   const astGrepAvailable = (() => {
     try {
       createRequire(import.meta.url).resolve('@ast-grep/napi');
@@ -485,7 +486,88 @@ describe('structural_edit — ast_pattern behavior tracks @ast-grep/napi availab
   );
 });
 
-describe('structural_edit — input validation', () => {
+describe('structural_edit: apply lock recovery', () => {
+  function applyLockPath(): string {
+    return getStatePath(stateRoot, 'locks', 'structural-edit.lock');
+  }
+
+  async function previewToken(name: string): Promise<string> {
+    await writeFile(dir, name, 'const value = 1;\n');
+    const preview = expectSuccess<{ preview_token: string }>(
+      await call({
+        action: 'preview',
+        base_path: dir,
+        edits: [{ id: 'e1', path: name, find: 'const value = 1;', replace: 'const value = 2;' }],
+      })
+    );
+    return preview.data!.preview_token;
+  }
+
+  async function writeLock(record: Record<string, unknown>): Promise<string> {
+    const lockFile = applyLockPath();
+    await fs.mkdir(path.dirname(lockFile), { recursive: true, mode: 0o700 });
+    await fs.writeFile(lockFile, JSON.stringify(record), 'utf8');
+    return lockFile;
+  }
+
+  it('reclaims a lock left behind by a process that no longer exists', async () => {
+    const token = await previewToken('lock-stale.ts');
+    const lockFile = await writeLock({
+      owner_id: 'ghost',
+      pid: 0x7fffffff,
+      hostname: os.hostname(),
+      created_at: Date.now(),
+    });
+
+    const apply = expectSuccess<{ summary: { applied: number } }>(
+      await call({ action: 'apply', preview_token: token })
+    );
+
+    expect(apply.data!.summary.applied).toBe(1);
+    expect(await fs.readFile(path.join(dir, 'lock-stale.ts'), 'utf8')).toBe('const value = 2;\n');
+    await expect(fs.stat(lockFile)).rejects.toThrow();
+  });
+
+  it('reclaims a lock whose record is unreadable once it is old enough', async () => {
+    const token = await previewToken('lock-garbage.ts');
+    const lockFile = applyLockPath();
+    await fs.mkdir(path.dirname(lockFile), { recursive: true, mode: 0o700 });
+    await fs.writeFile(lockFile, 'not json at all', 'utf8');
+
+    const apply = expectSuccess<{ summary: { applied: number } }>(
+      await call({ action: 'apply', preview_token: token })
+    );
+
+    expect(apply.data!.summary.applied).toBe(1);
+    await expect(fs.stat(lockFile)).rejects.toThrow();
+  });
+
+  it('waits for a live holder instead of stealing its lock', async () => {
+    const token = await previewToken('lock-live.ts');
+    const held = JSON.stringify({
+      owner_id: 'live-holder',
+      pid: process.pid,
+      hostname: os.hostname(),
+      created_at: Date.now(),
+    });
+    const lockFile = applyLockPath();
+    await fs.mkdir(path.dirname(lockFile), { recursive: true, mode: 0o700 });
+    await fs.writeFile(lockFile, held, 'utf8');
+
+    const pending = call({ action: 'apply', preview_token: token });
+    await new Promise<void>(resolve => setTimeout(resolve, 300));
+
+    // Still the original holder's record: a running process is never evicted.
+    expect(await fs.readFile(lockFile, 'utf8')).toBe(held);
+    expect(await fs.readFile(path.join(dir, 'lock-live.ts'), 'utf8')).toBe('const value = 1;\n');
+
+    await fs.unlink(lockFile);
+    const apply = expectSuccess<{ summary: { applied: number } }>(await pending);
+    expect(apply.data!.summary.applied).toBe(1);
+  });
+});
+
+describe('structural_edit: input validation', () => {
   it('rejects an unknown action', async () => {
     const r = parseResult(await call({ action: 'destroy' }));
     expect(r.success).toBe(false);

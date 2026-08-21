@@ -3,7 +3,7 @@ name: codebase-review
 description: "Review an uncommitted diff or a diff against a base ref using repository checks and refutation-based findings. Use for code review, pull-request review, regression hunting, or an explicitly requested Write-Review-Fix-Confirm cycle."
 ---
 
-# Codebase Review
+# Codebase review
 
 Default to a read-only review. Do not fix findings merely because this skill was invoked; apply changes only when the user explicitly requests a fix or full WRFC cycle.
 

@@ -47,7 +47,7 @@ export function parseFastifyFileRoutes(
     }
   }
 
-  // fastify.route({ method: 'GET', url: '/path' }) — either key order.
+  // fastify.route({ method: 'GET', url: '/path' }): either key order.
   const routePattern =
     /(?:fastify|server|app)\.route\s*\(\s*\{[^}]*method\s*:\s*['"](\w+)['""][^}]*url\s*:\s*['"]([^'"]+)['"]|url\s*:\s*['"]([^'"]+)['""][^}]*method\s*:\s*['"](\w+)['"]/g;
 

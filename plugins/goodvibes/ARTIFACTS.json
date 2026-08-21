@@ -121,8 +121,8 @@
     },
     {
       "path": "server/connect/index.cjs",
-      "bytes": 1481837,
-      "sha256": "ca5c37c61a4bc82a2b86ff3d096d3622b952b1b74e372e92c6046f24fa4ed762"
+      "bytes": 1488328,
+      "sha256": "e554b4d3c7d1e37076d5450d2903ec2be5320ab095cfdf177a2b4a314c2cb749"
     },
     {
       "path": "server/connect/launcher.cjs",
@@ -146,8 +146,8 @@
     },
     {
       "path": "server/intel/index.cjs",
-      "bytes": 12387880,
-      "sha256": "e93d8cdd0266a80b266cb8b66095625343221fc51c93a4c0d0743a1234ab74fe"
+      "bytes": 12390195,
+      "sha256": "f621c27f5294578a2ae4bad541d2f6c52ec5682becaeb79dc19da2caa9f48a75"
     },
     {
       "path": "server/intel/launcher.cjs",
@@ -197,7 +197,7 @@
     {
       "path": "skills/codebase-review/SKILL.md",
       "bytes": 1568,
-      "sha256": "713a6e5abcc58517e24eac40dd2b6aab66a5244367bac67ee75e330dbc55b249"
+      "sha256": "88cc498ff542d996c0675f776be24921fc46192df6cd3551a88beb3654c242e2"
     },
     {
       "path": "skills/codebase-review/agents/openai.yaml",
@@ -212,7 +212,7 @@
     {
       "path": "skills/goodvibes-analytics/SKILL.md",
       "bytes": 2148,
-      "sha256": "7c94c7b3330f0903a38e32188e5d0d4cd00ecbce62f3beaa81d972c10fbeeab5"
+      "sha256": "f6c675bab4a6b08cc713ed9b8d5ef93e7b69a6a5d73feffa5b7ab67cee5d7da8"
     },
     {
       "path": "skills/goodvibes-analytics/agents/openai.yaml",
@@ -227,7 +227,7 @@
     {
       "path": "skills/goodvibes-maintenance/SKILL.md",
       "bytes": 3182,
-      "sha256": "c3ac72ef9843b1e739968a7b0a689ae2efe76346524ec56b6d2c7f96662f219d"
+      "sha256": "e4c95462d8530198f7d506f57ab4f6272142820a8a3ed8ac864c301b5bfb197a"
     },
     {
       "path": "skills/goodvibes-maintenance/agents/openai.yaml",
@@ -242,7 +242,7 @@
     {
       "path": "skills/goodvibes-memory/SKILL.md",
       "bytes": 1449,
-      "sha256": "5c7cd12c3fc0196526ddc8700b9fef6eb9dd3a2a8ac4dce7261d027d04a9a12b"
+      "sha256": "853b4fe901d5e8f17b435d9d5a81fd9306ee8b7f10d9047eff5889453693d922"
     },
     {
       "path": "skills/goodvibes-memory/agents/openai.yaml",
@@ -257,7 +257,7 @@
     {
       "path": "skills/intel-mastery/SKILL.md",
       "bytes": 2092,
-      "sha256": "caa8231afac9a2636da15d9944ddb762b0416508c9a04f57a1ce72bae72b6f7b"
+      "sha256": "9b543eb8098dd05a169a56521f127bf5a9d10a295ca37f56b5dae920482acd6b"
     },
     {
       "path": "skills/intel-mastery/agents/openai.yaml",
@@ -272,7 +272,7 @@
     {
       "path": "skills/project-onboarding/SKILL.md",
       "bytes": 1888,
-      "sha256": "489546fc1f2ede1cda19f74abefe878bb754811a87f609c9803f2cbc9c284963"
+      "sha256": "3874c5f7024a473842818e8f17b27517102bee45db6bb603c349c60fab00572b"
     },
     {
       "path": "skills/project-onboarding/agents/openai.yaml",
@@ -282,7 +282,7 @@
     {
       "path": "skills/review-scoring/SKILL.md",
       "bytes": 1573,
-      "sha256": "2a49143c4335f02c14c78efee3349904ce7aa8cf09891bb38111dd01a8cc3e72"
+      "sha256": "93f864cd1230da712df7df7f48a54e4516960601bbc7d44bc66aacb8d6896c01"
     },
     {
       "path": "skills/review-scoring/agents/openai.yaml",
@@ -292,7 +292,7 @@
     {
       "path": "skills/service-integration/SKILL.md",
       "bytes": 2600,
-      "sha256": "c0f9b3a5582770b06e6fbda260ea125b3960eca94a0a42c5a87c1e668a4622b8"
+      "sha256": "4911c33bda088c3c0931eaba604995705e197bf467720312f55939f6e5b7b6d1"
     },
     {
       "path": "skills/service-integration/agents/openai.yaml",
@@ -307,7 +307,7 @@
     {
       "path": "skills/task-orchestration/SKILL.md",
       "bytes": 2117,
-      "sha256": "293396ac77c4ec05039921751779c92ba035c5d67afd4bc73a112eda7d73aac8"
+      "sha256": "939e816611e21912a07b8d18999e00066660a4242ee4bb6e0de2ef7baf6cbe48"
     },
     {
       "path": "skills/task-orchestration/agents/openai.yaml",
@@ -336,8 +336,8 @@
     },
     {
       "path": "templates/README.md",
-      "bytes": 716,
-      "sha256": "06a62b946dbbd538ab5aa35a6a934f136f21099d5ee4244bb09786bff6cf9cc4"
+      "bytes": 707,
+      "sha256": "ec396248d129bdbe0e0f4de7be332279cfff163af88fe085e654bfa517a0a7b6"
     },
     {
       "path": "templates/full/next-saas/files/.env.example.hbs",

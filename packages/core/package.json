@@ -11,6 +11,7 @@
     "./config": "./src/config/index.ts",
     "./telemetry": "./src/telemetry/index.ts",
     "./cache": "./src/cache/index.ts",
+    "./lockfile": "./src/lockfile/index.ts",
     "./logging": "./src/logging/index.ts",
     "./workspace": "./src/workspace/index.ts"
   },

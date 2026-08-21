@@ -3,7 +3,7 @@ name: review-scoring
 description: "Review a code change by trying to falsify its correctness claims and reporting concrete, severity-ranked defects. Use for pull requests, diffs, implementation reviews, merge-readiness checks, or re-review after a fix."
 ---
 
-# Review Scoring
+# Review scoring
 
 Produce a defect list, not a scalar score. Remain read-only unless the user separately asks for fixes.
 

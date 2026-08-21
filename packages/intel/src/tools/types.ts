@@ -11,6 +11,6 @@ import type { CallToolResult, Tool } from '@modelcontextprotocol/sdk/types.js';
 export interface ToolDefinition {
   /** The MCP `tools/list` entry (name, description, inputSchema). */
   definition: Tool;
-  /** Serves a `tools/call` for this tool. Never throws — errors become an error envelope. */
+  /** Serves a `tools/call` for this tool. Never throws, errors become an error envelope. */
   handler: (args: Record<string, unknown>) => Promise<CallToolResult>;
 }

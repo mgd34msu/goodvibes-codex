@@ -1,7 +1,7 @@
 /**
  * Database domain types for connect `db_query`.
  *
- * Trimmed port of v1 project-engine `core/database/types.ts` — only the query
+ * Trimmed port of v1 project-engine `core/database/types.ts`, only the query
  * execution surface (connect does not do schema extraction; that stays in
  * intel's `db_schema`). The v1 `McpResponse` coupling is dropped; `db_query`
  * returns the shared `core/envelope` instead.
@@ -96,6 +96,4 @@ export interface SqliteConnectionOptions {
   timeout?: number;
   /** Enable foreign-key enforcement. */
   foreignKeys?: boolean;
-  /** Enable WAL mode. */
-  walMode?: boolean;
 }

@@ -3,7 +3,7 @@ name: goodvibes-memory
 description: "Read or record durable repository decisions, patterns, failures, and preferences under .goodvibes/codex/memory. Use when prior project context may affect a task or when a completed change produced knowledge worth preserving across sessions."
 ---
 
-# GoodVibes Memory
+# GoodVibes memory
 
 Treat `.goodvibes/codex/memory/` as curated project knowledge, not a transcript, task queue, or same-session message bus.
 

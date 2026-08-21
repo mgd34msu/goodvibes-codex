@@ -1,6 +1,6 @@
 /**
  * Tests for code_grep. Named regression class: F2 cap honesty in every
- * output format (plan §5.3 — the fix lives in `transformRipgrepResult`).
+ * output format (plan §5.3, the fix lives in `transformRipgrepResult`).
  * Also covers negate, ranked, preview_replace, stats, expand_to, base_path,
  * and the ported v1 Bug 3 / Bug 11 regressions (bug-fixes.test.ts).
  */
@@ -47,7 +47,7 @@ afterEach(async () => {
   await cleanupTempDir(dir);
 });
 
-describe('code_grep — input validation', () => {
+describe('code_grep: input validation', () => {
   it('errors when queries array is missing', async () => {
     const result = await handler({ base_path: dir });
     const parsed = expectError(result);
@@ -67,7 +67,7 @@ describe('code_grep — input validation', () => {
   });
 });
 
-describe('code_grep — basic search', () => {
+describe('code_grep: basic search', () => {
   beforeEach(async () => {
     await writeFiles(dir, {
       'file1.ts': 'const foo = 1;\nconst bar = 2;',
@@ -91,7 +91,7 @@ describe('code_grep — basic search', () => {
   });
 });
 
-describe('code_grep — F2 cap honesty in every output format', () => {
+describe('code_grep: F2 cap honesty in every output format', () => {
   it('count_only returns the true count above the per-file default cap', async () => {
     await writeFile(dir, 'big.ts', Array(50).fill('needle').join('\n'));
     const result = await handler({
@@ -208,7 +208,7 @@ describe('code_grep — F2 cap honesty in every output format', () => {
   });
 });
 
-describe('code_grep — negate', () => {
+describe('code_grep: negate', () => {
   it('reports honest truncation with effective_caps', async () => {
     await writeFiles(dir, {
       'hit.ts': 'needle',
@@ -245,7 +245,7 @@ describe('code_grep — negate', () => {
   });
 });
 
-describe('code_grep — base_path (F1)', () => {
+describe('code_grep: base_path (F1)', () => {
   it('resolves relative query paths against base_path', async () => {
     await writeFiles(dir, { 'decoy.ts': 'needle here', 'sub/inner/hit.ts': 'needle here' });
     const result = await handler({
@@ -274,7 +274,7 @@ describe('code_grep — base_path (F1)', () => {
   });
 });
 
-describe('code_grep — ranked', () => {
+describe('code_grep: ranked', () => {
   it('sorts files in place by a single relevance scalar, no duplicated content', async () => {
     await writeFiles(dir, {
       'deep/nested/dir/exported.ts': 'export const needle = 1;',
@@ -295,7 +295,7 @@ describe('code_grep — ranked', () => {
   });
 });
 
-describe('code_grep — preview_replace', () => {
+describe('code_grep: preview_replace', () => {
   it('generates a unified-diff-shaped preview without writing', async () => {
     await writeFile(dir, 'target.ts', 'const OLD_NAME = 1;\nconsole.log(OLD_NAME);');
     const result = await handler({
@@ -315,7 +315,7 @@ describe('code_grep — preview_replace', () => {
   });
 });
 
-describe('code_grep — stats mode', () => {
+describe('code_grep: stats mode', () => {
   it('computes per-directory and per-file-type breakdowns', async () => {
     await writeFiles(dir, { 'a.ts': 'needle', 'b.ts': 'needle\nneedle', 'sub/c.ts': 'needle' });
     const result = await handler({
@@ -329,7 +329,7 @@ describe('code_grep — stats mode', () => {
   });
 });
 
-describe('code_grep — expand_to context', () => {
+describe('code_grep: expand_to context', () => {
   it('expands to the enclosing function body', async () => {
     await writeFile(dir, 'fn.ts', 'function outer() {\n  const needle = 1;\n  return needle;\n}\n');
     const result = await handler({
@@ -344,7 +344,7 @@ describe('code_grep — expand_to context', () => {
   });
 });
 
-describe('code_grep — ported v1 regressions (Bug 3 / Bug 11)', () => {
+describe('code_grep: ported v1 regressions (Bug 3 / Bug 11)', () => {
   beforeEach(async () => {
     await writeFile(
       dir,
@@ -377,7 +377,7 @@ describe('code_grep — ported v1 regressions (Bug 3 / Bug 11)', () => {
   });
 });
 
-describe('code_grep — hidden files (include_hidden)', () => {
+describe('code_grep: hidden files (include_hidden)', () => {
   beforeEach(async () => {
     await writeFiles(dir, {
       'visible.ts': 'export const searchme = 1;',

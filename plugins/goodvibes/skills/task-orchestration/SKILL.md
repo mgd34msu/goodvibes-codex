@@ -3,7 +3,7 @@ name: task-orchestration
 description: "Decompose complex repository work into bounded Codex subagent tasks, coordinate dependencies, and apply the Write-Review-Fix-Confirm pattern. Use when independent investigation, implementation, testing, or refutation work can run in parallel or needs explicit handoffs."
 ---
 
-# Task Orchestration
+# Task orchestration
 
 Use Codex's available subagent tooling as an in-band workflow. Do not create a background coordinator or shared mutable task queue.
 

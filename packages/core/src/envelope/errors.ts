@@ -54,8 +54,8 @@ export function formatMutualExclusivityError(fieldName: string, providedSources:
  * package is one of the externalized native/WASM deps (tree-sitter, sql.js,
  * ast-grep, ripgrep). Launchers and maintenance automatically retry the locked
  * dependency repair. A tool that reaches a missing dep while repair is still
- * unavailable returns this as a normal error envelope — never a crash or hang
- * — and dependency-free surfaces remain usable.
+ * unavailable returns this as a normal error envelope, never a crash or hang
+ *, and dependency-free surfaces remain usable.
  *
  * @param capability - the user-facing capability name (e.g. "code_read outline mode").
  */

@@ -1,5 +1,5 @@
 /**
- * `db_query` — SQL execution under the connect trust boundary (§4.3 db_query row).
+ * `db_query`, SQL execution under the connect trust boundary (§4.3 db_query row).
  *
  * Ported from v1 project-engine `extensions/database/query.ts`, moved onto
  * connect's trust model:
@@ -62,7 +62,7 @@ export const dbQueryTool = {
   description:
     'Run a SQL query under the connect trust boundary. Restricted mode requires a ' +
     'connection registered through the interactive GoodVibes control utility. ' +
-    'Read-only by default — writes require write:true AND a connection-level ' +
+    'Read-only by default: writes require write:true AND a connection-level ' +
     'allow_writes grant. Unknown and multi-statement SQL is rejected.',
   inputSchema: {
     type: 'object',

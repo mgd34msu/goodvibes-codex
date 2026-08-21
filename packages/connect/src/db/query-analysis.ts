@@ -1,5 +1,5 @@
 /**
- * SQL query analysis — ported verbatim from v1 project-engine
+ * SQL query analysis, ported verbatim from v1 project-engine
  * `core/database/query-analysis.ts` (read/write classification, LIMIT handling,
  * CTE-with-write detection). This is what enforces the connect read-only
  * default before a query ever reaches an executor.

@@ -40,7 +40,7 @@ export async function detectEntryPoints(
     if (error instanceof Error && error.message.includes('escapes the selected workspace root')) {
       throw error;
     }
-    // no/invalid package.json — fall through to conventions
+    // no/invalid package.json; fall through to conventions
   }
 
   const addIfExists = async (p: string): Promise<void> => {
@@ -55,7 +55,7 @@ export async function detectEntryPoints(
       if (error instanceof Error && error.message.includes('escapes the selected workspace root')) {
         throw error;
       }
-      // does not exist — skip
+      // does not exist; skip
     }
   };
 

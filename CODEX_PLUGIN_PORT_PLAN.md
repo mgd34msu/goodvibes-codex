@@ -347,7 +347,7 @@ Resolution rules:
 10. Show the canonical path during the user-presence flow and document immediate revocation.
 11. Offer plugin-scoped Codex approval-mode configuration as defense in depth, but do not make server security depend on users having configured it.
 
-If neither MCP roots nor a proven user-presence control flow is available, defer filesystem tools until the host contract improves. Shipping a convenient but model-defined root—or treating a model-invokable CLI as a different principal—would invalidate the stated trust boundary.
+If neither MCP roots nor a proven user-presence control flow is available, defer filesystem tools until the host contract improves. Shipping a convenient but model-defined root, or treating a model-invokable CLI as a different principal, would invalidate the stated trust boundary.
 
 #### Tool-schema consequences
 
@@ -471,7 +471,7 @@ A local inspection of current Codex rollout files shows usable `session_meta`, `
 - prefer stable hook inputs such as `last_assistant_message` over parsing transcript internals;
 - never ingest secrets or full prompt/tool payloads when counters and metadata suffice.
 
-Define one versioned `GoodVibesEvent` schema and a concurrency-safe `TelemetrySink/EventStore`. Every MCP invocation records bounded timing/result metadata through that sink; retained hooks may add only stable lifecycle metadata; rollout ingestion supplies Codex token/tool/agent records. The analytics layer must label each metric's provenance and reconcile duplicate observations. Cache, timing, anomaly, and tool-health queries remain deferred until this producer/consumer path is implemented—do not copy the source's disconnected telemetry DB and hook JSONL streams.
+Define one versioned `GoodVibesEvent` schema and a concurrency-safe `TelemetrySink/EventStore`. Every MCP invocation records bounded timing/result metadata through that sink; retained hooks may add only stable lifecycle metadata; rollout ingestion supplies Codex token/tool/agent records. The analytics layer must label each metric's provenance and reconcile duplicate observations. Cache, timing, anomaly, and tool-health queries remain deferred until this producer/consumer path is implemented. Do not copy the source's disconnected telemetry DB and hook JSONL streams.
 
 Tool plan:
 
@@ -485,7 +485,7 @@ Tool plan:
 | `sync`      | incremental Codex rollout import with version diagnostics                               | optional explicit Claude-history import                                                       |
 | `config`    | schema-validated, non-authoritative display/query preferences                           | privacy, ingestion, retention, and external-export authority remain out-of-band host controls |
 
-Do not call an estimated dollar value “Codex cost” or “actual spend.” ChatGPT/Codex subscription billing is not derivable from local token records. If an OpenAI API price table is later added, label results `api_equivalent_estimate`, timestamp the pricing data, map model aliases explicitly, and show unpriced usage separately.
+Do not call an estimated dollar value "Codex cost" or "actual spend." ChatGPT/Codex subscription billing is not derivable from local token records. If an OpenAI API price table is later added, label results `api_equivalent_estimate`, timestamp the pricing data, map model aliases explicitly, and show unpriced usage separately.
 
 The current sql.js global database is loaded and exported as a whole file without cross-process locking, so concurrent sessions can lose updates. Choose one of these before historical analytics ships:
 
@@ -715,7 +715,7 @@ codex plugin add goodvibes@goodvibes-local
 
 Each phase ends in a demonstrable gate. Do not advance merely because files have been copied.
 
-### Phase 0 — contracts, threat model, and host spike
+### Phase 0: contracts, threat model, and host spike
 
 Deliverables:
 
@@ -738,7 +738,7 @@ Exit gate:
 - a user can list and revoke approved roots;
 - security review signs off on the boundary.
 
-### Phase 1 — repository scaffold and reproducible core
+### Phase 1: repository scaffold and reproducible core
 
 Deliverables:
 
@@ -756,7 +756,7 @@ Exit gate:
 - each of the three placeholder servers independently initializes and lists its intended tool contracts;
 - missing optional runtime dependencies produce actionable errors without breaking handshake.
 
-### Phase 2 — Intel parity and write hardening
+### Phase 2: Intel parity and write hardening
 
 Deliverables:
 
@@ -774,7 +774,7 @@ Exit gate:
 - edit concurrency/rollback tests pass;
 - destructive execution remains server-safe with no host approval configured and is separated enough for users to configure an always-prompt tool policy.
 
-### Phase 3 — Connect data plane and control plane
+### Phase 3: Connect data plane and control plane
 
 Deliverables:
 
@@ -792,7 +792,7 @@ Exit gate:
 - test services and databases work only after explicit registration;
 - revoked permissions take effect without reinstalling the plugin.
 
-### Phase 4 — Codex skills, orchestration roles, and hooks
+### Phase 4: Codex skills, orchestration roles, and hooks
 
 Deliverables:
 
@@ -810,7 +810,7 @@ Exit gate:
 - every hook fixture passes and unsupported events are absent;
 - plugin operation remains understandable before hooks are trusted.
 
-### Phase 5 — Analytics v1: trustworthy Codex telemetry
+### Phase 5: Analytics v1, trustworthy Codex telemetry
 
 Deliverables:
 
@@ -829,7 +829,7 @@ Exit gate:
 - concurrent sessions do not lose indexed data;
 - no UI, output, or documentation describes token-derived estimates as actual spend.
 
-### Phase 6 — historical analytics and optional estimates
+### Phase 6: historical analytics and optional estimates
 
 Deliverables:
 
@@ -846,7 +846,7 @@ Exit gate:
 - priced and unpriced usage are separated and labeled;
 - privacy/retention controls are user-visible.
 
-### Phase 7 — cross-platform hardening and `0.1.0`
+### Phase 7: cross-platform hardening and `0.1.0`
 
 Deliverables:
 

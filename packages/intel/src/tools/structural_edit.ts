@@ -1,20 +1,20 @@
 /**
- * structural_edit — intel tool 15, the ONE write surface on an otherwise
+ * structural_edit, intel tool 15, the ONE write surface on an otherwise
  * read-only server (plan §14.B; carve-out §8 addendum lane 10).
  *
  * Two-step, preview-gated contract:
- *   action "preview" — run the match engine across the batch, return a per-entry
+ *   action "preview", run the match engine across the batch, return a per-entry
  *     unified diff, a single-use `preview_token`, and each file's content hash.
  *     Writes NOTHING.
- *   action "apply"   — take the token, re-hash every file, and write. Any file
- *     changed since preview is refused per-entry (`refused_stale`) — never
+ *   action "apply"  , take the token, re-hash every file, and write. Any file
+ *     changed since preview is refused per-entry (`refused_stale`), never
  *     silently re-matched. Hashes are checked at preflight and immediately
  *     before replacement. Atomic mode (default) serializes applies, rejects the
  *     batch before writing when preflight fails, and restores completed writes
  *     after an ordinary mid-batch error. It reports any restoration failure.
  *
  * Only the three permitted modes ship: `exact`, `ast` (TypeScript-compiler node
- * matching), `ast_pattern` (ast-grep — degrades to an honest "unavailable"
+ * matching), `ast_pattern` (ast-grep, degrades to an honest "unavailable"
  * error in this build; see engine). No fuzzy, no regex.
  *
  * Every filesystem interaction goes through `base_path` and echoes each entry's
@@ -36,6 +36,7 @@ import {
   type Envelope,
 } from '@goodvibes/core/envelope';
 import { withBudget } from '@goodvibes/core/proc';
+import { acquireLockFile, type LockRelease } from '@goodvibes/core/lockfile';
 import { loadConfig } from '@goodvibes/core/config';
 import { resolveInputPath } from '@goodvibes/core/fsx';
 import { assertPathTrusted, goodvibesDataRoot } from '@goodvibes/core/workspace';
@@ -63,65 +64,18 @@ function editStateRoot(): string {
     : goodvibesDataRoot();
 }
 
-async function waitBriefly(ms: number): Promise<void> {
-  await new Promise<void>(resolve => {
-    const timer = setTimeout(resolve, ms);
-    timer.unref?.();
+/**
+ * Serialize applies across Codex threads that share the same GoodVibes data
+ * root. A lock left behind by a crashed apply is reclaimed automatically once
+ * its recorded process is found to be gone.
+ */
+function acquireApplyLock(): Promise<LockRelease> {
+  return acquireLockFile(path.join(editStateRoot(), 'locks', 'structural-edit.lock'), {
+    waitMs: APPLY_LOCK_WAIT_MS,
+    busyMessage: lockFile =>
+      `Another structural_edit apply still owns '${lockFile}' and its process is still running. ` +
+      'Locks left behind by processes that no longer exist are reclaimed automatically.',
   });
-}
-
-/** Serialize applies across Codex threads that share the same GoodVibes data root. */
-async function acquireApplyLock(): Promise<() => Promise<void>> {
-  const lockDir = path.join(editStateRoot(), 'locks');
-  const lockFile = path.join(lockDir, 'structural-edit.lock');
-  const ownerId = crypto.randomBytes(16).toString('hex');
-  await fs.mkdir(lockDir, { recursive: true, mode: 0o700 });
-  const deadline = Date.now() + APPLY_LOCK_WAIT_MS;
-
-  for (;;) {
-    let handle: Awaited<ReturnType<typeof fs.open>>;
-    try {
-      handle = await fs.open(lockFile, 'wx', 0o600);
-    } catch (error) {
-      const code = (error as NodeJS.ErrnoException).code;
-      if (code !== 'EEXIST') {
-        throw error;
-      }
-
-      if (Date.now() >= deadline) {
-        throw new Error(
-          `Another structural_edit apply still owns '${lockFile}'. ` +
-            'If its process crashed, the user must verify no apply is running and remove that stale lock manually.'
-        );
-      }
-      await waitBriefly(25);
-      continue;
-    }
-
-    try {
-      await handle.writeFile(
-        JSON.stringify({ owner_id: ownerId, pid: process.pid, created_at: Date.now() })
-      );
-      await handle.sync();
-    } catch (error) {
-      await handle.close().catch(() => {});
-      await fs.unlink(lockFile).catch(() => {});
-      throw error;
-    }
-    return async () => {
-      await handle.close().catch(() => {});
-      try {
-        const current = JSON.parse(await fs.readFile(lockFile, 'utf8')) as {
-          owner_id?: string;
-        };
-        if (current.owner_id === ownerId) {
-          await fs.unlink(lockFile);
-        }
-      } catch {
-        // Missing/replaced locks are not ours to remove.
-      }
-    };
-  }
 }
 
 interface EditSpec {
@@ -161,7 +115,7 @@ function truncateDiff(diff: string, cap: number): { diff: string; truncated: boo
   const head = Math.floor(cap * 0.6);
   const tail = Math.floor(cap * 0.25);
   return {
-    diff: `${diff.slice(0, head)}\n... [diff truncated — full content via code_read] ...\n${diff.slice(-tail)}`,
+    diff: `${diff.slice(0, head)}\n... [diff truncated: full content via code_read] ...\n${diff.slice(-tail)}`,
     truncated: true,
   };
 }
@@ -430,7 +384,7 @@ async function runPreview(input: StructuralEditInput, startedAt: number): Promis
     next:
       readyCount > 0
         ? `Call structural_edit action:"apply" with preview_token:"${token.token}" within 10 minutes to write ${readyCount} ready edit(s).`
-        : 'No ready edits — nothing to apply.',
+        : 'No ready edits: nothing to apply.',
   };
 
   const env: Envelope<typeof data> = successEnvelope(data, {
@@ -886,13 +840,13 @@ async function run(args: unknown): Promise<CallToolResult> {
 const definition: Tool = {
   name: 'structural_edit',
   description:
-    'Use for multi-site or AST-anchored edits where a plain string replace is risky (rename all call sites, change every matching pattern). The ONE write tool on this read-only server — a preview-gated, AST-aware editor. Two steps: action:"preview" ' +
+    'Use for multi-site or AST-anchored edits where a plain string replace is risky (rename all call sites, change every matching pattern). The ONE write tool on this read-only server: a preview-gated, AST-aware editor. Two steps: action:"preview" ' +
     "returns a per-entry unified diff, a single-use preview_token, and each file's content hash WITHOUT writing; " +
     'action:"apply" takes that token, checks every hash at preflight and immediately before replacement, and writes. A file changed since preview is refused ' +
     '(refused_stale), never silently re-matched. Atomic mode (default) serializes applies across processes, rejects ' +
     'a failed preflight before writing, and rolls completed writes back after an ordinary write error. It is not a ' +
     'filesystem-wide crash transaction or a CAS against unrelated writers, and reports any failed restoration. Modes: exact (byte-exact string), ast ' +
-    '(TypeScript-compiler node matching), ast_pattern (ast-grep — unavailable unless @ast-grep/napi is installed). ' +
+    '(TypeScript-compiler node matching), ast_pattern (ast-grep: unavailable unless @ast-grep/napi is installed). ' +
     'No fuzzy, no regex. Newlines/CRLF outside edit spans are preserved byte-for-byte.',
   inputSchema: {
     type: 'object',

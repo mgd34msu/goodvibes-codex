@@ -1,8 +1,8 @@
 /**
- * `@goodvibes/core/fsx` — filesystem path handling shared by intel and connect.
+ * `@goodvibes/core/fsx`, filesystem path handling shared by intel and connect.
  *
  * Field issue 1 fixes, non-negotiable:
- *  - `base_path` resolution is plain `path.resolve` — NO git-bash rewrite (the
+ *  - `base_path` resolution is plain `path.resolve`, NO git-bash rewrite (the
  *    v1 `normalizePath` that mangled paths is deleted).
  *  - Every resolved input echoes its absolute `resolved_path` (fix #3), so a
  *    caller can always see exactly which file was touched.
@@ -10,7 +10,7 @@
  *    cwd) but carries a `warning` field so the ambiguity is visible.
  *
  * Plus a real `.gitignore` reader (re-exported), UTF-8-safe slicing, and path
- * validation ported from v1 `utils/path-validation.ts` — with the
+ * validation ported from v1 `utils/path-validation.ts`, with the
  * agent-reachable sandbox toggle removed (plan §1.12); the project-root boundary
  * is now an explicit, opt-in argument, never a hidden config switch.
  */
@@ -34,7 +34,7 @@ export { utf8SafeSlice, utf8SafeSliceBytes, utf8ByteLength } from '../shared/utf
 
 /** The outcome of resolving a caller-supplied path against an optional base. */
 export interface ResolvedInput {
-  /** Absolute, resolved path — always echoed to the caller (issue 1 fix #3). */
+  /** Absolute, resolved path, always echoed to the caller (issue 1 fix #3). */
   resolved_path: string;
   /** Present only when a relative path was resolved without a base_path. */
   warning?: string;

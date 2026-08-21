@@ -3,7 +3,7 @@ name: goodvibes-analytics
 description: 'Query and present GoodVibes analytics for Codex sessions, including tokens, cache use, agent activity, reports, budgets, exports, tags, synchronization, and diagnostics. Use only when the user asks to inspect or manage usage data.'
 ---
 
-# GoodVibes Analytics
+# GoodVibes analytics
 
 Use the `goodvibes_analytics` MCP server and label every metric by its source. This version reports local token/session metadata only and does not calculate money, pricing, subscription charges, or API-equivalent cost.
 

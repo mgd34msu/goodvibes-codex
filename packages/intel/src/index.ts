@@ -1,5 +1,5 @@
 /**
- * goodvibes-intel MCP server — the structure-aware code-intelligence server of
+ * goodvibes-intel MCP server, the structure-aware code-intelligence server of
  * the single `goodvibes` plugin (three servers: intel, analytics, connect).
  *
  * Wires `core/proc` (process hygiene) and `core/envelope` (response shape) and
@@ -125,7 +125,7 @@ export async function main(): Promise<void> {
   await server.connect(transport);
 }
 
-// Bootstrap only when run as the process entry — never when imported by tests.
+// Bootstrap only when run as the process entry; never when imported by tests.
 if (!process.env.VITEST) {
   void main().catch(err => {
     console.error(`[${SERVER_NAME}] fatal:`, err);

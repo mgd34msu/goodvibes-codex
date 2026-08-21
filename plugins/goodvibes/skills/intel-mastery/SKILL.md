@@ -3,7 +3,7 @@ name: intel-mastery
 description: "Choose and use the GoodVibes intel MCP tools for repository-scale reading, search, static analysis, scaffolding, and structural edits. Use when code structure matters more than a simple native file read or text search."
 ---
 
-# Intel Mastery
+# Intel mastery
 
 Use Intel selectively. Prefer a native file or shell operation for a small, direct task; use Intel when batching, compiler-aware analysis, or a structured result reduces ambiguity.
 

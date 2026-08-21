@@ -1,5 +1,5 @@
 /**
- * F9 — process hygiene (release gate; field issue 9).
+ * F9, process hygiene (release gate; field issue 9).
  *
  *  - real-process ppid watchdog: spawn a real child server, kill its parent,
  *    assert the orphaned child exits within 10s;
@@ -28,7 +28,7 @@ function isAlive(pid: number): boolean {
   }
 }
 
-describe('installProcessHygiene — parent-liveness (real process)', () => {
+describe('installProcessHygiene: parent-liveness (real process)', () => {
   let tmpDir: string;
   let bundlePath: string;
 
@@ -111,12 +111,12 @@ describe('installProcessHygiene — parent-liveness (real process)', () => {
   }, 20000);
 });
 
-describe('installProcessHygiene — NO idle self-exit, ever (fake clock)', () => {
+describe('installProcessHygiene: NO idle self-exit, ever (fake clock)', () => {
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it('never exits from idleness — an installed server runs for the life of its session (Mike, 2026-07-02)', async () => {
+  it('never exits from idleness; an installed server runs for the life of its session (Mike, 2026-07-02)', async () => {
     vi.useFakeTimers();
     let code = -1;
     const h = installProcessHygiene({
@@ -140,7 +140,7 @@ describe('installProcessHygiene — NO idle self-exit, ever (fake clock)', () =>
   });
 });
 
-describe('withBudget — partial result on expiry', () => {
+describe('withBudget: partial result on expiry', () => {
   it('returns a partial with budget_exceeded when the task overruns', async () => {
     const collected: number[] = [];
     const outcome = await withBudget(50, async signal => {

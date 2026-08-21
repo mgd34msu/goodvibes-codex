@@ -1,4 +1,4 @@
-/** `budget` — set/check/clear an exactly selected session token budget. */
+/** `budget`, set/check/clear an exactly selected session token budget. */
 import type { ToolModule } from './types.js';
 
 export const budgetTool: ToolModule = {

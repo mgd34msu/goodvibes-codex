@@ -1,5 +1,5 @@
 /**
- * connect service registry — named API service configurations.
+ * connect service registry, named API service configurations.
  *
  * The library retains mutation helpers for the isolated control/test layer, but
  * the MCP service tool exposes read-only summaries only. Durable policy lives
@@ -9,7 +9,7 @@
 
 import {
   getRegistry,
-  saveRegistry,
+  updateRegistry,
   type FetchConfig,
   type ServiceConfig,
   type UrlPattern,
@@ -45,20 +45,20 @@ export async function addService(
   config: ServiceConfig,
   force = false
 ): Promise<void> {
-  const fetchConfig = { ...getFetchConfig() };
-  const services = { ...(fetchConfig.services ?? {}) };
+  await updateRegistry(async registry => {
+    const services = { ...(registry.services ?? {}) };
 
-  if (!force && name in services) {
-    throw new Error(`Service "${name}" already exists. Use force=true to overwrite.`);
-  }
+    if (!force && name in services) {
+      throw new Error(`Service "${name}" already exists. Use force=true to overwrite.`);
+    }
 
-  // Names are reusable display handles, not credential identities. Remove any
-  // legacy/orphaned record before granting a name a destination (and before an
-  // overwrite can change that destination).
-  await removeServiceSecret(name);
-  services[name] = config;
-  fetchConfig.services = services;
-  await saveRegistry(fetchConfig);
+    // Names are reusable display handles, not credential identities. Remove any
+    // legacy/orphaned record before granting a name a destination (and before an
+    // overwrite can change that destination).
+    await removeServiceSecret(name);
+    services[name] = config;
+    registry.services = services;
+  });
 }
 
 /**
@@ -67,26 +67,26 @@ export async function addService(
  * @returns true when the service existed and was removed
  */
 export async function removeService(name: string): Promise<boolean> {
-  const fetchConfig = { ...getFetchConfig() };
-  const services = { ...(fetchConfig.services ?? {}) };
+  return updateRegistry(async registry => {
+    const services = { ...(registry.services ?? {}) };
 
-  if (!(name in services)) {
-    return false;
-  }
+    if (!(name in services)) {
+      return false;
+    }
 
-  delete services[name];
-  fetchConfig.services = services;
+    delete services[name];
+    registry.services = services;
 
-  if (fetchConfig.url_patterns) {
-    fetchConfig.url_patterns = fetchConfig.url_patterns.filter(p => p.service !== name);
-  }
+    if (registry.url_patterns) {
+      registry.url_patterns = registry.url_patterns.filter(p => p.service !== name);
+    }
 
-  // Revoke credentials first. If the later registry write fails, the surviving
-  // service is unauthenticated rather than leaving an orphan secret behind.
-  await removeServiceSecret(name);
-  await saveRegistry(fetchConfig);
+    // Revoke credentials first. If the later registry write fails, the surviving
+    // service is unauthenticated rather than leaving an orphan secret behind.
+    await removeServiceSecret(name);
 
-  return true;
+    return true;
+  });
 }
 
 /** Get all URL patterns. */
@@ -100,23 +100,23 @@ export function getUrlPatterns(): UrlPattern[] {
  * @param serviceName - service the hostname resolves to (must exist)
  */
 export async function addUrlPattern(hostname: string, serviceName: string): Promise<void> {
-  const fetchConfig = { ...getFetchConfig() };
-  const patterns = [...(fetchConfig.url_patterns ?? [])];
+  await updateRegistry(registry => {
+    const patterns = [...(registry.url_patterns ?? [])];
 
-  const services = fetchConfig.services ?? {};
-  if (!(serviceName in services)) {
-    throw new Error(`Service "${serviceName}" not found. Add the service first.`);
-  }
+    const services = registry.services ?? {};
+    if (!(serviceName in services)) {
+      throw new Error(`Service "${serviceName}" not found. Add the service first.`);
+    }
 
-  const existingIndex = patterns.findIndex(p => p.hostname === hostname);
-  if (existingIndex >= 0) {
-    patterns[existingIndex] = { ...patterns[existingIndex], service: serviceName };
-  } else {
-    patterns.push({ hostname, service: serviceName });
-  }
+    const existingIndex = patterns.findIndex(p => p.hostname === hostname);
+    if (existingIndex >= 0) {
+      patterns[existingIndex] = { ...patterns[existingIndex], service: serviceName };
+    } else {
+      patterns.push({ hostname, service: serviceName });
+    }
 
-  fetchConfig.url_patterns = patterns;
-  await saveRegistry(fetchConfig);
+    registry.url_patterns = patterns;
+  });
 }
 
 /**
@@ -143,9 +143,9 @@ export function getFetchGlobalDefaults(): FetchConfig['global_defaults'] {
 export async function setFetchGlobalDefaults(
   defaults: FetchConfig['global_defaults']
 ): Promise<void> {
-  const fetchConfig = { ...getFetchConfig() };
-  fetchConfig.global_defaults = defaults;
-  await saveRegistry(fetchConfig);
+  await updateRegistry(registry => {
+    registry.global_defaults = defaults;
+  });
 }
 
 /** List all service names. */
@@ -160,23 +160,23 @@ export function getAllowlist(): string[] {
 
 /** Add a hostname to the destination allowlist (idempotent). */
 export async function addAllowlistHost(hostname: string): Promise<void> {
-  const fetchConfig = { ...getFetchConfig() };
-  const allowlist = new Set(fetchConfig.allowlist ?? []);
-  allowlist.add(hostname);
-  fetchConfig.allowlist = [...allowlist];
-  await saveRegistry(fetchConfig);
+  await updateRegistry(registry => {
+    const allowlist = new Set(registry.allowlist ?? []);
+    allowlist.add(hostname);
+    registry.allowlist = [...allowlist];
+  });
 }
 
 /** Remove a hostname from the destination allowlist. Returns true when removed. */
 export async function removeAllowlistHost(hostname: string): Promise<boolean> {
-  const fetchConfig = { ...getFetchConfig() };
-  const before = fetchConfig.allowlist ?? [];
-  if (!before.includes(hostname)) {
-    return false;
-  }
-  fetchConfig.allowlist = before.filter(h => h !== hostname);
-  await saveRegistry(fetchConfig);
-  return true;
+  return updateRegistry(registry => {
+    const before = registry.allowlist ?? [];
+    if (!before.includes(hostname)) {
+      return false;
+    }
+    registry.allowlist = before.filter(h => h !== hostname);
+    return true;
+  });
 }
 
 // ── Registered database connections (db_query trust model) ───────────────────
@@ -207,27 +207,27 @@ export async function addConnection(
   connection: DbConnection,
   force = false
 ): Promise<void> {
-  const fetchConfig = { ...getFetchConfig() };
-  const connections = { ...(fetchConfig.connections ?? {}) };
-  if (!force && name in connections) {
-    throw new Error(`Connection "${name}" already exists. Use force=true to overwrite.`);
-  }
-  connections[name] = connection;
-  fetchConfig.connections = connections;
-  await saveRegistry(fetchConfig);
+  await updateRegistry(registry => {
+    const connections = { ...(registry.connections ?? {}) };
+    if (!force && name in connections) {
+      throw new Error(`Connection "${name}" already exists. Use force=true to overwrite.`);
+    }
+    connections[name] = connection;
+    registry.connections = connections;
+  });
 }
 
 /** Remove a registered connection. Returns true when it existed. */
 export async function removeConnection(name: string): Promise<boolean> {
-  const fetchConfig = { ...getFetchConfig() };
-  const connections = { ...(fetchConfig.connections ?? {}) };
-  if (!(name in connections)) {
-    return false;
-  }
-  delete connections[name];
-  fetchConfig.connections = connections;
-  await saveRegistry(fetchConfig);
-  return true;
+  return updateRegistry(registry => {
+    const connections = { ...(registry.connections ?? {}) };
+    if (!(name in connections)) {
+      return false;
+    }
+    delete connections[name];
+    registry.connections = connections;
+    return true;
+  });
 }
 
 /** Credential-free summary for a single connection (never echoes the URL). */

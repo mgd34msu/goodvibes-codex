@@ -1,5 +1,5 @@
 /**
- * `api_request` tool tests — the §1.8/§4.4.4 behaviors and the F8 lesson.
+ * `api_request` tool tests, the §1.8/§4.4.4 behaviors and the F8 lesson.
  *
  * fetch is stubbed on globalThis so no network is touched; the rate limiter is
  * reset per test to avoid inter-test delay. Config is pinned via a project
@@ -115,7 +115,7 @@ describe('api_request', () => {
     expect(r.body).toEqual({ ok: true, id: 42 });
   });
 
-  it('isolates a malformed entry — the rest of the batch still runs', async () => {
+  it('isolates a malformed entry; the rest of the batch still runs', async () => {
     await registry.addService('demo', { base_url: 'https://api.demo.test' });
     globalThis.fetch = vi.fn(async () => jsonResponse({ ok: true })) as typeof fetch;
 

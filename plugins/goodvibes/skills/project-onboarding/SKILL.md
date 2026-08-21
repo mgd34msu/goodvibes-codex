@@ -3,7 +3,7 @@ name: project-onboarding
 description: "Map an unfamiliar repository's stack, entry points, APIs, data model, UI composition, and public modules before planning changes. Use when beginning non-trivial work in a codebase whose architecture has not yet been verified."
 ---
 
-# Project Onboarding
+# Project onboarding
 
 Build a structural map before proposing changes. Use a trusted absolute `base_path` for every GoodVibes filesystem call and fall back to native workspace tools if that boundary is unavailable.
 

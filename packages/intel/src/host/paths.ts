@@ -21,7 +21,7 @@ import { SOURCE_EXTENSIONS, SKIP_DIRECTORIES, TEST_PATTERNS } from './constants.
 
 /**
  * Normalize a path to forward slashes for TypeScript's internal key space.
- * Slash-direction only — no drive/prefix rewriting.
+ * Slash-direction only, no drive/prefix rewriting.
  * @param filePath - any path
  * @returns the same path with backslashes replaced by forward slashes
  */
@@ -89,7 +89,7 @@ export async function findSourceFiles(
     try {
       entries = await fsPromises.readdir(safeDir, { withFileTypes: true });
     } catch {
-      return; // unreadable directory — skip
+      return; // unreadable directory; skip
     }
 
     for (const entry of entries) {

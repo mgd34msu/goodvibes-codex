@@ -1,4 +1,4 @@
-/** `config` — view/update/reload local GoodVibes output bounds. */
+/** `config`, view/update/reload local GoodVibes output bounds. */
 import type { ToolModule } from './types.js';
 
 export const configTool: ToolModule = {

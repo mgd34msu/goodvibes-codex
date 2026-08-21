@@ -31,7 +31,7 @@ const SHARED = {
   target: 'node20',
   format: 'cjs',
   // Bundle module-key comments are rendered relative to esbuild's working
-  // directory — pin it to the repo root so output is byte-identical no
+  // directory; pin it to the repo root so output is byte-identical no
   // matter where the build is invoked from.
   absWorkingDir: join(__dirname, '../..'),
   sourcemap: process.env.GOODVIBES_SOURCEMAP === '1',

@@ -1,4 +1,4 @@
-/** `query` — ad-hoc queries against local Codex rollout metadata. */
+/** `query`, ad-hoc queries against local Codex rollout metadata. */
 import type { ToolModule } from './types.js';
 
 export const queryTool: ToolModule = {

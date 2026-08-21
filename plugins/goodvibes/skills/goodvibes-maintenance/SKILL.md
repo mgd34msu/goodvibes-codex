@@ -3,7 +3,7 @@ name: goodvibes-maintenance
 description: "Inspect and automatically repair GoodVibes Codex plugin health, runtime dependencies, MCP servers, and assets. Use for setup, status, installation repair, hook trust, or plugin troubleshooting requests."
 ---
 
-# GoodVibes Maintenance
+# GoodVibes maintenance
 
 Invocation of this skill, whether explicit or implicit, authorizes unattended repair of GoodVibes-owned runtime dependencies beneath the durable GoodVibes data root. Do not ask for confirmation and do not stop after diagnosing a repairable dependency problem. This authorization is narrow: it does not grant or broaden workspace roots, services, credentials, network destinations, database connections, write grants, hook trust, or open mode.
 

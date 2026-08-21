@@ -1,5 +1,5 @@
 /**
- * `api_request` — the HTTP half of the v1 precision-fetch split (§4.4.4).
+ * `api_request`, the HTTP half of the v1 precision-fetch split (§4.4.4).
  *
  * REBUILT (not straight-ported): the page-reading stack retired (WebFetch won),
  * so this is a lean, honest HTTP client under the connect trust boundary. The
@@ -7,7 +7,7 @@
  *  - per-entry error isolation: one malformed spec fails only its own entry;
  *  - no automatic credential refresh or login network path exists;
  *  - response capping via the shared token budget;
- *  - honest extract names — json | text | headers | status, nothing called
+ *  - honest extract names, json | text | headers | status, nothing called
  *    "summary";
  *  - a `mode: restricted|open` envelope stamp and a redaction pass that strips
  *    known secret values from echoed responses.
@@ -43,7 +43,7 @@ import {
   type TrustMode,
 } from '../trust.js';
 
-/** Honest extract modes — each named for exactly what it returns. */
+/** Honest extract modes, each named for exactly what it returns. */
 export type ExtractMode = 'json' | 'text' | 'headers' | 'status';
 
 /** Body forms accepted for a request entry. */
@@ -413,6 +413,26 @@ function collectAppliedCredentialValues(
   }
 }
 
+/**
+ * An outcome for an entry that produced no usable response. The constant fields
+ * live here so a new `RequestOutcome` member is a compiler error in one place
+ * instead of a silently incomplete literal at one of the many refusal sites.
+ * @param error - the refusal reason reported to the caller
+ * @param options - the fields that vary: how far the request got, and any advisory
+ */
+function deniedOutcome(
+  error: string,
+  options: { status?: number | null; resolved_url?: string | null; warning?: string } = {}
+): RequestOutcome {
+  return {
+    status: options.status ?? null,
+    resolved_url: options.resolved_url ?? null,
+    truncated: false,
+    error,
+    warning: options.warning,
+  };
+}
+
 /** Run one entry with full error isolation. Never throws. */
 async function runEntry(
   entry: RequestEntry,
@@ -424,41 +444,25 @@ async function runEntry(
   const { spec, warning } = toRequestSpec(entry);
 
   if (entry.service && (entry.url !== undefined || !entry.path)) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error: 'A registered-service request must use `service` plus a relative `path`, not `url`.',
-      warning,
-    };
+    return deniedOutcome(
+      'A registered-service request must use `service` plus a relative `path`, not `url`.',
+      { warning }
+    );
   }
   if (entry.service && /^[A-Za-z][A-Za-z0-9+.-]*:/.test(entry.path ?? '')) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error: 'A registered-service `path` must be relative so credentials cannot cross origins.',
-      warning,
-    };
+    return deniedOutcome(
+      'A registered-service `path` must be relative so credentials cannot cross origins.',
+      { warning }
+    );
   }
   if (entry.service && !policy.services[entry.service]) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error: `Service "${entry.service}" is not registered.`,
-      warning,
-    };
+    return deniedOutcome(`Service "${entry.service}" is not registered.`, { warning });
   }
   if ('auth' in (entry as object)) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error:
-        'Per-request authentication is not accepted. Configure an opaque service credential through the control utility.',
-      warning,
-    };
+    return deniedOutcome(
+      'Per-request authentication is not accepted. Configure an opaque service credential through the control utility.',
+      { warning }
+    );
   }
   for (const name of Object.keys(entry.headers ?? {})) {
     const normalized = name.toLowerCase();
@@ -470,80 +474,54 @@ async function runEntry(
       normalized.includes('access-token') ||
       normalized.includes('secret')
     ) {
-      return {
-        status: null,
-        resolved_url: null,
-        truncated: false,
-        error: `Request header '${name}' is control-plane managed and cannot be supplied in an MCP call.`,
-        warning,
-      };
+      return deniedOutcome(
+        `Request header '${name}' is control-plane managed and cannot be supplied in an MCP call.`,
+        { warning }
+      );
     }
   }
 
   if (!spec.url) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error: 'Each request needs a service+path or an absolute url.',
-    };
+    return deniedOutcome('Each request needs a service+path or an absolute url.', { warning });
   }
 
   let built;
   try {
     built = await buildRequest(spec);
   } catch (e) {
-    return {
-      status: null,
-      resolved_url: null,
-      truncated: false,
-      error: e instanceof Error ? e.message : String(e),
-      warning,
-    };
+    return deniedOutcome(e instanceof Error ? e.message : String(e), { warning });
   }
 
   const finalUrl = built.url;
   let method = built.method.toUpperCase();
   if (!/^[A-Z]+$/.test(method)) {
-    return {
-      status: null,
+    return deniedOutcome(`Invalid HTTP method '${built.method}'.`, {
       resolved_url: finalUrl,
-      truncated: false,
-      error: `Invalid HTTP method '${built.method}'.`,
       warning,
-    };
+    });
   }
   if (bodyBytes(built.body) > 4 * 1024 * 1024) {
-    return {
-      status: null,
+    return deniedOutcome('Request body exceeds the 4 MiB limit.', {
       resolved_url: finalUrl,
-      truncated: false,
-      error: 'Request body exceeds the 4 MiB limit.',
       warning,
-    };
+    });
   }
 
   const registeredOrigins = Object.values(policy.services)
     .map(s => originOf(s.base_url))
     .filter((o): o is string => o !== null);
   if (built.service && !isCredentialAttachAllowed(finalUrl, built.service.config.base_url)) {
-    return {
-      status: null,
+    return deniedOutcome('The resolved service URL left its registered origin.', {
       resolved_url: finalUrl,
-      truncated: false,
-      error: 'The resolved service URL left its registered origin.',
       warning,
-    };
+    });
   }
 
   if (!Number.isFinite(built.timeout_ms) || built.timeout_ms <= 0) {
-    return {
-      status: null,
+    return deniedOutcome('`timeout_ms` must be a positive number.', {
       resolved_url: finalUrl,
-      truncated: false,
-      error: '`timeout_ms` must be a positive number.',
       warning,
-    };
+    });
   }
   const timeoutMs = Math.min(Math.floor(built.timeout_ms), hardTimeoutMs);
   const extract = entry.extract ?? 'json';
@@ -560,13 +538,10 @@ async function runEntry(
         allowlist: policy.allowlist,
       });
       if (!destination.allowed) {
-        return {
-          status: null,
+        return deniedOutcome(destination.reason ?? 'Destination denied.', {
           resolved_url: currentUrl,
-          truncated: false,
-          error: destination.reason ?? 'Destination denied.',
           warning,
-        };
+        });
       }
 
       const targetService = policyServiceForUrl(currentUrl, policy);
@@ -576,13 +551,10 @@ async function runEntry(
         writeMethods: targetService?.write_methods,
       });
       if (!methodDecision.allowed) {
-        return {
-          status: null,
+        return deniedOutcome(methodDecision.reason ?? 'Method denied.', {
           resolved_url: currentUrl,
-          truncated: false,
-          error: methodDecision.reason ?? 'Method denied.',
           warning,
-        };
+        });
       }
 
       const sameCredentialOrigin =
@@ -593,13 +565,10 @@ async function runEntry(
         : stripCrossOriginHeaders(built.headers, [...redactionSecrets]);
       if (sameCredentialOrigin && expectedAuthType && expectedAuthType !== 'none') {
         if (new URL(currentUrl).protocol !== 'https:') {
-          return {
-            status: null,
-            resolved_url: currentUrl,
-            truncated: false,
-            error: `Registered credentials for service '${built.service!.name}' require HTTPS.`,
-            warning,
-          };
+          return deniedOutcome(
+            `Registered credentials for service '${built.service!.name}' require HTTPS.`,
+            { resolved_url: currentUrl, warning }
+          );
         }
         try {
           const applied = await applyAuth(
@@ -610,22 +579,16 @@ async function runEntry(
             expectedAuthType
           );
           if (!applied) {
-            return {
-              status: null,
-              resolved_url: currentUrl,
-              truncated: false,
-              error: `Registered credentials for service '${built.service!.name}' are unavailable.`,
-              warning,
-            };
+            return deniedOutcome(
+              `Registered credentials for service '${built.service!.name}' are unavailable.`,
+              { resolved_url: currentUrl, warning }
+            );
           }
         } catch {
-          return {
-            status: null,
-            resolved_url: currentUrl,
-            truncated: false,
-            error: `Registered credentials for service '${built.service!.name}' could not be read safely.`,
-            warning,
-          };
+          return deniedOutcome(
+            `Registered credentials for service '${built.service!.name}' could not be read safely.`,
+            { resolved_url: currentUrl, warning }
+          );
         }
       }
       collectAppliedCredentialValues(headers, redactionSecrets);
@@ -648,31 +611,25 @@ async function runEntry(
         await response.body?.cancel().catch(() => {});
         await timed.finish();
         if (!location) {
-          return {
+          return deniedOutcome('Redirect response omitted Location.', {
             status: response.status,
             resolved_url: currentUrl,
-            truncated: false,
-            error: 'Redirect response omitted Location.',
             warning,
-          };
+          });
         }
         if (!['GET', 'HEAD', 'OPTIONS'].includes(method)) {
-          return {
+          return deniedOutcome('Redirects for write requests are not permitted.', {
             status: response.status,
             resolved_url: currentUrl,
-            truncated: false,
-            error: 'Redirects for write requests are not permitted.',
             warning,
-          };
+          });
         }
         if (hops++ >= 5) {
-          return {
+          return deniedOutcome('Redirect limit exceeded.', {
             status: response.status,
             resolved_url: currentUrl,
-            truncated: false,
-            error: 'Redirect limit exceeded.',
             warning,
-          };
+          });
         }
         currentUrl = new URL(location, currentUrl).toString();
         if (response.status === 303) {
@@ -709,13 +666,10 @@ async function runEntry(
   } catch (e) {
     const err = e instanceof Error ? e : new Error(String(e));
     const isTimeout = err.name === 'AbortError';
-    return {
-      status: null,
+    return deniedOutcome(isTimeout ? `Request timed out after ${timeoutMs}ms` : err.message, {
       resolved_url: currentUrl,
-      truncated: false,
-      error: isTimeout ? `Request timed out after ${timeoutMs}ms` : err.message,
       warning,
-    };
+    });
   }
 }
 
@@ -826,14 +780,10 @@ export async function handleApiRequest(args: unknown): Promise<CallToolResult> {
   const outcome = await withBudget(budgetMs, async () => {
     // Each entry is isolated: a rejection in one cannot fail the batch.
     const settled = await Promise.all(
-      entries.map(
-        entry =>
-          runEntry(entry, mode, policy, cfg.budgets.http_max_ms, maxResponseBytes).catch(e => ({
-            status: null,
-            resolved_url: null,
-            truncated: false,
-            error: e instanceof Error ? e.message : String(e),
-          })) as Promise<RequestOutcome>
+      entries.map(entry =>
+        runEntry(entry, mode, policy, cfg.budgets.http_max_ms, maxResponseBytes).catch(e =>
+          deniedOutcome(e instanceof Error ? e.message : String(e))
+        )
       )
     );
     const results: Record<string, RequestOutcome> = {};

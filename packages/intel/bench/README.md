@@ -4,8 +4,8 @@ Ported from `docs/deep-review-2026-07-01.md` Appendix A (token-cost measurements
 that grounded the "keep code_read outline / code_grep" call in
 `docs/goodvibes-plan.md`), scoped to the operations v2 actually kept:
 `code_read`'s `outline` extract (EXP3) and `code_grep` search (EXP4). The
-retired `content`/`symbols`/`ast` extract modes (EXP1, EXP2, EXP5–7) do not
-port — there is nothing left in v2 to measure them against.
+retired `content`/`symbols`/`ast` extract modes (EXP1, EXP2, EXP5-7) do not
+port. There is nothing left in v2 to measure them against.
 
 Gate 5 (plan §5.3, §6 lane 8): intel must beat native on these kept
 operations at defaults, or the README's token-savings claim comes off. This
@@ -19,9 +19,9 @@ Intel tools and the required tree-sitter grammars.
 node packages/intel/build.mjs   # produces plugins/goodvibes/server/intel/index.cjs
 ```
 
-`measure-grep.mjs` also needs `git` on PATH (used as the native baseline —
+`measure-grep.mjs` also needs `git` on PATH (used as the native baseline:
 `git grep -n`). Both scripts need the ripgrep binary the server resolves
-(`@vscode/ripgrep` once installed, or a system `rg` on PATH meanwhile — see
+(`@vscode/ripgrep` once installed, or a system `rg` on PATH meanwhile, see
 `src/lib/ripgrep.ts`).
 
 ## Run
