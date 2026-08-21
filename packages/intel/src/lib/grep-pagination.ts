@@ -1,6 +1,5 @@
 /**
  * Offset-based pagination for code_grep file results.
- * Ported verbatim from v1 `precision-engine/src/utils/grep-pagination.ts`.
  */
 
 export interface PaginationParams {

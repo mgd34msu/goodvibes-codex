@@ -1,27 +1,21 @@
 /**
- * `scaffold`, create a new project from a template (§4.1).
+ * `scaffold`, create a new project from a template.
  *
- * Ported from `PJ/extensions/standalone/scaffold.ts` (`plugins/goodvibes/tools/
- * implementations/project-engine/src/extensions/standalone/scaffold.ts`, read-only
- * quarry) with the plan §9.5 fixes: the two phantom-manifest templates are fixed
- * at the content layer (`plugins/goodvibes/templates/`, see its README),
- * `latest`-pinned dependencies are replaced with tested versions, and
- * `_registry.yaml` does not carry forward.
+ * Template content lives under `plugins/goodvibes/templates/` (see its README).
+ * Template dependencies are pinned to tested versions rather than `latest`.
  *
- * v2 additions over the v1 handler:
- *  - `base_path`/`resolved_path` fsx contract (§3.2) instead of a hardcoded
- *    `PROJECT_ROOT` env lookup.
- *  - Runs under `core/proc` `withBudget` so a hung install command degrades to
+ * Contract:
+ *  - Paths go through the `base_path`/`resolved_path` contract, so a scaffold
+ *    destination is checked against the registered workspace rather than read
+ *    from an ambient environment variable.
+ *  - Runs under `core/proc` `withBudget`, so a hung install command degrades to
  *    a partial, honestly-accounted result instead of hanging the client.
- *  - `dry_run` mode: reports what would be created/run without touching disk
- *    or spawning a shell, this is what the regression test in
- *    `src/__tests__/scaffold.test.ts` exercises.
- *  - Copies whatever is physically present in the template's `files/` tree
- *    (matching v1's actual behavior, the `template.yaml` `files:` list is
- *    documentation, never consulted for the copy itself); a per-template
- *    consistency test (also in `scaffold.test.ts`) is the regression guard
- *    against manifest/tree drift so that documentation issue cannot recur
- *    silently.
+ *  - `dry_run` is the default: it reports what would be created and run without
+ *    touching disk or spawning a shell.
+ *  - The copy takes whatever is physically present in the template's `files/`
+ *    tree. The `template.yaml` `files:` list is documentation and is never
+ *    consulted for the copy itself, so a per-template consistency test in
+ *    `src/__tests__/scaffold.test.ts` guards against manifest/tree drift.
  */
 
 import * as fs from 'node:fs';
@@ -45,9 +39,9 @@ import {
 import { withBudget } from '@goodvibes/core/proc';
 import type { ToolDefinition } from './types.js';
 
-/** Scaffold has no dedicated §3.1 budget row; it may shell out to `npm install`,
- * so it gets a longer-than-analyzer budget. Config-overridable would require a
- * new config key, deferred; this is a fixed, documented ruling for alpha. */
+/** Scaffold may shell out to `npm install`, so it gets a longer budget than the
+ * analyzers. This value is fixed rather than config-overridable: changing it
+ * would need its own config key, and no caller has needed one. */
 const SCAFFOLD_BUDGET_MS = 90_000;
 /** Hard ceiling for any single post-create shell command (install/git init). */
 const POST_CREATE_TIMEOUT_MS = 60_000;

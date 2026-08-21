@@ -1,9 +1,8 @@
 /**
  * Export collection over the shared program's type checker.
  *
- * Ported from project-engine `core/code-intel/exports.ts`. These are pure over a
- * `ts.LanguageService`, the caller acquires it from {@link CompilerHost}. Used
- * by code_surface here and available to lanes 3/4.
+ * These are pure over a `ts.LanguageService`, which the caller acquires from
+ * {@link CompilerHost}. `code_surface` is the current consumer.
  */
 
 import ts from 'typescript';

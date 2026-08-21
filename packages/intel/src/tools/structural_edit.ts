@@ -1,6 +1,5 @@
 /**
- * structural_edit, intel tool 15, the ONE write surface on an otherwise
- * read-only server (plan §14.B; carve-out §8 addendum lane 10).
+ * structural_edit, the ONE write surface on an otherwise read-only server.
  *
  * Two-step, preview-gated contract:
  *   action "preview", run the match engine across the batch, return a per-entry
@@ -18,9 +17,9 @@
  * error in this build; see engine). No fuzzy, no regex.
  *
  * Every filesystem interaction goes through `base_path` and echoes each entry's
- * absolute `resolved_path` (field issue 1); the handler runs under `withBudget`
- * (field issue 9); bytes outside an edit span are preserved exactly, including
- * CRLF (the v1 silent-conversion lesson).
+ * absolute `resolved_path`. The handler runs under `withBudget`, and bytes
+ * outside an edit span are preserved exactly, including
+ * CRLF, which is never silently converted.
  */
 
 import * as fs from 'fs/promises';

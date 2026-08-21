@@ -1,7 +1,7 @@
 /**
- * React component relationship builder, Lane 4.
- * Ported from frontend-engine `core/react/relationship-builder.ts`; `buildTree`
- * carries the `resolved_path` echo (issue 1 fix #3) through to each node.
+ * React component relationship builder.
+ *
+ * `buildTree` carries the `resolved_path` echo through to each node.
  *
  * @module frontend/react/relationship-builder
  */

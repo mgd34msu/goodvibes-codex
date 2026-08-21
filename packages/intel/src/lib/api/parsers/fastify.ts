@@ -1,8 +1,6 @@
 /**
  * Fastify route parser.
  *
- * Ported near-verbatim from v1 project-engine `core/api/parsers/fastify.ts`.
- *
  * @module lib/api/parsers/fastify
  */
 

@@ -2,8 +2,7 @@
  * code_glob, token-efficient file finding with filters, presets, and
  * gitignore-aware excludes.
  *
- * Ported from v1 `precision-engine/src/handlers/precision-glob.ts`
- * (`PE/handlers/precision-glob.ts` per plan §4.1). Fixes carried in:
+ * Guarantees:
  *  - `respect_gitignore` actually reads the root `.gitignore` via
  *    `@goodvibes/core/fsx`'s real reader (fast-glob never did this natively).
  *  - `DEFAULT_EXCLUDES` is un-anchored (`**\/node_modules/**`), so nested
@@ -11,18 +10,15 @@
  *  - Honest counts above the 100-result cap: `summary.total_files` is the
  *    TRUE match count; `returned` is what the response actually contains;
  *    `truncated`/`effective_caps` are set only when trimming happened.
- *  - `base_path` (issue 1): every result echoes an absolute `resolved_path`.
- *  - `with_stats` + filters + sorting kept from v1.
+ *  - `base_path`: every result echoes an absolute `resolved_path`.
+ *  - `with_stats`, filters and sorting are supported.
  *
- * RULING (backend simplification, see lane report): v1 auto-selected
- * fast-glob over ripgrep for `has_content`-filtered or subdirectory-anchored
- * patterns (`dir/*.ts`), commented as "ripgrep cannot handle subdirectory
- * patterns", verified false for ripgrep 13+ (`rg --files --glob 'dir/*.ts'`
- * resolves correctly; confirmed empirically in this workspace). `auto` and
- * `ripgrep` both now use the ripgrep listing unconditionally. `fast-glob` is
- * requestable explicitly for parity with v1's surface; if the package is not
- * installed (genuinely missing in this workspace, see report) the call
- * degrades to the ripgrep listing with a `warning` instead of failing.
+ * BACKEND SELECTION: `auto` and `ripgrep` both use the ripgrep listing
+ * unconditionally. ripgrep 13+ resolves subdirectory-anchored patterns
+ * correctly (`rg --files --glob 'dir/*.ts'`), so there is no reason to switch
+ * backends for `has_content` filters or `dir/*.ts` patterns. `fast-glob` stays
+ * explicitly requestable; when the package is not installed the call degrades to
+ * the ripgrep listing with a `warning` instead of failing.
  */
 
 import * as fs from 'fs/promises';

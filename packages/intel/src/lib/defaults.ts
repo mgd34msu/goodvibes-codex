@@ -1,16 +1,15 @@
 /**
  * Shared constants for the search/read trio (code_read, code_grep, code_glob).
  *
- * `DEFAULT_EXCLUDES` ported from v1 `precision-engine/src/config.ts`, already
- * un-anchored (`**\/x/**`, not `x/**`) so nested `node_modules` (e.g.
- * `packages/app/node_modules`) is excluded on both the ripgrep and fast-glob
- * backends (plan §4.1 code_glob row, issue "DEFAULT_EXCLUDES leak").
+ * `DEFAULT_EXCLUDES` is un-anchored (`**\/x/**`, not `x/**`) so a nested
+ * `node_modules`, for example `packages/app/node_modules`, is excluded on both
+ * the ripgrep and fast-glob backends. Anchoring it lets nested matches leak
+ * through.
  *
- * The read size-gate numbers (`MAX_FILE_BYTES`/`MAX_TOKEN_ESTIMATE`/
- * `PAGE_SIZE_LINES`) mirror v1 `runtime-config.ts` defaults. They are NOT
- * `@goodvibes/core/config` keys (that module's `CONFIG_KEYS` covers process
- * hygiene / trust, owned by lane 0), these are intel-local
- * read-pagination thresholds, kept as local constants per this lane's scope.
+ * The read size-gate numbers (`MAX_FILE_BYTES`, `MAX_TOKEN_ESTIMATE`,
+ * `PAGE_SIZE_LINES`) are deliberately NOT `@goodvibes/core/config` keys. That
+ * module's `CONFIG_KEYS` covers process hygiene and trust; these are intel-local
+ * read-pagination thresholds and stay local constants.
  */
 
 /** Exclude globs applied by default to every search/glob (un-anchored, matches at any depth). */

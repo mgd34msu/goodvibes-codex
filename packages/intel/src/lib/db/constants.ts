@@ -1,9 +1,8 @@
 /**
  * Constants for `db_schema` usage-mode Prisma call detection.
  *
- * Ported verbatim from v1 project-engine `core/database/constants.ts`.
- * `WRITE_KEYWORDS` (raw-SQL classification) does NOT port here, it belongs
- * to connect's `db_query` trust model (§4.3), not intel's static analyzer.
+ * `WRITE_KEYWORDS` for raw-SQL classification does NOT belong here. It belongs
+ * to connect's `db_query` trust model, not to intel's static analyzer.
  *
  * @module lib/db/constants
  */

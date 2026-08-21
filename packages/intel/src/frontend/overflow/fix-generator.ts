@@ -1,8 +1,8 @@
 /**
- * Overflow fix generator, Lane 4.
- * Ported from frontend-engine `core/overflow/fix-generator.ts` (the `generateFixes`
- * fix-option list the tribunal keeps, §4.4.2). The v1 recommendation/related-element
- * helpers are not needed by the merged shape.
+ * Overflow fix generator.
+ *
+ * Produces the fix-option list for an overflow pattern. Recommendation and
+ * related-element helpers are not part of the merged shape.
  *
  * @module frontend/overflow/fix-generator
  */

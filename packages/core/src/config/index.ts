@@ -20,7 +20,7 @@ import { goodvibesDataRoot } from '../workspace/index.js';
 
 export type EnvelopeMode = 'restricted' | 'open';
 
-/** Per-call time budgets (ms). Mechanisms are mandated; values are overridable (R10). */
+/** Per-call time budgets (ms). Every call is budgeted; the values are overridable. */
 export interface Budgets {
   /** intel analyzers (code_surface, safe_delete, api_*, db_schema, frontend). */
   analyzer_ms: number;
@@ -141,9 +141,13 @@ export function getStatePath(cwd: string, ...segments: string[]): string {
 }
 
 /**
- * Resolve a state path relative to the current working directory.
- * Evaluated lazily at call time so it honours the server's runtime cwd.
- * @param segments - path segments under `.goodvibes/`
+ * Resolve a path under the durable GoodVibes data root. This is user-level
+ * state, not project state, so it does not depend on the working directory.
+ * Use `getStatePath` for project-local `.goodvibes/codex` paths instead.
+ *
+ * Evaluated lazily at call time so a later change to `GOODVIBES_DATA_ROOT` or
+ * `CODEX_HOME` is honoured.
+ * @param segments - path segments under the data root
  */
 export function statePath(...segments: string[]): string {
   return path.join(goodvibesDataRoot(), ...segments);

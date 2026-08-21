@@ -1,6 +1,5 @@
 /**
- * Issue detector for hook dependencies, Lane 4.
- * Ported verbatim from frontend-engine `core/hooks/issue-detector.ts`.
+ * Issue detector for hook dependencies.
  *
  * @module frontend/hooks/issue-detector
  */

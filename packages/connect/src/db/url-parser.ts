@@ -1,7 +1,6 @@
 /**
- * Database connection URL parser, ported verbatim from v1 project-engine
- * `core/database/url-parser.ts` (PostgreSQL / MySQL / SQLite, in-memory and bare
- * file paths).
+ * Database connection URL parser for PostgreSQL, MySQL, and SQLite, covering
+ * in-memory and bare file paths.
  */
 
 import type { DatabaseConnectionInfo } from './types.js';

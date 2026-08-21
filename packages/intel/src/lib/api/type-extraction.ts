@@ -1,12 +1,11 @@
 /**
  * Handler type extraction for `api_spec`.
  *
- * Ported near-verbatim from v1 project-engine `core/api/type-extraction.ts`
- * (regex-based Zod/interface/NextResponse detection over the handler's raw
- * text, deliberately NOT wired onto the shared compiler host: this is a
+ * Regex-based Zod, interface and NextResponse detection over the handler's raw
+ * text. This is deliberately NOT wired onto the shared compiler host: it is a
  * best-effort, low-confidence signal for the OpenAPI generator, and the
- * `extractTypesFromHandler` variant already parses its own throwaway
- * `ts.createSourceFile` per file, which needs no type-checking Program).
+ * `extractTypesFromHandler` variant parses its own throwaway
+ * `ts.createSourceFile` per file, which needs no type-checking Program.
  *
  * @module lib/api/type-extraction
  */

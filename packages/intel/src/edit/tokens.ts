@@ -10,10 +10,11 @@
  *     cannot be replayed and two concurrent applies cannot both win.
  *   - EXPIRING, a 10-minute TTL; `apply` rejects an expired token and the store
  *     sweeps stale files opportunistically.
- *   - NAMESPACED, stored under `core/config` `getStatePath` (`.goodvibes/
- *     edit-tokens/`), honoring R15. The state ROOT defaults to the server cwd
- *     (the project root in production); `GOODVIBES_STATE_ROOT` overrides it,
- *     which the tests use to keep token files inside an isolated temp dir.
+ *   - NAMESPACED, stored in `edit-tokens/` under the durable GoodVibes data
+ *     root returned by `goodvibesDataRoot()`, never inside the project being
+ *     edited. `GOODVIBES_STATE_ROOT` overrides the root, placing tokens under
+ *     `<root>/.goodvibes/codex/edit-tokens/`, which the tests use to keep token
+ *     files inside an isolated temp dir.
  */
 
 import * as fs from 'fs/promises';

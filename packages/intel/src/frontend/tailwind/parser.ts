@@ -1,8 +1,9 @@
 /**
- * Tailwind class parser, Lane 4.
- * Ported from frontend-engine `core/tailwind/parser.ts` (both the canonical
- * `parseTailwindClasses` superset used by sizing/element-finder and the
- * layout-aware `parseTailwindClassesLayout` used by the layout analyzer).
+ * Tailwind class parser.
+ *
+ * Provides both the canonical `parseTailwindClasses` superset used by sizing and
+ * element-finder, and the layout-aware `parseTailwindClassesLayout` used by the
+ * layout analyzer.
  *
  * @module frontend/tailwind/parser
  */

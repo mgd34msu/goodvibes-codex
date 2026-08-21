@@ -2,39 +2,32 @@
  * code_read, outline and lines/range file reading, cache-aware, token-budget
  * paginated.
  *
- * Ported from v1 `precision-engine/src/handlers/precision-read.ts`, narrowed
- * per plan §4.1 code_read row to the outline + lines/range paths ONLY, the
- * content/symbols/ast/pdf/notebook/image branches retire (native tools and
- * WebFetch cover them; §4.1 gate 2 also deletes the stub-cache assumption
- * those paths leaned on).
+ * Narrowed to the outline and lines/range paths ONLY. There are no
+ * content, symbols, ast, pdf, notebook or image branches, because native tools
+ * and WebFetch cover those.
  *
- * Fixes carried in:
+ * Guarantees:
  *  - Honest `exported` flags, the fix lives in `lib/tree-sitter.ts`
  *    (`getOutline` only sets `exported` on top-level entries).
- *  - `output.max_tokens` enforcement (v1 ignored it for outline/lines; a
- *    104KB context-bomb was observed), trims the oversized `outline`/`lines`
- *    array and flags `truncated` instead of returning an oversized payload.
+ *  - `output.max_tokens` is enforced for outline and lines. It trims the
+ *    oversized `outline`/`lines` array and flags `truncated` rather than
+ *    returning an oversized payload.
  *  - `include_line_numbers` honored in `lines` mode (numbers from the range
  *    start line, or line 1 with no range).
- *  - Batch results keyed by ENTRY, not path (field issue 3): two entries for
- *    the same path with different ranges both survive.
- *  - Extracts served from the session cache, never a stub (field issue 4 /
- *    §7.1, `@goodvibes/core/cache`, F4's unit tests live there; this file
- *    carries the integration case: a real code_read call against a
- *    cache-registered file returns full content, not a stub).
- *  - `token_budget` pagination REBUILT to one representation per page (field
- *    issue 6): a paginated page only ever touches the array field the
- *    extract mode actually produced (`lines` or `outline`), v1's pager
- *    unconditionally added BOTH a `content` string and a `lines` array to
- *    every page regardless of extract mode; that bug is structurally
- *    impossible here since `content` mode does not exist in v2 at all, and
- *    the rebuilt pager never invents a field the extract mode didn't produce.
- *  - UTF-8-safe pre-read size gate (never splits a multi-byte character or
- *    returns a partial final line).
- *  - `base_path` (issue 1): every file result echoes an absolute
- *    `resolved_path`; no `base_path` given falls back to the server cwd with
- *    an envelope `warning`. The v1 git-bash `normalizePath` rewrite is
- *    deleted per `@goodvibes/core/fsx`'s contract.
+ *  - Batch results are keyed by ENTRY, not by path, so two entries for the same
+ *    path with different ranges both survive.
+ *  - Extracts are served from the session cache (`@goodvibes/core/cache`), never
+ *    as a stub: a `code_read` call against a cache-registered file returns full
+ *    content.
+ *  - `token_budget` pagination emits one representation per page. A paginated
+ *    page only ever touches the array field the extract mode actually produced,
+ *    `lines` or `outline`, and never invents a field that mode did not produce.
+ *  - The pre-read size gate is UTF-8-safe: it never splits a multi-byte
+ *    character or returns a partial final line.
+ *  - `base_path`: every file result echoes an absolute `resolved_path`. With no
+ *    `base_path`, resolution falls back to the server cwd and sets an envelope
+ *    `warning`. Paths are never rewritten beyond what `@goodvibes/core/fsx`
+ *    specifies.
  */
 
 import * as fs from 'fs/promises';
@@ -425,8 +418,8 @@ function resultCost(result: FileReadResult): number {
 /**
  * Split ONE oversized result's native array representation (`lines` or
  * `outline`, whichever the extract mode produced) into token-budgeted pages.
- * Never invents a field the extract mode didn't already produce (field issue
- * 6's one-representation rebuild).
+ * Never invents a field the extract mode did not already produce, so a page
+ * carries exactly one representation.
  */
 function paginateSingleResult(
   result: FileReadResult,
@@ -651,16 +644,17 @@ const definition: Tool = {
 };
 
 /**
- * RULING (budget-partial design, see lane report): `core/proc`'s `withBudget`
- * supports a task returning a genuine partial result via the cooperative
- * `signal` it receives (code_surface does this for its single, monolithic
- * compiler pass). code_read's unit of work is a BATCH of independent
- * per-file reads (`Promise.all`); threading cooperative cancellation through
- * that batch to return whichever files finished would be a materially
- * bigger change for a batch that is typically fast. This wrapper keeps the
- * hard, safety-critical guarantee, the client never waits past
- * `search_ms`, via an honest `budget_exceeded` error instead of a partial
- * envelope; see the lane report for the tradeoff.
+ * Budget behavior, and why it differs from `code_surface`. `core/proc`'s
+ * `withBudget` lets a task return a genuine partial result through the
+ * cooperative `signal` it receives, which `code_surface` uses for its single
+ * monolithic compiler pass.
+ *
+ * `code_read`'s unit of work is instead a BATCH of independent per-file reads
+ * run under `Promise.all`, and threading cooperative cancellation through that
+ * batch to return whichever files finished is a materially bigger change for a
+ * batch that is typically fast. So this wrapper keeps the safety-critical
+ * guarantee, that the client never waits past `search_ms`, and reports an honest
+ * `budget_exceeded` error rather than a partial envelope.
  */
 export async function handler(args: unknown): Promise<CallToolResult> {
   const start = performance.now();
@@ -719,8 +713,8 @@ async function runCodeRead(args: unknown): Promise<CallToolResult> {
       fileSpecs.map(spec => readSingleFile(spec, extract, output, input.default_range, workDir))
     );
 
-    // Key batch results by ENTRY, not path (field issue 3): a repeated path
-    // with a different range/extract is a legitimate distinct entry.
+    // Key batch results by ENTRY, not path: a repeated path with a different
+    // range or extract is a legitimate distinct entry.
     const pathCounts = new Map<string, number>();
     for (const r of results) {
       pathCounts.set(r.path, (pathCounts.get(r.path) ?? 0) + 1);
@@ -880,9 +874,8 @@ async function runCodeRead(args: unknown): Promise<CallToolResult> {
     }
 
     // Enforce output.max_tokens: trim the largest outline/lines array and flag
-    // truncation instead of returning an oversized payload (v1 only did this
-    // for outline/symbols; v2 generalizes it to whichever array the extract
-    // mode produced, since `lines` is now the primary workhorse mode).
+    // truncation instead of returning an oversized payload. This applies to
+    // whichever array the extract mode produced, `lines` included.
     if (output.max_tokens !== undefined && output.max_tokens > 0) {
       const maxTokens = output.max_tokens;
       const ENVELOPE_OVERHEAD_CHARS = 220;

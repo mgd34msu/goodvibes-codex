@@ -1,16 +1,15 @@
 /**
- * `attributes` annotation for component_tree, Lane 4 (§4.4.1).
+ * `attributes` annotation for component_tree.
  *
- * Distilled from frontend-engine `core/accessibility/*`. Per tribunal, attributes
- * are a STATIC overlay of the VERIFIED checks only and NEVER claim computed-style
- * knowledge. Exactly four checks survive:
+ * Attributes are a STATIC overlay of verifiable checks only, and NEVER claim
+ * computed-style knowledge. Exactly four checks apply:
  *  - role / tree construction (implicit-role resolution),
  *  - missing-alt (img without alt, non-decorative),
  *  - click-without-role (onClick on a non-focusable element with no role),
  *  - ARIA required-attribute presence (explicit role's required attrs).
- * The v1 className-derived checks (focus-outline, color-contrast, expandable) are
- * dropped as computed-style claims. Shape per §4.4.1 (array generalization,
- * ruling R4-2): [{ element, role, issues }] for elements with ≥1 issue.
+ * className-derived checks such as focus-outline, color-contrast and expandable
+ * are excluded, because each would be a computed-style claim. Shape:
+ * [{ element, role, issues }] for elements with at least one issue.
  *
  * @module frontend/annotations/attributes
  */

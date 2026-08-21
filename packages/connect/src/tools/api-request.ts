@@ -1,18 +1,16 @@
 /**
- * `api_request`, the HTTP half of the v1 precision-fetch split (§4.4.4).
+ * `api_request`, an HTTP client under the connect trust boundary.
  *
- * REBUILT (not straight-ported): the page-reading stack retired (WebFetch won),
- * so this is a lean, honest HTTP client under the connect trust boundary. The
- * §1.8 fixes are wired in:
+ * This module reads HTTP responses; it does not render pages. Its rules:
  *  - per-entry error isolation: one malformed spec fails only its own entry;
  *  - no automatic credential refresh or login network path exists;
  *  - response capping via the shared token budget;
- *  - honest extract names, json | text | headers | status, nothing called
- *    "summary";
+ *  - extract names state exactly what they return, json | text | headers |
+ *    status, with nothing called "summary";
  *  - a `mode: restricted|open` envelope stamp and a redaction pass that strips
- *    known secret values from echoed responses.
- *  - F8 lesson: a body carrying BOTH plain and base64 forms is accepted (base64
- *    preferred with a warning), never rejected.
+ *    known secret values from echoed responses;
+ *  - a body carrying BOTH plain and base64 forms is accepted, preferring base64
+ *    with a warning, rather than rejected.
  */
 
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';

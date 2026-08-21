@@ -1,10 +1,9 @@
 /**
  * Reference-finding utilities over the LanguageService.
  *
- * Ported from project-engine `core/code-intel/references.ts`. Every function
- * here uses TypeScript's semantic reference engine
+ * Every function here uses TypeScript's semantic reference engine
  * (`getReferencesAtPosition` / `findReferences`), NEVER a text/regex scan.
- * That is the guarantee code_safe_delete depends on (§4.1 port note).
+ * That is the guarantee code_safe_delete depends on.
  */
 
 import ts from 'typescript';

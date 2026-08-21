@@ -1,9 +1,8 @@
 /**
  * Per-domain rate limiting for connect requests.
  *
- * Ported verbatim from v1 precision-engine `utils/fetch/rate-limiter.ts`
- * (counting semaphore + FIFO queue, Retry-After honouring). Prevents a batch of
- * `api_request` entries from overwhelming a single host.
+ * A counting semaphore with a FIFO queue, honouring `Retry-After`. Prevents a
+ * batch of `api_request` entries from overwhelming a single host.
  */
 
 import {

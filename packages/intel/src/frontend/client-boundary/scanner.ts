@@ -1,10 +1,9 @@
 /**
- * File scanner for client boundary analysis, Lane 4.
+ * File scanner for client boundary analysis.
  *
- * Ported from frontend-engine `core/client-boundary/scanner.ts`, rewired off the
- * v1 per-file `ts.createSourceFile` onto the shared compiler host (§3.3): the
- * caller hands in pre-parsed SourceFiles, and directive detection reads the
- * SourceFile text rather than a second `fs.readFileSync`.
+ * Runs on the shared compiler host rather than parsing per file: the caller
+ * hands in pre-parsed SourceFiles, and directive detection reads the SourceFile
+ * text rather than issuing a second `fs.readFileSync`.
  *
  * @module frontend/client-boundary/scanner
  */

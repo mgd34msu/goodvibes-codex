@@ -1,15 +1,16 @@
 /**
  * Tool-module contract for the goodvibes-analytics server.
  *
- * Per R13 the MCP tool names drop the `analytics_` prefix (the server key is the
- * namespace): `query`, `dashboard`, `budget`, `export`, `tag`, `sync`, `config`.
+ * MCP tool names drop the `analytics_` prefix because the server key is already
+ * the namespace: `query`, `dashboard`, `budget`, `export`, `tag`, `sync`,
+ * `config`.
  * Each module carries the external name, the engine's internal handler key,
  * a description, and the JSON input schema surfaced to the client. The active
  * Codex adapter validates untrusted input again at the handler boundary.
  */
 
 export interface ToolModule {
-  /** External MCP tool name, `analytics_` prefix dropped (R13). */
+  /** External MCP tool name, with the `analytics_` prefix dropped. */
   name: string;
   /** The engine handler-registry key (keeps the `analytics_` prefix). */
   engineTool: string;

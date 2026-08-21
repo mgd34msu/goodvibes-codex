@@ -1,7 +1,6 @@
 /**
  * connect service resolver, combines registry config with stored credentials.
  *
- * Ported verbatim from v1 precision-engine `utils/fetch/service-resolver.ts`
  * Produces a service plus its static credential status. Legacy `$env` refs are
  * deliberately left unresolved by the secrets store.
  */

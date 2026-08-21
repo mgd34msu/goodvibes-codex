@@ -1,11 +1,10 @@
 /**
  * `api_routes` orchestration, framework-dispatch route scanning.
  *
- * Ported from v1 project-engine `extensions/api/routes.ts`, rewired per §3.3:
- * file discovery rides the shared intel compiler host's `findSourceFiles`
- * (one skip-directory policy shared with every other analyzer) instead of the
- * v1 bespoke recursive walker. Every route echoes an absolute `resolved_path`
- * (issue 1 fix #3) alongside a `base_path`-relative `handler_file`.
+ * File discovery rides the shared intel compiler host's `findSourceFiles`, so
+ * one skip-directory policy is shared with every other analyzer rather than
+ * each walking the tree its own way. Every route echoes an absolute
+ * `resolved_path` alongside a `base_path`-relative `handler_file`.
  *
  * @module lib/api/routes
  */
@@ -25,7 +24,7 @@ export type { Framework } from './types.js';
 
 type ParseFile = (content: string, filePath: string, resolvedPath: string) => ApiRoute[];
 
-/** Express/Fastify/Hono are regex-scanned over `.ts`/`.js` only (mirrors v1; excludes `.d.ts`). */
+/** Express/Fastify/Hono are regex-scanned over `.ts`/`.js` only, excluding `.d.ts`. */
 const SCAN_EXT = /\.(ts|js)$/;
 
 async function existsDir(p: string, analysisRoot: string): Promise<boolean> {

@@ -1,5 +1,5 @@
 /**
- * `@goodvibes/core/envelope`, the shared v2 response envelope.
+ * `@goodvibes/core/envelope`, the shared response envelope.
  *
  * One representation per payload, serialized to compact JSON with honest
  * accounting: `meta.token_estimate` is always recomputed from the exact string
@@ -10,10 +10,6 @@
  * truncation of the content payload. `truncated` is set true ONLY when trimming
  * actually happened, and `effective_caps` echoes the cap that trimmed. A
  * `mode: restricted|open` stamp slot rides along for connect.
- *
- * Ported and consolidated from v1 precision-engine `utils/index.ts`
- * (`renderPrecisionResult`, `estimatePayloadTokens`, `toCallToolResult`) and
- * `logging.ts` (`startTimer`).
  */
 
 import type { CallToolResult, TextContent, ImageContent } from '@modelcontextprotocol/sdk/types.js';
@@ -41,7 +37,7 @@ export interface EnvelopeMeta {
   mode?: EnvelopeMode;
 }
 
-/** The standard result wrapper for every v2 tool. */
+/** The standard result wrapper for every tool. */
 export interface Envelope<T = unknown> {
   /** Whether the operation succeeded. */
   success: boolean;

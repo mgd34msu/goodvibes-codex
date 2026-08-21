@@ -1,7 +1,7 @@
 /**
- * Standard error-message formatting, shared by every v2 server.
- * Ported from v1 precision-engine `utils/errors.ts`, trimmed to the generic
- * helpers (the precision-specific TOOL_EXAMPLES map does not carry forward).
+ * Standard error-message formatting, shared by every server.
+ *
+ * Generic helpers only: nothing here is specific to one tool's examples.
  */
 
 /** Format an error for a missing required parameter. */

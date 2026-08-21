@@ -1,16 +1,16 @@
 /**
- * `api_validate`, static spec-vs-routes contract validation (R11).
+ * `api_validate`, static spec-vs-routes contract validation.
  *
- * REBUILD of project-engine `extensions/api/validate.ts` + `core/api/
- * {matching,validation}.ts` (§4.1, §7 R11): the v1 tool made live HTTP
- * requests against a running server. v2 keeps it entirely static, spec vs.
- * the routes `api_routes` finds in source, because live probing needs
- * credentials, which is connect's trust model, not intel's read-only one.
- * The JSONPath-precise mismatch reporting the tribunal required is preserved
- * (see `lib/api/validate-static.ts`), now pointing at spec document
- * locations instead of live response bodies.
+ * This is entirely static: the spec is compared against the routes `api_routes`
+ * finds in source. It never issues live HTTP requests, because live probing
+ * needs credentials, and credentials are connect's trust model rather than
+ * intel's read-only one.
  *
- * v2 wrappers: `base_path`/`resolved_path` echo (issue 1), `core/proc`
+ * Mismatches are reported with JSONPath precision (see
+ * `lib/api/validate-static.ts`), pointing at spec document locations rather than
+ * response bodies.
+ *
+ * Wrappers: `base_path`/`resolved_path` echo, `core/proc`
  * budget, `core/envelope` accounting.
  *
  * @module tools/api_validate

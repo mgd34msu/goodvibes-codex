@@ -1,11 +1,10 @@
 /**
  * Domain types for `api_routes` / `api_spec` / `api_validate`.
  *
- * Trimmed from v1 project-engine `core/api/types.ts` to the shapes v2 actually
- * uses: `project_api_sync` retired (writes code; §4.1 port map), and
- * `api_validate` dropped every live-probe field (`base_url`, `timeout`,
- * `auth_header`, network-error issue types) per R11, static spec-vs-routes
- * only, no HTTP.
+ * Trimmed to the shapes the tools actually use. There is no code-writing sync
+ * type, and `api_validate` carries no live-probe field such as `base_url`,
+ * `timeout`, `auth_header` or a network-error issue type, because it is static
+ * spec-vs-routes comparison only, with no HTTP.
  *
  * @module lib/api/types
  */
@@ -165,7 +164,7 @@ export interface GenerateOpenApiResult {
 }
 
 // =============================================================================
-// api_validate types, STATIC spec-vs-routes only (R11)
+// api_validate types, STATIC spec-vs-routes only
 // =============================================================================
 
 export type ValidationIssueType = 'missing_route' | 'undocumented_route' | 'parameter_mismatch';
@@ -178,7 +177,7 @@ export interface ValidationIssue {
   method: string;
   type: ValidationIssueType;
   message: string;
-  /** JSONPath into the spec document pinpointing the mismatch (tribunal requirement). */
+  /** JSONPath into the spec document pinpointing the mismatch. */
   json_path: string;
   expected?: unknown;
   actual?: unknown;

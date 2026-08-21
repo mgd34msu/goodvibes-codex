@@ -1,10 +1,9 @@
 /**
  * Root-level `.gitignore` parsing for the glob exclude pipeline.
  *
- * Ported verbatim from the v1 Phase-0.5-fixed `utils/gitignore.ts`, which
- * actually reads `.gitignore` (fast-glob never does). Only the `.gitignore` at
- * the ROOT of the provided base directory is parsed; the ripgrep backend still
- * honours nested `.gitignore` files natively.
+ * This reads `.gitignore` directly, which fast-glob never does. Only the
+ * `.gitignore` at the ROOT of the provided base directory is parsed; the ripgrep
+ * backend still honours nested `.gitignore` files natively.
  *
  * Unsupported features are skipped, never guessed:
  * - Negation (`!pattern`): a fast-glob ignore list cannot re-include a path.

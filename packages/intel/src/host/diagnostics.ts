@@ -1,8 +1,8 @@
 /**
  * TypeScript diagnostics collection/conversion over the shared program.
  *
- * Ported from project-engine `core/code-intel/diagnostics.ts`. Pure over a
- * `ts.LanguageService`; available to lanes 3/4 (e.g. edit/spec validation).
+ * Pure over a `ts.LanguageService`, so it is usable by any analyzer that has
+ * one, including edit and spec validation.
  */
 
 import ts from 'typescript';

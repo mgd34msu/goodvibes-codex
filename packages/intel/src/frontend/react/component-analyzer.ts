@@ -1,9 +1,8 @@
 /**
- * React component analyzer, Lane 4.
+ * React component analyzer.
  *
- * Ported from frontend-engine `core/react/component-analyzer.ts`, rewired off the
- * v1 per-file `ts.createSourceFile` onto the shared compiler host (§3.3): the
- * caller hands `analyzeFile` a host-parsed SourceFile plus its relative + absolute
+ * Runs on the shared compiler host rather than parsing per file: the caller
+ * hands `analyzeFile` a host-parsed SourceFile plus its relative and absolute
  * paths. As a side effect it records each component's defining AST node in a
  * `nodeIndex` so the annotation passes can scope to one component.
  *

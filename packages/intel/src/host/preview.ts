@@ -1,7 +1,5 @@
 /**
  * Line-preview helpers for reference/location output.
- *
- * Ported verbatim from project-engine `core/code-intel/preview.ts`.
  */
 
 import type ts from 'typescript';

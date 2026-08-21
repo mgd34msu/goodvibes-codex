@@ -1,6 +1,5 @@
 /**
- * Stability analyzer for hook dependencies, Lane 4.
- * Ported verbatim from frontend-engine `core/hooks/stability-analyzer.ts`.
+ * Stability analyzer for hook dependencies.
  *
  * @module frontend/hooks/stability-analyzer
  */

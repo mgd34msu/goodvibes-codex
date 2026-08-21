@@ -1,6 +1,5 @@
 /**
  * Statistical summary for code_grep `output.mode: "stats"`.
- * Ported verbatim from v1 `precision-engine/src/utils/grep-stats.ts`.
  */
 
 import * as path from 'path';

@@ -1,7 +1,8 @@
 /**
- * MySQL query executor, ported from v1 project-engine
- * `core/database/executors/mysql.ts`. The `mysql2` driver loads lazily from the
- * plugin's prepared dependency directory and requires verified TLS.
+ * MySQL query executor.
+ *
+ * The `mysql2` driver loads lazily from the plugin's prepared dependency
+ * directory and requires verified TLS.
  */
 
 import type { DatabaseConnectionInfo, ColumnInfo, ExecutionResult } from '../types.js';

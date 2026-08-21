@@ -1,10 +1,9 @@
 /**
  * Exported-symbol type extraction over the shared host.
  *
- * Ported from project-engine `core/code-intel/type-extraction.ts`, rewired onto
- * {@link CompilerHost} (no global singleton). Used by api_spec (lane 3) to snapshot
- * a file's exported signatures; the temp-file helpers support analyzing content
- * at a git ref without touching the working tree.
+ * Runs on {@link CompilerHost} with no global singleton. `api_spec` uses it to
+ * snapshot a file's exported signatures; the temp-file helpers support analyzing
+ * content at a git ref without touching the working tree.
  */
 
 import * as node_fs from 'node:fs/promises';

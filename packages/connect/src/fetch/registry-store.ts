@@ -4,7 +4,7 @@
  * Service and connection policy lives in the shared GoodVibes data root, apart
  * from credentials. The MCP service tool reads this state but cannot mutate it;
  * only the interactive control utility performs authority changes. Credentials
- * live in their own owner-only file, and version 0.1.0 has no cookie store.
+ * live in their own owner-only file, and version 0.1.x has no cookie store.
  *
  * The file is read fresh on every access (small, infrequent) so a write by one
  * call is visible to the next without cache-invalidation bugs, the same
@@ -35,7 +35,7 @@ export interface ServiceConfig {
   /** Display description. */
   description?: string;
   /**
-   * Trust boundary (BUILD NEW): write methods this service is allowed to use.
+   * Trust boundary: write methods this service is allowed to use.
    * Absent/empty means read-only, only SAFE_METHODS are permitted. Opting into
    * writes is explicit and per-service.
    */
@@ -73,7 +73,7 @@ export interface FetchConfig {
   /** Hostname → service resolution patterns. */
   url_patterns?: UrlPattern[];
   /**
-   * Trust boundary (BUILD NEW): destination allowlist of extra hostnames
+   * Trust boundary: destination allowlist of extra hostnames
    * reachable with a bare `url` (no service) while in restricted mode.
    * Registered service origins are always reachable and need no entry here.
    */
@@ -88,7 +88,7 @@ export interface FetchConfig {
   connections?: Record<string, DbConnection>;
 }
 
-/** The registry file path (namespaced under `.goodvibes/`, R15). */
+/** The registry file path, `services.json` under the durable GoodVibes data root. */
 export function registryPath(): string {
   return statePath('services.json');
 }

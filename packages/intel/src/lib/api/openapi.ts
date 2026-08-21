@@ -1,10 +1,8 @@
 /**
  * OpenAPI generation helpers for `api_spec`.
  *
- * Ported near-verbatim from v1 project-engine `core/api/openapi.ts`. The
- * disk-write path (`fs.writeFileSync` in the v1 extension) does NOT port,
- * intel is read-only by design (§4.1 api_spec row: "read-only"); `toYaml`
- * still produces the YAML text in-memory for callers that want it in the
+ * There is no disk-write path, because `api_spec` is read-only by design.
+ * `toYaml` produces the YAML text in memory for callers that want it in the
  * response, but nothing here touches the filesystem.
  *
  * @module lib/api/openapi

@@ -1,11 +1,10 @@
 /**
- * AST primitives for React component detection, Lane 4.
+ * AST primitives for React component detection.
  *
- * Ported verbatim from frontend-engine `shared/ast.ts` (the read-only v1 quarry).
  * Pure functions over a `ts.SourceFile`; they carry no parsing of their own. The
  * frontend analyzers obtain that SourceFile from the shared compiler host
- * (`../frontend/source.ts` → `@goodvibes/intel host`), rewiring off the v1
- * ad-hoc `ts.createSourceFile` per §3.3.
+ * through `../frontend/source.ts`, never by calling `ts.createSourceFile`
+ * themselves.
  *
  * @module frontend/ast
  */

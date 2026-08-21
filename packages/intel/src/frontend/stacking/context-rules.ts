@@ -1,9 +1,9 @@
 /**
- * Stacking context detection rules, Lane 4.
- * Ported from frontend-engine `core/stacking/context-rules.ts` and extended with
- * {@link allStackingTriggers}, the tribunal "all context-creation triggers per
- * element" enhancement (§4.4.2). The v1 `createsStackingContext` returned only the
- * FIRST matching trigger; `allStackingTriggers` returns every one.
+ * Stacking context detection rules.
+ *
+ * `createsStackingContext` reports only the FIRST matching trigger, so
+ * {@link allStackingTriggers} exists to return every context-creation trigger on
+ * an element.
  *
  * @module frontend/stacking/context-rules
  */
@@ -74,7 +74,7 @@ export function createsStackingContext(classes: string[]): { creates: boolean; r
   return { creates: false };
 }
 
-/** ALL matching triggers for an element (the §4.4.2 all-triggers enhancement). */
+/** ALL matching triggers for an element (the all-triggers enhancement). */
 export function allStackingTriggers(classes: string[]): string[] {
   const triggers: string[] = [];
   for (const [name, check] of Object.entries(CONTEXT_CREATORS)) {

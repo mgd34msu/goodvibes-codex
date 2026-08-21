@@ -1,8 +1,6 @@
 /**
  * Hono route parser.
  *
- * Ported near-verbatim from v1 project-engine `core/api/parsers/hono.ts`.
- *
  * @module lib/api/parsers/hono
  */
 

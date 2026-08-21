@@ -1,9 +1,6 @@
 /**
  * Prisma schema parser.
  *
- * Ported near-verbatim from v1 project-engine
- * `core/database/parsers/prisma-schema.ts`.
- *
  * @module lib/db/parsers/prisma-schema
  */
 

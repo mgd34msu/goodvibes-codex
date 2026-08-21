@@ -1,9 +1,6 @@
 /**
  * Drizzle ORM schema parser.
  *
- * Ported near-verbatim from v1 project-engine
- * `core/database/parsers/drizzle-schema.ts`.
- *
  * @module lib/db/parsers/drizzle-schema
  */
 

@@ -1,18 +1,17 @@
 /**
  * `code_safe_delete`, is the symbol at a position safe to delete?
  *
- * Ports project-engine `extensions/code-intel/safe-delete.ts` onto the shared
- * compiler host (§3.3, §4.1).
+ * Runs on the shared compiler host.
  *
- * HARD REQUIREMENT (verified during port): the reference check is the
+ * HARD REQUIREMENT: the reference check is the
  * TypeScript LanguageService semantic engine, `service.getReferencesAtPosition`
  *, NOT a text/regex scan. A regex approach would miss aliased imports and
  * flag string/comment coincidences; only the compiler resolves the actual
  * symbol. If this call is ever swapped for a textual scan the tool is wrong and
  * must not ship. See the reference categorization below and `host/references.ts`.
  *
- * v2 wrappers per the port row: `base_path`/`resolved_path` echo (issue 1),
- * `core/proc` budget, `core/envelope` accounting.
+ * Wrappers: `base_path`/`resolved_path` echo, `core/proc` budget,
+ * `core/envelope` accounting.
  *
  * @module tools/code_safe_delete
  */
@@ -139,8 +138,8 @@ export async function handler(rawArgs: unknown): Promise<CallToolResult> {
       }
 
       // Resolve the symbol name from the identifier token at the position. This
-      // is precise; the v1 quick-info signature heuristic returned the leading
-      // keyword (e.g. "function") for functions and is not used.
+      // is precise. A quick-info signature heuristic is not used, because it
+      // returns the leading keyword (for example "function") for functions.
       const symbolName = identifierAt(sourceFile.text, position);
 
       // ── The semantic reference check (LanguageService, NOT regex) ───────────

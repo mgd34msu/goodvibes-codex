@@ -1,10 +1,9 @@
 /**
- * Import graph builder for client boundary analysis, Lane 4.
+ * Import graph builder for client boundary analysis.
  *
- * Ported from frontend-engine `core/client-boundary/graph-builder.ts`, rewired to
- * consume host-parsed SourceFiles (§3.3) instead of re-reading + re-parsing each
- * file. Import RESOLUTION still hits the filesystem (`fs.existsSync`), that is
- * path lookup, not parsing.
+ * Consumes host-parsed SourceFiles instead of re-reading and re-parsing each
+ * file. Import RESOLUTION still hits the filesystem (`fs.existsSync`), because
+ * that is path lookup rather than parsing.
  *
  * @module frontend/client-boundary/graph-builder
  */

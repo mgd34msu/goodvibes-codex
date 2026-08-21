@@ -1,22 +1,20 @@
 /**
- * Static spec-vs-routes comparison for `api_validate` (R11).
+ * Static spec-vs-routes comparison for `api_validate`.
  *
- * REBUILD, not a straight port: v1 `extensions/api/validate.ts` made live HTTP
- * requests against a running server and validated response bodies against the
- * spec schema. R11 retires that, live probing needs credentials, which is
- * connect's trust model, not intel's. This module instead compares the
- * OpenAPI spec's declared paths/methods/path-parameters against the routes
- * `api_routes` actually found in source, purely statically. The tribunal's
- * "JSONPath-precise mismatch reporting" requirement is honored via the
- * `json_path` field on every issue, now pointing into the spec DOCUMENT
- * (e.g. `$.paths['/api/users/{id}'].get`) rather than into a live response
- * body.
+ * This validation is entirely static. It never issues live HTTP requests,
+ * because probing a running server needs credentials, and credentials are
+ * connect's trust model rather than intel's.
  *
- * Deliberately scoped to route/method/path-parameter existence, NOT a
- * request/response body schema diff. v1's schema inference (`parseHandlerTypes`)
- * is regex-based and would produce false positives if used as a hard
- * mismatch signal here; the tribunal's "zero false alarms on correct routes"
- * bar is easier to hold with a deterministic, structural comparison.
+ * It compares the OpenAPI spec's declared paths, methods and path parameters
+ * against the routes `api_routes` found in source. Every issue carries a
+ * `json_path` pointing into the spec DOCUMENT, for example
+ * `$.paths['/api/users/{id}'].get`, rather than into a response body.
+ *
+ * Scope is deliberately route, method and path-parameter existence, NOT a
+ * request/response body schema diff. Regex-based schema inference would produce
+ * false positives if used as a hard mismatch signal, and the bar here is zero
+ * false alarms on correct routes, which a deterministic structural comparison
+ * holds more easily.
  *
  * @module lib/api/validate-static
  */

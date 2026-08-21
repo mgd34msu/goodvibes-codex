@@ -1,8 +1,9 @@
 /**
- * Shared `base_path` resolution for the search/read trio (issue 1, §3.2 of
- * the carve-out spec): every tool takes `base_path`; relative inputs resolve
- * against it; absent `base_path`, resolution falls back to the server cwd
- * WITH a `warning` field so the ambiguity is visible to the caller.
+ * Shared `base_path` resolution for the search/read trio.
+ *
+ * Every tool takes `base_path`, and relative inputs resolve against it. With no
+ * `base_path`, resolution falls back to the server cwd and sets a `warning`
+ * field so the ambiguity is visible to the caller.
  */
 
 import { resolveInputPath, validateDirectoryPath } from '@goodvibes/core/fsx';

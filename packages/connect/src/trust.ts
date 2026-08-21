@@ -1,5 +1,5 @@
 /**
- * connect trust boundary (BUILD NEW, §4.3 service row).
+ * connect trust boundary.
  *
  * Everything the credential/destination policy needs is expressed here as pure,
  * side-effect-free functions so the whole boundary is unit-testable without a

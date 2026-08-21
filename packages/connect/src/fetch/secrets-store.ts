@@ -1,7 +1,6 @@
 /**
  * Credential store for connect service authentication.
  *
- * Ported from v1 precision-engine `utils/fetch/secrets-store.ts`, the
  * Credentials are stored outside workspaces with owner-only permissions,
  * symlink refusal, and atomic replacement. Environment references are
  * recognized only to reject legacy values; they never read process.env.
@@ -48,7 +47,7 @@ export interface SecretsFile {
   global: Record<string, string | EnvRef>;
 }
 
-/** The credential file path (namespaced under `.goodvibes/`, R15). */
+/** The credential file path, `goodvibes.secrets.json` under the durable GoodVibes data root. */
 function getSecretsPath(): string {
   return statePath('goodvibes.secrets.json');
 }

@@ -1,12 +1,12 @@
 /**
  * `client_boundary`, Next.js App Router "use client"/"use server" analysis.
  *
- * Straight port (§4.1, §3 KEEP) of frontend-engine `extensions/client-boundary.ts`
+ * Client/server boundary analysis
  * + `core/client-boundary/*` onto the shared compiler host and `core/envelope`.
- * v2 wrappers: `base_path` contract (issue 1) with `resolved_path` echoed per file
+ * Wrappers: `base_path` contract with `resolved_path` echoed per file
  * and for the scanned root; `core/proc` budget; honest token accounting with
  * `output.max_tokens` trimming issues → components → boundaries. Every SourceFile
- * comes from the ONE compiler host (§3.3) in a single program build.
+ * comes from the ONE compiler host in a single program build.
  *
  * @module tools/client_boundary
  */

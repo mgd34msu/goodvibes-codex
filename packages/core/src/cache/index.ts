@@ -1,5 +1,5 @@
 /**
- * `@goodvibes/core/cache`, the §7.1 file-cache rebuild.
+ * `@goodvibes/core/cache`, the file-cache layer.
  *
  * Three features, no more:
  *  1. Freshness metadata on normal full responses: the handler always delivers
@@ -7,12 +7,9 @@
  *     a content hash. Information, never refusal.
  *  2. Explicit probe mode: "did these files change?" returns change-status with
  *     NO content, the caller opts into contentlessness.
- *  3. Stub-on-read is deleted; `tokens_saved` self-crediting is deleted. The
- *     legacy `tokensSaved` accumulator stays pinned at 0 so no self-credit can
- *     leak back in (the ported no-self-credit test asserts this).
- *
- * Adapted from the v1 Phase-0.5-rebuilt precision-engine `state/file-cache.ts`,
- * which already implements most of this.
+ *  3. No stub-on-read and no `tokens_saved` self-crediting. The legacy
+ *     `tokensSaved` accumulator stays pinned at 0 so no self-credit can leak
+ *     back in, which a dedicated test asserts.
  */
 
 import { createHash } from 'crypto';
@@ -43,7 +40,7 @@ export interface CacheEntry {
   limit?: number;
   readCount: number;
   tokenCost: number;
-  /** Legacy accumulator, self-crediting removed in the v2 rebuild (stays 0). */
+  /** Legacy accumulator. Self-crediting is not performed, so this stays 0. */
   tokensSaved: number;
   version: number;
   lastModifiedBy?: string;

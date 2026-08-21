@@ -1,7 +1,8 @@
 /**
- * PostgreSQL query executor, ported from v1 project-engine
- * `core/database/executors/postgres.ts`. The `pg` driver loads lazily from the
- * plugin's prepared dependency directory and requires verified TLS.
+ * PostgreSQL query executor.
+ *
+ * The `pg` driver loads lazily from the plugin's prepared dependency directory
+ * and requires verified TLS.
  */
 
 import type { DatabaseConnectionInfo, ColumnInfo, ExecutionResult } from '../types.js';

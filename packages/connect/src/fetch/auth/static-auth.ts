@@ -1,8 +1,7 @@
 /**
- * Static auth (Tier 1), pre-configured credentials applied to headers.
+ * Static auth: pre-configured credentials applied to request headers.
  *
- * Ported verbatim from v1 precision-engine `utils/fetch/auth/static-auth.ts`.
- * Bearer, Basic, and API-key credentials from the owner-only control store.
+ * Bearer, Basic, and API-key credentials come from the owner-only control store.
  */
 
 import { resolveSecretValue, type ServiceAuth, type EnvRef } from '../secrets-store.js';

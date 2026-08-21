@@ -1,7 +1,7 @@
 /**
- * Sizing analyzers, Lane 4.
- * Ported from frontend-engine `core/sizing/analyzers.ts` (width/height strategy +
- * flex/grid behavior for the selected element).
+ * Sizing analyzers.
+ *
+ * Width and height strategy plus flex/grid behavior for the selected element.
  *
  * @module frontend/sizing/analyzers
  */

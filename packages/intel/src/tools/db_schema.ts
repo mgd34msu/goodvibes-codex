@@ -1,20 +1,17 @@
 /**
  * `db_schema`, database schema extraction + Prisma usage analysis.
  *
- * Ports project-engine `extensions/database/schema.ts` +
- * `core/database/parsers/{prisma-schema,drizzle-schema,sql-schema}.ts`
- * (§4.1). Usage mode MERGES `extensions/database/prisma.ts` +
- * `core/database/prisma-utils.ts` (tribunal merge, shape in §4.4.3),
- * rewired onto the shared compiler host (see `lib/db/prisma-usage.ts`).
+ * Schema extraction covers Prisma, Drizzle, and SQL parsers. Usage mode rides
+ * the shared compiler host; see `lib/db/prisma-usage.ts`.
  *
- * v2 wrappers per the port row:
- *  - `base_path` contract (issue 1): the schema file's absolute path is
+ * Wrappers:
+ *  - `base_path` contract: the schema file's absolute path is
  *    echoed as `resolved_path`; call sites echo their own `resolved_path`.
  *  - `core/proc` budget: usage-mode scanning runs under `withBudget`.
  *  - `core/envelope`: honest token accounting; `output.max_tokens` trims
  *    `usage.call_sites` (the largest field) with `truncated`/`effective_caps`.
- *  - Output reshaped to the tribunal's `models[].relations` shape (§4.4.3),
- *    not v1's flat `tables`+`relations` arrays.
+ *  - Output uses the `models[].relations` shape rather than the parsers' flat
+ *    `tables` plus `relations` arrays.
  *
  * @module tools/db_schema
  */

@@ -1,6 +1,5 @@
 /**
- * Tailwind element identifier, Lane 4.
- * Ported verbatim from frontend-engine `core/tailwind/identifier.ts`.
+ * Tailwind element identifier.
  *
  * @module frontend/tailwind/identifier
  */

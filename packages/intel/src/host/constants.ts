@@ -1,11 +1,12 @@
 /**
  * Compiler-host constants (intel).
  *
- * Ported from project-engine `core/code-intel/constants.ts` and
- * `shared/constants.ts` (SOURCE_EXTENSIONS / SKIP_DIRECTORIES folded in so the
- * host is self-contained). The v1 background-cleanup knobs (`CACHE_TTL_MS`) do
- * NOT carry forward: the v2 host holds no `setInterval` (field issue 9, no
- * timers that keep the event loop alive); it bounds its cache by count instead.
+ * SOURCE_EXTENSIONS and SKIP_DIRECTORIES are folded in here so the host is
+ * self-contained.
+ *
+ * There is deliberately no background-cleanup TTL knob. The host holds no
+ * `setInterval`, because a timer that keeps the event loop alive is what strands
+ * an orphaned server. It bounds its cache by count instead.
  */
 
 import ts from 'typescript';

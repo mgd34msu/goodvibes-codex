@@ -1,9 +1,9 @@
 /**
  * Shared types for the compiler host and the intel analyzers that ride it.
  *
- * Ported from project-engine `core/code-intel/types.ts`, trimmed to the shapes
- * the v2 surface actually uses (the breaking-changes / semantic-diff / dead-code
- * tool argument types did not port, those tools retire with the v1 tree).
+ * Trimmed to the shapes the current tool surface actually uses. There are no
+ * breaking-changes, semantic-diff, or dead-code argument types, because no tool
+ * here exposes those.
  */
 
 import type ts from 'typescript';

@@ -1,11 +1,11 @@
 /**
  * `packages/intel/src/host`, the intel compiler host public interface.
  *
- * ONE TypeScript LanguageService/Program per tsconfig scope (§3.3, R4), shared
- * by every intel analyzer. Lanes 2 (code_surface, code_safe_delete), 3 (api_*,
- * db_schema usage) and 4 (frontend analyzers) all consume THIS surface, it is
- * stable once lane 2's tests pass. Do not reach past it into the internal
- * modules; add capabilities by extending this barrel.
+ * ONE TypeScript LanguageService/Program per tsconfig scope, shared by every
+ * intel analyzer. `code_surface`, `code_safe_delete`, the `api_*` tools,
+ * `db_schema` usage mode and the frontend analyzers all consume THIS surface.
+ * Do not reach past it into the internal modules; add capabilities by extending
+ * this barrel.
  *
  * Contract for callers:
  *  - Resolve `base_path` → an ABSOLUTE path via `@goodvibes/core/fsx` BEFORE
@@ -14,8 +14,9 @@
  *  - Acquire a program with {@link CompilerHost.getServiceForFile} (single file)
  *    or {@link CompilerHost.getServiceForFiles} (whole directory, every path is
  *    added to one program so `program.getSourceFile()` is deterministic).
- *  - Share one host via {@link getCompilerHost}; the alpha server holds a single
- *    instance. No background timers run (field issue 9); call
+ *  - Share one host via {@link getCompilerHost}; the server holds a single
+ *    instance. No background timers run, because a timer that keeps the event
+ *    loop alive is what strands an orphaned server. Call
  *    {@link disposeCompilerHost} on shutdown if you want eager teardown.
  *
  * @module host

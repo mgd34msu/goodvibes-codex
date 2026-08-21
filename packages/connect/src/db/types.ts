@@ -1,10 +1,9 @@
 /**
  * Database domain types for connect `db_query`.
  *
- * Trimmed port of v1 project-engine `core/database/types.ts`, only the query
- * execution surface (connect does not do schema extraction; that stays in
- * intel's `db_schema`). The v1 `McpResponse` coupling is dropped; `db_query`
- * returns the shared `core/envelope` instead.
+ * The query-execution surface only. Connect does not do schema extraction;
+ * that stays in intel's `db_schema`. `db_query` returns the shared
+ * `core/envelope` rather than an MCP-specific response type.
  */
 
 /** Supported database driver types. */

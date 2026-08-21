@@ -1,19 +1,17 @@
 /**
  * `db_schema` usage mode, Prisma call-chain mapping.
  *
- * Ported from v1 project-engine `core/database/prisma-utils.ts`
- * (`extensions/database/prisma.ts`'s N+1 detector), REWIRED onto the shared
- * intel compiler host per §3.3/§4.4.3 ("usage mode rides the shared host"):
- * file discovery uses `findSourceFiles` instead of the v1 bespoke walker, and
- * the AST comes from ONE shared `Program` (`getServiceForFiles`) instead of a
- * throwaway `ts.createSourceFile` per file. `query-analysis.ts`'s raw-SQL
- * read/write classifiers do NOT port here, they analyze SQL query text, not
- * TypeScript call chains, and belong to connect's `db_query` trust model
- * (§4.3), not this static analyzer.
+ * Usage mode rides the shared intel compiler host: file discovery uses
+ * `findSourceFiles`, and the AST comes from ONE shared `Program`
+ * (`getServiceForFiles`) instead of a throwaway `ts.createSourceFile` per file.
  *
- * Recommendation generation (`generatePrismaRecommendations`) and the
- * standalone N+1-only tool shape do not port either: the tribunal's merged
- * `db_schema` usage shape (§4.4.3) is `call_sites` (with a per-site `in_loop`
+ * Raw-SQL read/write classification does NOT belong here. It analyzes SQL query
+ * text rather than TypeScript call chains, so it lives in connect's `db_query`
+ * trust model, not in this static analyzer.
+ *
+ * Recommendation generation and a standalone N+1-only tool shape are
+ * deliberately absent: the merged `db_schema` usage shape is `call_sites`
+ * (with a per-site `in_loop`
  * flag) + `frequency`, not a prose recommendation list.
  *
  * @module lib/db/prisma-usage

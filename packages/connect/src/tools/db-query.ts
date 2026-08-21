@@ -1,8 +1,7 @@
 /**
- * `db_query`, SQL execution under the connect trust boundary (§4.3 db_query row).
+ * `db_query`, SQL execution under the connect trust boundary.
  *
- * Ported from v1 project-engine `extensions/database/query.ts`, moved onto
- * connect's trust model:
+ * The trust model is:
  *  - registered-connection-only: every query resolves an opaque connection
  *    handle created by the interactive control utility;
  *  - read-only by default: write statements are blocked unless the caller passes

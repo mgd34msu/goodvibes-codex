@@ -1,8 +1,9 @@
 /**
- * SQL query analysis, ported verbatim from v1 project-engine
- * `core/database/query-analysis.ts` (read/write classification, LIMIT handling,
- * CTE-with-write detection). This is what enforces the connect read-only
- * default before a query ever reaches an executor.
+ * SQL query analysis: read/write classification, LIMIT handling, and
+ * CTE-with-write detection.
+ *
+ * This is what enforces connect's read-only default before a query ever reaches
+ * an executor.
  */
 
 const CONTROL_OR_UNSAFE = new Set([

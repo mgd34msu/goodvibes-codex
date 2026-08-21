@@ -2,26 +2,21 @@
  * Tree-sitter wrapper (web-tree-sitter / WASM) for code_read (outline) and
  * code_grep (`expand_to: function|class` context expansion).
  *
- * Ported from v1 `precision-engine/src/core/tree-sitter.ts`, trimmed to the
- * surface v2 actually uses (outline + enclosing-function/class lookup, the
- * `symbols`/`ast` extraction and cross-file reference search do not port; no
- * v2 tool in this lane calls them).
+ * Trimmed to the surface the tools use: outline plus enclosing-function/class
+ * lookup. There is no `symbols`/`ast` extraction and no cross-file reference
+ * search, because no shipped tool calls them.
  *
- * API note: v1 targeted an older `web-tree-sitter` release with a default
- * export (`import Parser from 'web-tree-sitter'`) and `Parser.SyntaxNode`.
- * The pinned v2 version (0.26.10) ships named exports only (`Parser`,
- * `Language`, `Node`, `Tree`) and `Parser.parse()` returns `Tree | null`,
- * adapted below; behavior is unchanged.
+ * API note: the pinned `web-tree-sitter` version (0.26.10) ships named exports
+ * only (`Parser`, `Language`, `Node`, `Tree`), and `Parser.parse()` returns
+ * `Tree | null`. Older releases used a default export and `Parser.SyntaxNode`.
  *
- * Fix (plan §4.1 code_read row, "honest exported flags", currently marks
- * private/nested members exported): v1's `isExported()` walked every ancestor
- * looking for an `export_statement`, so a method or property inside an
- * exported class inherited the CLASS's export status even though individual
- * class/interface members are never independently exported in JS/TS. v2 only
- * computes `exported` for entries visited at the outline's TOP LEVEL (direct
- * children of the source file); nested members (class/interface/namespace
- * children) never carry an `exported` key at all rather than a misleading
- * inherited value.
+ * EXPORTED FLAGS ARE HONEST. Walking every ancestor looking for an
+ * `export_statement` makes a method or property inside an exported class
+ * inherit the CLASS's export status, which is wrong: individual class and
+ * interface members are never independently exported in JS/TS. So `exported` is
+ * computed only for entries at the outline's TOP LEVEL, meaning direct children
+ * of the source file. Nested class, interface and namespace children carry no
+ * `exported` key at all, rather than a misleading inherited value.
  */
 
 // `web-tree-sitter` is an externalized WASM dependency (intel build.mjs) that
@@ -169,7 +164,7 @@ function extractSymbolName(node: Node): string | null {
   return null;
 }
 
-/** True ONLY when `node` is directly wrapped by an `export_statement`/`export_declaration`, does not cross a class/interface/namespace body boundary (that crossing is what produced the honest-exported-flags bug in v1). */
+/** True ONLY when `node` is directly wrapped by an `export_statement`/`export_declaration`. Crossing a class/interface/namespace body boundary would wrongly mark nested members exported. */
 function isDirectlyExported(node: Node): boolean {
   let current: Node | null = node;
   while (current) {

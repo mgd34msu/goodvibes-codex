@@ -1,7 +1,9 @@
 /**
- * Database error classes + message enhancement, ported from v1 project-engine
- * `core/database/errors.ts` (the "honest install hints"/actionable-message
- * behavior the plan praised). Schema-only helpers are dropped.
+ * Database error classes and message enhancement.
+ *
+ * A driver failure is reported with an actionable message, including an honest
+ * install hint when the cause is a missing driver. Schema-only helpers are not
+ * part of this module.
  */
 
 import type { QueryResult, DatabaseDriver } from './types.js';

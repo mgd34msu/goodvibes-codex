@@ -1,7 +1,8 @@
 /**
- * Types for hook_dependencies, Lane 4.
- * Ported from frontend-engine `core/hooks/types.ts` (v1 quarry); the
- * `ToolResponse` re-export is dropped (v2 uses `core/envelope`).
+ * Types for hook_dependencies.
+ *
+ * Responses are shaped by `core/envelope`, so no tool-response type is
+ * re-exported here.
  *
  * @module frontend/hooks/types
  */

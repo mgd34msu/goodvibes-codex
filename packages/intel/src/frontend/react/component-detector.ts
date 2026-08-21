@@ -1,7 +1,7 @@
 /**
- * React component detector, Lane 4.
- * Ported verbatim from frontend-engine `core/react/component-detector.ts`, with
- * the HOC/ast helpers sourced from `../ast.js` (the ported `shared/ast`).
+ * React component detector.
+ *
+ * HOC and AST helpers come from `../ast.js`.
  *
  * @module frontend/react/component-detector
  */

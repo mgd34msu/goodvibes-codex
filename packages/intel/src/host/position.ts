@@ -1,7 +1,6 @@
 /**
  * Position conversion helpers.
  *
- * Ported verbatim from project-engine `core/code-intel/position.ts`.
  * Converts between 1-based line/column and byte offsets in a source file.
  */
 

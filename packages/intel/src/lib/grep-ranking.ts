@@ -1,20 +1,18 @@
 /**
  * Cheap relevance ranking for code_grep `ranked: true`.
  *
- * REBUILT per plan §4.1 code_grep row ("grep-ranking.ts REBUILT cheap:
- * in-place sort + one relevance scalar, no content duplication"). v1's
- * `rankResults()` (a) returned a separate `ranked_files` array that carried a
- * full COPY of each file's `matches` array alongside the original `files`
- * array, the exact content-duplication issue 6 also flagged, just on the
- * ranking path instead of the pagination path; (b) shelled out to `git log`
- * synchronously per file via `execFileSync`, a blocking sync call per
- * ranked file, exactly what `core/proc`'s "no blocking sync loops" rule
- * forbids; (c) coupled ranking to the `FileStateCache` singleton for no
- * strong signal value.
+ * `rankFiles` computes ONE `relevance` scalar per file from data already in
+ * hand and sorts the SAME file objects in place. There is no parallel array and
+ * no duplicated match content.
  *
- * v2: `rankFiles` computes ONE `relevance` scalar per file from data already
- * in hand (no shell-outs, no cache lookups) and sorts the SAME file objects
- * in place, no parallel array, no duplicated match content.
+ * Three things it deliberately does not do, each of which a ranking pass is
+ * tempting to add:
+ *  - return a second array carrying a full copy of each file's matches, which
+ *    duplicates content the caller already holds;
+ *  - shell out to `git log` per file, which is a blocking synchronous call and
+ *    is what `core/proc`'s no-blocking-sync-loops rule forbids;
+ *  - couple ranking to a file-state cache, which adds a dependency for no
+ *    strong signal.
  */
 
 export interface RankableMatch {

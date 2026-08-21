@@ -1,13 +1,11 @@
 /**
- * structural_edit match/apply engine (lane 10, intel tool 15).
+ * structural_edit match/apply engine.
  *
- * Ported from v1 `precision-engine/src/handlers/precision-edit.ts`, carrying
- * ONLY the three modes the plan §14.B allows, and nothing else:
+ * Exactly three match modes are permitted, and nothing else:
  *  - `exact`      , exact-string matching (the only text mode; no fuzzy, no
  *                    regex, no plain find/replace beyond byte-exact).
  *  - `ast`        , TypeScript-compiler node matching (function / variable /
- *                    method / class / import / type / interface / enum), the
- *                    v1 `astMatch` predicates verbatim.
+ *                    method / class / import / type / interface / enum).
  *  - `ast_pattern`, ast-grep structural pattern matching. `@ast-grep/napi` is
  *                    NOT installed in this build (nor declared), so this mode
  *                    degrades to an honest "unavailable" error via a lazy,
@@ -15,9 +13,8 @@
  *                    kept faithful so the mode lights up unchanged if the native
  *                    dep is ever added.
  *
- * CRLF PRESERVATION (the v1 silent-conversion defect, inverted into a
- * regression fixture): v1 normalized the WHOLE file to `\n` and wrote the
- * normalized content back, silently converting CRLF files to LF. This engine
+ * CRLF PRESERVATION, covered by a regression fixture: normalizing a whole file
+ * to `\n` and writing it back silently converts CRLF files to LF, so this engine
  * never rewrites bytes outside an edit span. Matching runs against a normalized
  * view with an index map back to the ORIGINAL string, so a match span is spliced
  * out of the exact original bytes; the replacement's own newlines are rendered
@@ -30,7 +27,7 @@ import * as path from 'path';
 import { nativeDepMessage } from '@goodvibes/core/envelope';
 import { importRuntimeModule } from '../lib/runtime-module.js';
 
-/** The three permitted match modes (no fuzzy / no regex, per plan §14.B). */
+/** The three permitted match modes. No fuzzy matching and no regex. */
 export type EditMatchMode = 'exact' | 'ast' | 'ast_pattern';
 
 /** Which matched occurrences an entry replaces. */
@@ -144,7 +141,7 @@ function exactMatchSpans(original: string, find: string, caseSensitive: boolean)
  * AST (TypeScript-compiler) match spans in ORIGINAL coordinates. The source is
  * parsed AS-IS (CRLF and all): `node.getStart`/`node.getEnd` are offsets into
  * the exact text we passed, so the spans are already original-accurate with no
- * mapping. Predicates ported verbatim from v1 `astMatch`.
+ * mapping.
  */
 function astMatchSpans(filePath: string, original: string, find: string): Span[] {
   if (!isJavaScriptFile(filePath)) {

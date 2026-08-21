@@ -2,16 +2,11 @@
  * code_grep, batched, structure-aware search with a clean cap layer, ranking,
  * negation, replace-preview, and stats.
  *
- * Ported from v1 `precision-engine/src/handlers/precision-grep.ts` plus
- * `core/{ripgrep,tree-sitter}.ts` and `utils/{grep-pagination,grep-negation,
- * grep-replace-preview,grep-stats}.ts`. `grep-ranking.ts` is REBUILT cheap
- * (see `lib/grep-ranking.ts`); `grep-relationships.ts` does not port (plan
- * §4.1 code_grep row); `core/ast-grep.ts` does not port either, RULING (see
- * lane report): the v1 `precision_grep` handler never calls `AstGrepCore` (it
- * is only used by the retiring `discover`/`precision_edit` handlers), so no
- * v2 `code_grep` behavior depends on it.
+ * Ranking is deliberately cheap; see `lib/grep-ranking.ts`. There is no
+ * relationship analysis and no ast-grep dependency, because no `code_grep`
+ * behavior needs either.
  *
- * Field issue 2 fixes carried in verbatim (cap layer, all root-caused):
+ * The cap layer:
  *  - `max_results` (output.max_results) caps the FILE LIST only.
  *  - `max_per_item` caps matches included PER FILE.
  *  - `max_total_matches` caps matches included ACROSS ALL FILES.
@@ -163,8 +158,8 @@ function splitGlobPattern(globPattern: string): { dir: string; glob: string } | 
 }
 
 /**
- * Transform a RipgrepSearchResult into a GrepResult. Cap semantics (each cap
- * does exactly one job, field issue 2):
+ * Transform a RipgrepSearchResult into a GrepResult. Each cap does exactly one
+ * job:
  *  - count_only counts with NO caps applied, true line-based totals.
  *  - maxFiles (max_results) caps the file LIST only.
  *  - maxPerItem (max_per_item) caps matches included per file.

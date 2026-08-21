@@ -1,6 +1,5 @@
 /**
- * Tailwind core types, Lane 4.
- * Ported from frontend-engine `core/tailwind/types.ts`.
+ * Tailwind core types.
  *
  * @module frontend/tailwind/types
  */

@@ -1,7 +1,8 @@
 /**
- * Sizing context, Lane 4.
- * Ported from frontend-engine `core/sizing/context.ts` (types + ancestor chain +
- * strategy descriptions used by the merged sizing section, §4.4.2).
+ * Sizing context.
+ *
+ * Types, the ancestor chain, and the strategy descriptions used by the merged
+ * sizing section.
  *
  * @module frontend/sizing/context
  */

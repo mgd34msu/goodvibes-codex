@@ -1,7 +1,6 @@
 /**
  * Entry-point detection for a package/directory.
  *
- * Ported verbatim from project-engine `core/code-intel/entry-points.ts`.
  * Reads package.json main/module/exports, then falls back to conventional
  * entry-point file names, then a `src/` subdirectory.
  */

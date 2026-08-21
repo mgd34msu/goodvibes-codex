@@ -1,14 +1,15 @@
 /**
  * `hook_dependencies`, audit React hook dependency arrays.
  *
- * Straight port (§4.1, §3 KEEP) of frontend-engine `extensions/hook-dependencies.ts`
- * + `core/hooks/*` onto the shared compiler host and `core/envelope`. v2 wrappers:
+ * Runs on the shared compiler host and `core/envelope`.
+ *
+ * Wrappers:
  *  - `base_path` contract (issue 1): the file resolves via `core/fsx`; the result
  *    echoes an absolute `resolved_path`.
  *  - `core/proc` budget: analysis runs under `withBudget`.
  *  - `core/envelope`: honest token accounting; `output.max_tokens` trims issues
  *    then hooks with `truncated` + `effective_caps`.
- *  - SourceFile comes from the ONE compiler host (§3.3), not `ts.createSourceFile`.
+ *  - SourceFile comes from the ONE compiler host, not `ts.createSourceFile`.
  *
  * @module tools/hook_dependencies
  */

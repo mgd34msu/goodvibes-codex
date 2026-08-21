@@ -1,7 +1,7 @@
 /**
- * Overflow diagnosis types, Lane 4.
- * Ported from frontend-engine `core/overflow/types.ts` (subset the merged
- * layout_analysis needs).
+ * Overflow diagnosis types.
+ *
+ * Only the subset the merged `layout_analysis` needs.
  *
  * @module frontend/overflow/types
  */

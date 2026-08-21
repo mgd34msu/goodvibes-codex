@@ -1,6 +1,5 @@
 /**
- * Layout core types, Lane 4.
- * Ported from frontend-engine `core/layout/types.ts`.
+ * Layout core types.
  *
  * @module frontend/layout/types
  */

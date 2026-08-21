@@ -1,11 +1,10 @@
 /**
- * `boundaries` annotation for component_tree, Lane 4 (§4.4.1).
+ * `boundaries` annotation for component_tree.
  *
- * Distilled from frontend-engine `core/error-boundaries/scanner.ts`. Per tribunal:
- * carry `has_fallback`/`has_reset` booleans and detect BOTH class boundaries
+ * Carries `has_fallback`/`has_reset` booleans and detects BOTH class boundaries
  * (getDerivedStateFromError / componentDidCatch) AND library wrappers
  * (react-error-boundary, Sentry, TanStack, Remix). Attaches to a component node
- * only when it is / renders a boundary. Shape per §4.4.1:
+ * only when it is / renders a boundary. Shape:
  *   { is_boundary, mechanism, has_fallback, has_reset }
  *
  * @module frontend/annotations/boundaries
@@ -108,7 +107,7 @@ function classHasFallback(node: ts.ClassDeclaration, sourceFile: ts.SourceFile):
 function classHasReset(node: ts.ClassDeclaration, sourceFile: ts.SourceFile): boolean {
   for (const member of node.members) {
     // Covers both `reset() {}` methods and `reset = () => {}` class-field handlers
-    // (the latter is common in real error boundaries and was missed by v1).
+    // (the latter is common in real error boundaries).
     if (
       (ts.isMethodDeclaration(member) || ts.isPropertyDeclaration(member)) &&
       member.name &&

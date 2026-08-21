@@ -1,16 +1,15 @@
 /**
  * `api_routes`, multi-framework API route discovery.
  *
- * Ports project-engine `extensions/api/routes.ts` + `core/api/{detection,
- * parsers/*}.ts` (§4.1). v2 wrappers per the port row:
- *  - `base_path` contract (issue 1): the target dir resolves via `core/fsx`;
+ * Wrappers:
+ *  - `base_path` contract: the target dir resolves via `core/fsx`;
  *    every route echoes an absolute `resolved_path`.
  *  - `core/proc` budget: scanning runs under `withBudget`; a budget expiry
  *    returns whatever routes were found so far with `budget_exceeded: true`.
  *  - `core/envelope`: honest token accounting; `output.max_tokens` trims the
  *    routes list with `truncated` + `effective_caps` when it bites.
- *  - File discovery rides the shared compiler host's `findSourceFiles` (§3.3)
- *    instead of the v1 bespoke walker.
+ *  - File discovery rides the shared compiler host's `findSourceFiles`, so
+ *    every analyzer shares one skip-directory policy.
  *
  * @module tools/api_routes
  */

@@ -1,10 +1,10 @@
 /**
- * SourceFile sourcing for the frontend analyzers, Lane 4.
+ * SourceFile sourcing for the frontend analyzers.
  *
- * §3.3 rule: every intel analyzer consumes the ONE shared compiler host; the
- * frontend analyzers rewire off the v1 per-call `ts.createSourceFile` onto it.
- * These helpers hand the host absolute paths (callers resolve `base_path` via
- * `core/fsx` first) and hand back parsed `ts.SourceFile`s.
+ * Every intel analyzer consumes the ONE shared compiler host rather than calling
+ * `ts.createSourceFile` per file. These helpers hand the host absolute paths,
+ * with callers resolving `base_path` through `core/fsx` first, and hand back
+ * parsed `ts.SourceFile`s.
  *
  *  - {@link getSourceFile}, one file (host parses with full JSX/TSX fidelity;
  *    the host's compiler options set `jsx: ReactJSX` + `allowJs`).

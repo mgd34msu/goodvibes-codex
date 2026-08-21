@@ -1,9 +1,8 @@
 /**
  * Envelope-decoupled argument validation for position-addressed tools.
  *
- * Rebuilt from project-engine `core/code-intel/validation.ts` with the v1
- * `McpResponse`/`fail()` coupling removed: these return plain discriminated
- * unions carrying an error STRING, which the tool wraps in `core/envelope`.
+ * These return plain discriminated unions carrying an error STRING, which the
+ * tool wraps in `core/envelope`. Nothing here is coupled to a response type.
  * Path resolution/existence is the tool's job (via `core/fsx`); this validates
  * only argument shape.
  */

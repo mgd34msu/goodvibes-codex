@@ -2,8 +2,7 @@
  * ripgrep binary wrapper, the search backend for code_grep and (via
  * `--files`) code_glob.
  *
- * Ported from v1 `precision-engine/src/core/ripgrep.ts` aside from binary
- * resolution. `resolveRgPath()` prefers the pinned runtime package and falls
+ * `resolveRgPath()` prefers the pinned runtime package and falls
  * back to `rg` on PATH while automatic repair is unavailable. The fallback is
  * deliberately not cached so a running server can use a later durable repair.
  */

@@ -1,11 +1,10 @@
 /**
  * Next.js route parser (App Router + Pages Router conventions).
  *
- * Ported from v1 project-engine `core/api/parsers/nextjs.ts`. Directory
- * discovery (locating `app/api` / `pages/api`, optionally under `src/`) moved
- * to the orchestrator (`lib/api/routes.ts`); these functions parse ONE
- * already-discovered file, matching the per-file shape of the other three
- * framework parsers.
+ * Directory discovery, locating `app/api` or `pages/api` and optionally looking
+ * under `src/`, belongs to the orchestrator (`lib/api/routes.ts`). These
+ * functions parse ONE already-discovered file, matching the per-file shape of
+ * the other three framework parsers.
  *
  * @module lib/api/parsers/nextjs
  */

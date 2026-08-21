@@ -1,8 +1,7 @@
 /**
  * Express route parser.
  *
- * Ported near-verbatim from v1 project-engine `core/api/parsers/express.ts`
- * (regex-based route + middleware detection); file discovery moved to the
+ * Regex-based route and middleware detection. File discovery belongs to the
  * orchestrator (`lib/api/routes.ts`), which rides the shared compiler host.
  *
  * @module lib/api/parsers/express

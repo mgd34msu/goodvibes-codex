@@ -1,11 +1,10 @@
 /**
- * `state` annotation for component_tree, Lane 4 (§4.4.1).
+ * `state` annotation for component_tree.
  *
- * Tribunal FIX: the v1 `passed_to_children` mapping added EVERY state-sourced JSX
- * prop to EVERY state variable (it only checked the passed value's category, not
- * which variable it was). Here `flows_to` is matched per state variable by the
- * base identifier of the passed expression, so each state var maps to exactly the
- * children it is actually handed to. Shape per §4.4.1:
+ * `flows_to` is matched per state variable by the base identifier of the passed
+ * expression, so each state variable maps to exactly the children it is actually
+ * handed to. Matching on the passed value's category alone would attach every
+ * state-sourced JSX prop to every state variable. Shape:
  *   [{ name, kind, flows_to: [{ child, prop }] }]
  *
  * @module frontend/annotations/state

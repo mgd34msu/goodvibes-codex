@@ -1,6 +1,5 @@
 /**
- * Hook extractor for dependency auditing, Lane 4.
- * Ported verbatim from frontend-engine `core/hooks/extractor.ts`.
+ * Hook extractor for dependency auditing.
  *
  * @module frontend/hooks/extractor
  */

@@ -1,8 +1,8 @@
 /**
- * Tailwind class dictionary, Lane 4.
- * Ported from frontend-engine `core/tailwind/constants.ts` (the corrected class
- * dictionary, §4.4.2). Only the three maps the layout parser needs are carried;
- * the responsive breakpoint tables do NOT port (responsive ships post-rebuild).
+ * Tailwind class dictionary.
+ *
+ * Only the three maps the layout parser needs. There are deliberately no
+ * responsive breakpoint tables, because there is no responsive section.
  *
  * @module frontend/tailwind/constants
  */

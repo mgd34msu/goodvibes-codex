@@ -1,9 +1,9 @@
 /**
- * Stacking JSX analyzer, Lane 4.
- * Ported from frontend-engine `core/stacking/jsx-analyzer.ts`, scoped to a
- * component/JSX node and rewired to the shared class-extractor + composite element
- * ids (so stacking `node`s cross-reference the hierarchy backbone). Emits ALL
- * context-creation triggers per element (§4.4.2 enhancement).
+ * Stacking JSX analyzer.
+ *
+ * Scoped to a component or JSX node, and built on the shared class-extractor and
+ * composite element ids so stacking nodes cross-reference the hierarchy
+ * backbone. Emits ALL context-creation triggers per element.
  *
  * @module frontend/stacking/jsx-analyzer
  */

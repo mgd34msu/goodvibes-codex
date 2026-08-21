@@ -3,14 +3,10 @@
  *
  * `toTsPath` is slash-normalization ONLY (backslash → forward slash) so cache
  * keys and `program.getSourceFile()` lookups match TypeScript's internal
- * forward-slashed representation on every platform. This is deliberately NOT the
- * v1 `normalizePath` git-bash rewrite that mangled paths and was deleted in v2
- * (see `@goodvibes/core/fsx`): callers resolve `base_path` → absolute via
- * `core/fsx` BEFORE handing a path to the host; `toTsPath` only reconciles slash
- * direction for TS's own key space.
- *
- * Ported from project-engine `core/code-intel/file-utils.ts` (file discovery)
- * plus the slash-normalization the language service relied on.
+ * forward-slashed representation on every platform. It is deliberately NOT a
+ * git-bash style rewrite, because rewriting mangles paths. Callers resolve
+ * `base_path` to an absolute path via `core/fsx` BEFORE handing it to the host,
+ * and `toTsPath` only reconciles slash direction for TypeScript's own key space.
  */
 
 import * as fsPromises from 'node:fs/promises';

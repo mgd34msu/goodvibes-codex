@@ -1,11 +1,8 @@
 /**
  * tsconfig discovery + parsing, and TypeScript lib-directory resolution.
  *
- * Ported from project-engine `core/code-intel/tsconfig.ts` and the
- * `findTypescriptLibDir` helper from `core/code-intel/virtual-fs.ts`.
- *
- * Lib-dir resolution matters in v2 because `typescript` is BUNDLED into the
- * server (§5.1): at runtime `ts.getDefaultLibFilePath()` resolves next to the
+ * Lib-dir resolution matters because `typescript` is BUNDLED into the server:
+ * at runtime `ts.getDefaultLibFilePath()` resolves next to the
  * esbuild bundle, where the `lib.*.d.ts` files do NOT live. So the host prefers
  * the TARGET project's `node_modules/typescript/lib` (found by walking up),
  * falling back to the bundled default only when the project has no TypeScript.

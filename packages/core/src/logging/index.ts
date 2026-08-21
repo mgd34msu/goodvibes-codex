@@ -1,15 +1,16 @@
 /**
  * `@goodvibes/core/logging`, level-routed logging with rotation.
  *
- * Fixes plan §7.5: debug output (the `SQLiteStore: saved to disk` TUI spam)
- * never interleaves into human logs again, debug routes to its own file, while
- * info/warn/error go to the human activity log. Both files rotate with a size
- * cap so `activity.md` can never grow to 1.2 MB / 54k lines again. Files live
- * under the namespaced `.goodvibes/logs/`.
+ * Debug output never interleaves into the human log: `debug` routes to its own
+ * file, while `info`/`warn`/`error`/`tool` go to the activity log. Both files
+ * rotate under a size cap so neither grows without bound.
+ *
+ * Log files live under `<data-root>/logs/`, resolved through `statePath`. That
+ * is the durable GoodVibes data root, not a directory inside the project being
+ * worked on.
  *
  * stdout stays clean for the MCP protocol; human-facing lines also mirror to
- * stderr so `--mcp-debug` shows them. Ported from v1 precision-engine
- * `logging.ts` (logger, startTimer, estimateTokens) plus the file sink.
+ * stderr so `--mcp-debug` shows them.
  */
 
 import { appendFileSync, mkdirSync, renameSync, statSync } from 'fs';
@@ -20,7 +21,7 @@ import { estimatePayloadTokens } from '../shared/tokens.js';
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'tool';
 
 export interface LoggerOptions {
-  /** Directory for log files (default `.goodvibes/logs`). */
+  /** Directory for log files (default `<data-root>/logs`). */
   dir?: string;
   /** Rotate a file once it exceeds this many bytes (default 1 MiB). */
   maxBytes?: number;
@@ -65,8 +66,8 @@ export function createLogger(options: LoggerOptions = {}): Logger {
   const maxBytes = options.maxBytes ?? DEFAULT_MAX_BYTES;
   const keep = options.keep ?? DEFAULT_KEEP;
   const mirror = options.stderr ?? true;
-  // Resolve the directory lazily per write so the runtime cwd is honoured, but
-  // an explicit `dir` pins it.
+  // Resolve the directory lazily per write so a later change to the data-root
+  // environment is honoured, but an explicit `dir` pins it.
   const resolveDir = (): string => options.dir ?? statePath('logs');
 
   function rotateIfNeeded(file: string): void {
@@ -124,7 +125,7 @@ export function createLogger(options: LoggerOptions = {}): Logger {
   };
 }
 
-/** A lazily-created default logger writing under `.goodvibes/logs/`. */
+/** A lazily-created default logger writing under `<data-root>/logs/`. */
 let defaultLogger: Logger | null = null;
 
 /** The shared default logger (level-routed, rotating). */

@@ -1,9 +1,6 @@
 /**
  * SQL schema parser (raw `CREATE TABLE` statements).
  *
- * Ported near-verbatim from v1 project-engine
- * `core/database/parsers/sql-schema.ts`.
- *
  * @module lib/db/parsers/sql-schema
  */
 

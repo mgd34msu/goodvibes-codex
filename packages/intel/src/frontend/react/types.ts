@@ -1,7 +1,8 @@
 /**
- * React component-tree analysis types, Lane 4.
- * Ported from frontend-engine `core/react/types.ts` (bare-tree fields only; the
- * annotation blocks + `resolved_path` live on the merged node in the tool).
+ * React component-tree analysis types.
+ *
+ * Bare-tree fields only. The annotation blocks and `resolved_path` live on the
+ * merged node in the tool.
  *
  * @module frontend/react/types
  */

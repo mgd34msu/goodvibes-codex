@@ -1,14 +1,13 @@
 /**
- * `@goodvibes/core/proc`, process-hygiene layer (field issue 9).
+ * `@goodvibes/core/proc`, the process-hygiene layer.
  *
- * BUILT NEW: v1 shipped only a non-firing stdin-close path, so orphaned servers
- * spun at 100% CPU after a session died. Every v2 server calls
- * `installProcessHygiene()` in `main()`. It provides:
+ * Without it, a server orphaned when its session dies can spin at 100% CPU, so
+ * every server calls `installProcessHygiene()` in `main()`. It provides:
  *
  *  (a) Parent-liveness watchdog, exits on stdin close AND on a `ppid` poll that
  *      catches reparent-to-init/systemd (the case stdin-close alone misses).
- *  (b) There is NO idle self-exit, an installed server runs for the life of
- *      its session, period (Mike's explicit direction, 2026-07-02).
+ *  (b) There is NO idle self-exit. An installed server runs for the life of its
+ *      session. This is deliberate and is not to be revised silently.
  *  (c) Per-request time budget via `withBudget(ms, task)`, a handler returns a
  *      partial result with honest `budget_exceeded` accounting instead of
  *      hanging the client forever.

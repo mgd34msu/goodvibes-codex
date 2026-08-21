@@ -1,10 +1,9 @@
 /**
- * `db_schema` source auto-detection + tribunal-shape conversion.
+ * `db_schema` source auto-detection and output reshaping.
  *
- * Discovery priority ported from v1 project-engine `extensions/database/
- * schema.ts`: Prisma → Drizzle → SQL. `toModels` reshapes the parsers'
- * proven flat `tables`+`relations` output into the tribunal's
- * `models[].relations` shape (§4.4.3) at the tool boundary.
+ * Discovery priority is Prisma, then Drizzle, then SQL. `toModels` reshapes the
+ * parsers' flat `tables` plus `relations` output into the `models[].relations`
+ * shape at the tool boundary.
  *
  * @module lib/db/schema-discovery
  */
@@ -134,7 +133,7 @@ export async function discoverSchema(
   return null;
 }
 
-/** Reshape the parser's flat tables+relations into the tribunal's models[].relations shape. */
+/** Reshape the parser's flat tables+relations into the models[].relations shape. */
 export function toModels(result: DatabaseSchemaResult): DbModel[] {
   return result.tables.map(table => ({
     name: table.name,

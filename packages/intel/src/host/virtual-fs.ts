@@ -1,11 +1,10 @@
 /**
  * In-memory filesystem overlay for hypothetical-edit analysis.
  *
- * Ported from project-engine `core/code-intel/virtual-fs.ts`. This is the ONE
- * place a SECOND, throwaway LanguageService is allowed: it types a proposed edit
- * without writing to disk. It is opt-in and separate from the shared program in
- * {@link CompilerHost} (which stays the single source of truth for real files).
- * Provided for lanes 3/4; no live tool in the alpha 14 requires it.
+ * This is the ONE place a SECOND, throwaway LanguageService is allowed: it types
+ * a proposed edit without writing to disk. It is opt-in and separate from the
+ * shared program in {@link CompilerHost}, which stays the single source of truth
+ * for real files. No shipped tool currently requires it.
  */
 
 import * as fs from 'node:fs';

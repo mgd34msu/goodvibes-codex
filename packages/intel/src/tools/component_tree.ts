@@ -1,15 +1,14 @@
 /**
  * `component_tree`, React component hierarchy with four opt-in annotation modes.
  *
- * §3 tribunal MERGE, shape per §4.4.1. Backbone ports frontend-engine
- * `extensions/component-tree.ts` + `core/react/*`; the four annotation modes are
- * distilled from `core/component-state` (state), `core/error-boundaries`
- * (boundaries), `core/event-flow` (events), and `core/accessibility` (attributes)
- * with the tribunal corrections baked in (see each annotation module). v2 wrappers:
- *  - `base_path` contract (issue 1): every node echoes an absolute `resolved_path`.
+ * The four annotation modes live in their own modules: state, boundaries,
+ * events, and attributes. See each annotation module for its shape.
+ *
+ * Wrappers:
+ *  - `base_path` contract: every node echoes an absolute `resolved_path`.
  *  - `core/proc` budget + `core/envelope` honest token accounting; `output.max_tokens`
  *    prunes leaf nodes until the forest fits.
- *  - Every SourceFile comes from the ONE compiler host (§3.3).
+ *  - Every SourceFile comes from the ONE compiler host.
  *
  * @module tools/component_tree
  */

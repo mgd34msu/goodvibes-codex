@@ -2,20 +2,17 @@
  * Find-and-replace dry-run preview for code_grep `preview_replace`. Shows what
  * a replacement would look like across matched files without writing.
  *
- * Ported from v1 `precision-engine/src/utils/grep-replace-preview.ts`, with
- * the plan §4.1 code_grep row's "absorb the unique diff-preview bits of
- * project-engine preview-edits" fold-in:
- *  - RULING (ambiguity resolution, see lane report): project-engine's
- *    `preview-edits.ts` validates edits by running them through the shared
- *    TypeScript compiler host (baseline vs. post-edit diagnostics), that
- *    host is lane 2's concurrent build and `preview_replace` here is a
- *    static text-level dry run, not a type-check, so the compiler-diagnostic
- *    half does not port. What DOES port: (a) a real unified-diff hunk per
- *    match (`--- file` / `+++ file` / `@@ -line,1 +line,1 @@` / `-old` /
- *    `+new`) replacing v1's bare `-old\n+new` two-liner; (b) a top-level
- *    `safe`/`summary` pair mirroring preview-edits' shape, `safe` is false
- *    when any match required a regex-fallback strategy (an ambiguous
- *    replacement), true otherwise.
+ * This is a static text-level dry run, not a type-check, so it never runs the
+ * proposed edit through the TypeScript compiler host for baseline-versus-edited
+ * diagnostics.
+ *
+ * What it produces:
+ *  - a real unified-diff hunk per match (`--- file` / `+++ file` /
+ *    `@@ -line,1 +line,1 @@` / `-old` / `+new`), rather than a bare
+ *    `-old`/`+new` pair;
+ *  - a top-level `safe`/`summary` pair. `safe` is false when any match required
+ *    a regex-fallback strategy, which means the replacement was ambiguous, and
+ *    true otherwise.
  */
 
 export interface ReplacePreviewMatch {

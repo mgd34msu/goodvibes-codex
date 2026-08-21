@@ -1,14 +1,14 @@
 /**
  * `layout_analysis`, CSS layout hierarchy + overflow/sizing/stacking sections.
  *
- * §3 tribunal MERGE, shape per §4.4.2. Backbone ports frontend-engine
- * `extensions/layout-hierarchy.ts` + `core/layout/*`; sections merge `core/overflow`
- * (nested-flex min-height detector + fix list, absolute-positioning demoted to a
- * guarded low-confidence flag), `core/sizing` (ancestor constraint chain, active
- * only with `selector`), and `core/stacking` (as-is + all-triggers-per-element).
- * The responsive section is ABSENT in alpha (it ships after the CSS-first rebuild).
- * v2 wrappers: `base_path` contract with `resolved_path` echo; `core/proc` budget;
- * `core/envelope` token accounting. Every SourceFile comes from the ONE host (§3.3).
+ * Sections cover overflow (nested-flex min-height detection plus a fix list,
+ * with absolute positioning demoted to a guarded low-confidence flag), sizing
+ * (ancestor constraint chain, active only with `selector`), and stacking (all
+ * triggers per element).
+ *
+ * There is deliberately no responsive section.
+ * Wrappers: `base_path` contract with `resolved_path` echo; `core/proc` budget;
+ * `core/envelope` token accounting. Every SourceFile comes from the ONE host.
  *
  * @module tools/layout_analysis
  */

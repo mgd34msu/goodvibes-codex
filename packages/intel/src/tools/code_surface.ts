@@ -1,9 +1,10 @@
 /**
  * `code_surface`, public vs internal API surface of a module/package.
  *
- * Ports project-engine `extensions/code-intel/api-surface.ts` onto the shared
- * compiler host (§3.3, §4.1). v2 wrappers per the port row:
- *  - `base_path` contract (issue 1): the target dir + explicit entry points
+ * Runs on the shared compiler host.
+ *
+ * Wrappers:
+ *  - `base_path` contract: the target dir and explicit entry points
  *    resolve via `core/fsx`; every export echoes an absolute `resolved_path`.
  *  - `core/proc` budget: the analysis runs under `withBudget`; if it expires the
  *    partial surface returns with `budget_exceeded: true`.

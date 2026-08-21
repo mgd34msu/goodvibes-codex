@@ -1,7 +1,5 @@
 /**
  * AST helpers shared by the export collectors and reference analyzers.
- *
- * Ported verbatim from project-engine `core/code-intel/ast-utils.ts`.
  */
 
 import ts from 'typescript';
