@@ -36,4 +36,25 @@ if (!entry || entry.source?.path !== './plugins/goodvibes') {
   throw new Error('Marketplace entry is missing or points at the wrong plugin path');
 }
 
+// allowScripts pins an exact version per package (npm requires this), separate from the
+// ^-ranged dependency. A lockfile refresh can bump the resolved version without anyone
+// touching allowScripts, silently detaching the pin from what actually gets installed.
+// Catch that drift here instead of letting npm's postinstall allowlist quietly stop applying.
+const lockfile = readJson('package-lock.json');
+for (const [allowScriptsKey] of Object.entries(rootPackage.allowScripts ?? {})) {
+  const separatorIndex = allowScriptsKey.lastIndexOf('@');
+  const packageName = allowScriptsKey.slice(0, separatorIndex);
+  const pinnedVersion = allowScriptsKey.slice(separatorIndex + 1);
+  const lockedPackage = lockfile.packages?.[`node_modules/${packageName}`];
+  if (!lockedPackage) {
+    throw new Error(`allowScripts references "${packageName}", which is not present in package-lock.json`);
+  }
+  if (lockedPackage.version !== pinnedVersion) {
+    throw new Error(
+      `allowScripts pins ${packageName}@${pinnedVersion}, but package-lock.json resolves it to ` +
+        `${lockedPackage.version}. Update the allowScripts key in package.json to match the locked version.`,
+    );
+  }
+}
+
 process.stdout.write(`GoodVibes version ${plugin.version} is consistent across manifests.\n`);
