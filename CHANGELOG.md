@@ -6,6 +6,10 @@
 - Keep dependency repair beneath the durable GoodVibes data root with per-server locking, verified staging, atomic promotion, and degraded offline fallback; never mutate the installed plugin cache.
 - Resolve Intel's ESM-only `web-tree-sitter` and `@ast-grep/napi` imports through the launcher's controlled durable dependency path.
 - Make `goodvibes-maintenance` an implicit-capable repair workflow while preserving interactive authorization for roots, services, credentials, connections, write grants, hooks, and trust mode.
+- Fail closed in the Connect query gate: SQL the tokenizer does not recognize is refused instead of allowed past a read-only connection, closing the writable common-table-expression bypass.
+- Serialize SQLite access across concurrent Connect writers with a cross-process lock module, eliminating last-writer-wins data loss on shared database files.
+- Remove the unwired telemetry subsystem (647 lines nothing on a live path imported) and its config plumbing; an existing config file carrying the old key still loads cleanly.
+- Make the release hazard scan actually run on hosted CI (it invoked a tool absent from the runner image and the failure read as a pass) and widen it to the whole shipped tree; SHA-pin workflow actions; assert allowScripts pins against the lockfile.
 
 ## 0.1.0 - 2026-07-10
 
