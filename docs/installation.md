@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-GoodVibes launches its MCP servers with the ambient `node` executable. Install Node.js 20.19.x or Node 22.12 and newer before installing the plugin. CI exercises Node 20.19 and Node 22; Node 22 is the preferred development line.
+GoodVibes launches its MCP servers with the ambient `node` executable. Install a Node.js version satisfying `^20.19.0 || >=22.12.0` before installing the plugin. Node 21 does not qualify. CI exercises Node 20.19 and Node 22; Node 22 is the preferred development line.
 
 You also need a Codex CLI version that supports `codex plugin`, and Git for a remote marketplace install.
 
@@ -105,7 +105,21 @@ Start from the top-level help rather than guessing credential flags:
 node "<plugin-root>/scripts/goodvibes-control.mjs" --help
 ```
 
-Representative operations are `services list/add/remove/auth/clear-auth`, `connections list/add/remove`, and `config show/set-mode`. Authority changes require an interactive terminal. The MCP `service` tool cannot perform any of them.
+The installed `--help` output is authoritative. The command groups it covers are:
+
+| Command                                              | What it does                                                       | Needs a TTY |
+| ---------------------------------------------------- | ------------------------------------------------------------------ | ----------- |
+| `status`                                             | Print data root, plugin root, roots, registrations, and mode       | No          |
+| `roots list\|add\|remove`                            | Register or revoke a canonical workspace                           | Add/remove  |
+| `services list\|add\|remove`                         | Register or revoke an HTTP service                                 | Add/remove  |
+| `services auth\|clear-auth`                          | Store or clear bearer, Basic, or API-key credentials               | Yes         |
+| `services allow list\|add\|remove`                   | Manage the destination allowlist                                   | Add/remove  |
+| `connections list\|add\|remove`                      | Register or revoke a database connection and its write grant       | Add/remove  |
+| `config show`                                        | Print the effective configuration and data root                    | No          |
+| `config set-mode restricted\|open [--persist]`       | Change trust mode                                                  | Yes         |
+| `deps status\|install [intel\|analytics\|connect\|all]` | Inspect or repair pinned runtime dependencies                   | No          |
+
+Authority changes require an interactive terminal and an explicit confirmation phrase. Setting `open` mode requires typing `open network access` rather than `yes`. The MCP `service` tool cannot perform any of these operations.
 
 Static bearer, Basic, and API-key credentials can be configured only for an `https://` service. Unauthenticated HTTP services may still be registered when policy permits, but GoodVibes will not attach a stored credential to plaintext transport.
 
@@ -121,7 +135,16 @@ Remain in `restricted` mode unless you have reviewed the wider destination behav
 
 ## Review hooks
 
-The plugin supplies six hooks: `SessionStart`, `PreToolUse` for Bash, `PreCompact`, `SubagentStart`, `SubagentStop`, and `Stop`.
+The plugin supplies six hooks. Review what each one does before trusting it:
+
+| Hook                  | What it does when trusted                                                          |
+| --------------------- | ------------------------------------------------------------------------------------ |
+| `SessionStart`        | Reports dependency and trust-mode state, and resets a non-persistent `open` mode   |
+| `PreToolUse` for Bash | Warns or advises denial when a Git command names a known GoodVibes credential file |
+| `PreCompact`          | Writes a metadata-only checkpoint before compaction, with no transcript parsing    |
+| `SubagentStart`       | Records bounded metadata and returns an inherited-authority reminder               |
+| `SubagentStop`        | Records subagent duration and the last message's length and digest                 |
+| `Stop`                | Records bounded per-turn metadata; it is not a session-end signal                  |
 
 Codex requires review/trust for non-managed hooks. In a Codex thread, run `/hooks`, inspect `hooks/hooks.json` and the referenced scripts, and trust them only if they match the installed version you intended. A hook change may require re-review.
 

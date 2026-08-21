@@ -112,6 +112,6 @@ Do not describe the checksum archive as supply-chain attestation. Signing, forma
 
 ## Version tags
 
-Release tags use `v<manifest-version>`, for example `v0.1.0`. The release-check workflow rejects a tag whose suffix differs from `.codex-plugin/plugin.json`.
+Release tags use `v<manifest-version>`, for example `v0.1.1` for the current manifest. The release-check workflow rejects a tag whose suffix differs from `.codex-plugin/plugin.json`.
 
 No workflow changes root, plugin, or runtime versions automatically. Version mutation remains an intentional reviewed source change.

@@ -19,9 +19,16 @@ The Codex plugin is a behavioral port, not an in-place upgrade. Install it along
 
 ## Do not copy state wholesale
 
-Do not copy `~/.claude`, Claude plugin cache files, old runtime `node_modules`, `.goodvibes/v2`, service registries, cookie jars, secret files, analytics databases, or transcript-derived reports into the Codex paths.
+GoodVibes deliberately performs no automatic Claude-state discovery or migration, and copying the old state by hand does not substitute for it. Each of these carries an assumption the Codex port does not share:
 
-The schemas, host assumptions, model identifiers, pricing semantics, and authority boundaries differ. GoodVibes deliberately performs no automatic Claude-state discovery or migration.
+| Do not copy                                     | Why it does not transfer                                                    |
+| ----------------------------------------------- | ----------------------------------------------------------------------------- |
+| `~/.claude` and Claude plugin cache files       | Host layout and plugin identity differ                                      |
+| Old runtime `node_modules`                      | Launchers install exact locked versions into the durable data root themselves |
+| `.goodvibes/v2` project state                   | Codex state is namespaced under `.goodvibes/codex` with a different schema  |
+| Service registries and cookie jars              | Authority boundaries changed; `0.1.x` has no cookie or session-auth path    |
+| Secret files                                    | Credentials are re-entered through the interactive control plane            |
+| Analytics databases and transcript-derived reports | Model identifiers and pricing semantics differ, so totals are not comparable |
 
 ## Recommended migration
 

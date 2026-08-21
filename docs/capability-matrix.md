@@ -82,9 +82,28 @@ Claude slash-command files are not installed. Codex invokes these skills from ma
 
 ## Templates and roles
 
-The minimal Next.js, minimal Vite React, and full Next.js SaaS template trees are included for `scaffold`. Four orchestration role references, architect, engineer, tester, and refutation reviewer, are included inside `task-orchestration`.
+Three template trees ship for `scaffold`. Pass the template id, not the directory path:
 
-The plugin does not install custom-agent TOML into `~/.codex` or `.codex/agents`. That remains an opt-in future possibility, not first-release behavior.
+| Template id  | Category  | Stack                                                        |
+| ------------ | --------- | ------------------------------------------------------------ |
+| `vite-react` | `minimal` | Vite 6, React 19, TypeScript, Tailwind 3                     |
+| `next-app`   | `minimal` | Next.js 15 App Router, TypeScript, Tailwind 3                |
+| `next-saas`  | `full`    | Next.js 15 SaaS starter with NextAuth v5, Prisma, and Stripe |
+
+Template package manifests pin mutually compatible versions rather than floating ranges. Tailwind stays on version 3 because these trees use its configuration-file and PostCSS conventions.
+
+`task-orchestration` carries four role references. They are prompt material the skill reads, not installed agents:
+
+| Role                  | Purpose                                                                       |
+| --------------------- | ------------------------------------------------------------------------------ |
+| `architect`           | Map a system, design an approach, and turn complex work into executable steps |
+| `engineer`            | Implement the assigned change completely within its stated boundary           |
+| `tester`              | Verify real behavior, prioritizing paths most likely or costly to fail        |
+| `refutation-reviewer` | Try to disprove that the change works, reviewing the diff rather than a summary |
+
+Each role inherits the parent task's scope, authority, workspace boundary, and permission mode, and never broadens them.
+
+The plugin does not install custom-agent TOML into `~/.codex` or `.codex/agents`. Reading a role reference never mutates user or project configuration.
 
 ## Intentional deferrals
 

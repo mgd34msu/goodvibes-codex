@@ -12,7 +12,19 @@ This repository is the Codex-native port. It does not read Claude state, install
 | `goodvibes_analytics` |     7 | Metadata-only Codex session summaries, reports, token budgets, exports, tags, sync, and local bounds                              |
 | `goodvibes_connect`   |     3 | Read-only registry inspection plus policy-bound HTTP and database operations                                                      |
 
-The nine skills are `intel-mastery`, `project-onboarding`, `goodvibes-memory`, `task-orchestration`, `review-scoring`, `service-integration`, `goodvibes-analytics`, `codebase-review`, and `goodvibes-maintenance`.
+Codex invokes the nine skills from matching requests or an explicit `$skill-name` reference. Each one is a workflow package, not a single command:
+
+| Skill                   | Use it when                                                                            |
+| ----------------------- | -------------------------------------------------------------------------------------- |
+| `intel-mastery`         | Code structure matters more than a plain file read or text search                      |
+| `project-onboarding`    | Beginning non-trivial work in a repository whose architecture is not yet verified      |
+| `goodvibes-memory`      | Prior project context affects a task, or a finished change produced durable knowledge  |
+| `task-orchestration`    | Work splits into bounded subagent tasks that run in parallel or need explicit handoffs |
+| `review-scoring`        | Reviewing a change by trying to falsify its correctness claims                         |
+| `service-integration`   | A task needs an already-approved HTTP service or database                              |
+| `goodvibes-analytics`   | The user asks to inspect or manage Codex usage data                                    |
+| `codebase-review`       | Reviewing an uncommitted diff or a diff against a base ref                             |
+| `goodvibes-maintenance` | Setup, status, installation repair, hook trust, or plugin troubleshooting              |
 
 The complete tool and migration status is in the [capability matrix](docs/capability-matrix.md).
 
@@ -21,7 +33,7 @@ The complete tool and migration status is in the [capability matrix](docs/capabi
 Prerequisites:
 
 - Codex CLI with plugin support;
-- Node.js 20.19.x or 22.12 and newer (Node 20.19 and Node 22 are the CI targets);
+- Node.js satisfying `^20.19.0 || >=22.12.0`, which excludes Node 21 (Node 20.19 and Node 22 are the CI targets);
 - Git, when installing the marketplace from GitHub.
 
 After a release commit has been published to the remote `main` branch, install its repository marketplace:

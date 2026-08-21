@@ -31,10 +31,11 @@ The exact set grows as features are used. Important paths include:
 
 ```text
 <data-root>/
-  config.json
-  trusted-roots.json
-  services.json
-  goodvibes.secrets.json
+  config.json                    trust mode and local bounds
+  trusted-roots.json             registered workspace roots
+  services.json                  service, connection, and allowlist policy
+  goodvibes.secrets.json         stored credentials
+  .control.lock                  serializes control-utility writes
   analytics/
     state.json
     session-index.json
@@ -44,8 +45,11 @@ The exact set grows as features are used. Important paths include:
     intel/node_modules/
     analytics/node_modules/
     connect/node_modules/
+  edit-tokens/                   structural_edit previews, expire after 10 minutes
+  locks/
+    structural-edit.lock         serializes applies across Codex threads
   hooks/                         fallback only
-  logs/
+  logs/                          size-rotated activity and debug logs
 ```
 
 `trusted-roots.json`, service/connection policy, and credential files are control state. They must not be copied into a workspace or edited by an MCP tool. On POSIX systems, private directories/files are created as `0700`/`0600` where supported. Important writes use same-directory temporary files and atomic rename.
@@ -54,15 +58,17 @@ The data directory is intentionally preserved across plugin reinstall and uninst
 
 ## Analytics source and retained fields
 
-Analytics scans a bounded set of rollout JSONL files under `~/.codex/sessions` in the supported installed-plugin layout. It extracts only fields needed for:
+Analytics scans a bounded set of rollout JSONL files under `~/.codex/sessions` in the supported installed-plugin layout. It extracts only what its summaries need:
 
-- session identity and timestamps;
-- project/cwd grouping;
-- Codex CLI and model identifiers;
-- input, cached-input, output, reasoning, and total token counters when present;
-- tool names and counts;
-- parent/subagent relationships;
-- malformed/unknown record diagnostics.
+| Extracted                       | Why it is kept                                                    |
+| ------------------------------- | ------------------------------------------------------------------ |
+| Session identity and timestamps | Identify and order sessions, and scope a query to a time range    |
+| Project and cwd                 | Group sessions by repository                                      |
+| Codex CLI and model identifiers | Attribute usage to a client and model version                     |
+| Token counters                  | Report input, cached-input, output, reasoning, and totals present |
+| Tool names and counts           | Report which tools ran and how often, never their arguments       |
+| Parent and subagent links       | Reconstruct which session spawned which                           |
+| Malformed record diagnostics    | Report unparsed input rather than counting it as zero             |
 
 It ignores message text, reasoning content, tool arguments, and tool outputs. It does not rewrite or tag the rollout files. Tags, budgets, parser limits, and the sanitized index are written to `analytics/state.json` and `analytics/session-index.json`.
 
@@ -76,17 +82,33 @@ GoodVibes does not infer actual subscription charges or API invoices from rollou
 
 ## Hook data
 
-The hooks write one JSON object per line under `events/YYYY-MM.jsonl`, plus bounded checkpoint and temporary agent-tracking records. Event fields may include:
+The hooks write one JSON object per line under `events/YYYY-MM.jsonl`, one file per calendar month in UTC. Three sibling directories hold short-lived records:
 
-- schema version and event name;
-- timestamp;
-- a one-way hash-derived workspace key;
-- bounded session, turn, trigger, source, permission-mode, agent ID, and agent-type strings;
-- dependency-health server names;
-- subagent duration;
-- length and SHA-256 digest of the last assistant message.
+| Directory       | Contents                                                                    |
+| --------------- | ---------------------------------------------------------------------------- |
+| `events/`       | The append-only monthly event log                                           |
+| `checkpoints/`  | One metadata-only compaction checkpoint per workspace                       |
+| `agents/`       | One tracking record per running subagent, deleted when that subagent stops  |
+| `commit-guard/` | Per-workspace state for the advisory Git credential guard                   |
 
-The last message itself is not stored. The digest is still a stable fingerprint and should be treated as metadata. Agent tracking files are removed on the corresponding stop event when possible.
+Every event carries the common fields. The rest appear only on the events that produce them:
+
+| Field                                       | Written by       | What it holds                                                    |
+| ------------------------------------------- | ---------------- | ------------------------------------------------------------------ |
+| `schema_version`, `event`, `at`             | every event      | Record format number, lifecycle event name, and UTC timestamp    |
+| `workspace_key`                             | every event      | Truncated SHA-256 of the canonical working directory, not a path |
+| `session_id`, `turn_id`, `agent_id`         | every event      | Host-supplied identifiers, truncated to 256 characters           |
+| `source`, `trigger`, `permission_mode`      | every event      | Short host-supplied labels, truncated to 32 characters           |
+| `agent_type`                                | every event      | Subagent role name, truncated to 64 characters                   |
+| `stop_hook_active`                          | every event      | Whether a stop hook was already running                          |
+| `trust_mode`, `missing_dependency_servers`  | `session_start`  | Effective mode and the names of servers needing dependency repair |
+| `decision`, `protected_files`               | `commit_guard`   | Allow or deny, and which known credential filenames matched      |
+| `started_at`, `duration_ms`                 | `subagent_stop`  | Subagent lifetime, computed when its tracking record is consumed |
+| `last_message_chars`, `last_message_sha256` | `stop`, `subagent_stop` | Length and digest of the last assistant message           |
+
+Fields whose value is absent are dropped rather than written as null.
+
+The last message itself is never written. Its digest is still a stable fingerprint of the exact text, so treat it as metadata rather than as an anonymized value. Agent tracking files are removed on the corresponding stop event when possible.
 
 Hooks fail open, so records may be incomplete. They are local diagnostics, not an audit log.
 

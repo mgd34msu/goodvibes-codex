@@ -51,8 +51,8 @@ The manifest points Codex to `.mcp.json` and the skills directory. Codex discove
 
 Each MCP declaration starts `node server/<name>/launcher.cjs` with the installed plugin root as its working directory. A launcher:
 
-1. the immutable installed plugin root;
-2. the writable GoodVibes data root;
+1. resolves the immutable installed plugin root;
+2. resolves the writable GoodVibes data root, from `GOODVIBES_DATA_ROOT` when set and otherwise from the Codex home;
 3. verifies exact dependency versions, lockfile identity, module loadability, and required executables;
 4. automatically repairs missing, stale, or corrupt packages under `<data-root>/deps/<server>` using a per-server lock, verified staging directory, and atomic promotion;
 5. initializes module resolution from server-local and durable `node_modules` roots;

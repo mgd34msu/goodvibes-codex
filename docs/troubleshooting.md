@@ -14,7 +14,7 @@ For an installed marketplace copy, use the `installedPath` returned by `codex pl
 
 Likely causes are an unavailable Node executable, plugin installation failure, or a stale Codex thread.
 
-1. Run `node --version` in the environment that launches Codex; it must be 20.19 or newer.
+1. Run `node --version` in the environment that launches Codex. It must satisfy `^20.19.0 || >=22.12.0`, so a Node 21 build does not qualify even though it is newer than 20.19.
 2. Confirm `codex plugin list --json` reports `goodvibes@goodvibes` as installed/enabled.
 3. Check that `.mcp.json` and all three `server/<name>/launcher.cjs` files exist under the reported plugin root.
 4. Reinstall with `codex plugin add goodvibes@goodvibes --json`.
@@ -103,7 +103,7 @@ If a budget or tag mutation requests `session_id`, use an ID returned by a
 read-only Analytics query. The server refuses to guess a mutation target when
 the host did not provide an active session ID. Query grouping/format and
 status/agent filters, plus export section selection, are intentionally not part
-of the `0.1.0` schema.
+of the `0.1.x` schema.
 
 Analytics intentionally shows no monetary total and no prompt or tool-payload history.
 

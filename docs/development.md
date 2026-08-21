@@ -142,4 +142,6 @@ Do not use production credentials or real private rollout files in tests.
 
 ## Documentation discipline
 
-The numbers `15`, `7`, `3`, `25`, `9`, and `6` are release contracts, not marketing estimates. If a surface changes, update the smoke inventory and [capability matrix](capability-matrix.md) in the same change. Keep deferred behavior visible rather than implying Claude parity that the Codex host cannot safely provide.
+The tool, skill, and hook counts stated in the documentation are enforced, not descriptive. `scripts/smoke-mcp.mjs` fails the build when a server advertises a tool set other than the exact 15, 7, and 3 names it pins. If a surface changes, update that inventory and the [capability matrix](capability-matrix.md) in the same change, so a count can never drift from the shipped servers without a failing gate.
+
+Record deferred behavior explicitly rather than implying Claude parity the Codex host cannot safely provide.
